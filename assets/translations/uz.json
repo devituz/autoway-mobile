@@ -1,0 +1,32 @@
+{
+  "welcome": "Xush kelibsiz",
+  "client_app": "Mijoz ilovasi",
+  "driver_app": "Haydovchi ilovasi",
+  "register": {
+    "app_welcome": "AutoWay ga",
+    "welcome_title": "Hush kelibsiz",
+    "choose_language": "Tilni tanlang",
+    "continue": "Davom etish",
+    "back": "Ortga",
+    "send": "Jo‘natish",
+    "choose_user_type": "Foydalanuvchi turini tanlang",
+    "passenger": "Yo‘lovchi",
+    "driver": "Haydovchi",
+    "new_service": "Yangi hizmat",
+    "offer_agreement": "Ofertaga rozilik",
+    "phone_title": "Telefon raqamingiz",
+    "phone_subtitle": "Raqamingizni tasdiqlash uchun sizga 4 xonali kod yuboramiz.",
+    "otp_title": "4 xonali kodni kiriting",
+    "otp_subtitle": "SMS-kod telefon raqamingizga yuborildi {phone}",
+    "seconds": "{n} soniya",
+    "resend": "Qayta jo‘natish",
+    "profile_title": "Keling, tanishib olaylik!",
+    "profile_subtitle": "Iltimos, malumotlaringizni kiriting",
+    "name_label": "Ismingiz",
+    "name_hint": "Abdurahmon",
+    "birth_label": "Tug‘ilgan sanangiz",
+    "male": "Erkak",
+    "female": "Ayol",
+    "done": "Ro‘yxatdan muvaffaqiyatli o‘tdingiz"
+  }
+}

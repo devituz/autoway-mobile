@@ -1,0 +1,32 @@
+{
+  "welcome": "Welcome",
+  "client_app": "Client App",
+  "driver_app": "Driver App",
+  "register": {
+    "app_welcome": "To AutoWay",
+    "welcome_title": "Welcome",
+    "choose_language": "Choose language",
+    "continue": "Continue",
+    "back": "Back",
+    "send": "Send",
+    "choose_user_type": "Choose user type",
+    "passenger": "Passenger",
+    "driver": "Driver",
+    "new_service": "New service",
+    "offer_agreement": "Offer agreement",
+    "phone_title": "Your phone number",
+    "phone_subtitle": "We will send you a 4-digit code to verify your number.",
+    "otp_title": "Enter the 4-digit code",
+    "otp_subtitle": "An SMS code was sent to your number {phone}",
+    "seconds": "{n} seconds",
+    "resend": "Resend",
+    "profile_title": "Let's get to know you!",
+    "profile_subtitle": "Please enter your details",
+    "name_label": "Your name",
+    "name_hint": "Abdurahmon",
+    "birth_label": "Date of birth",
+    "male": "Male",
+    "female": "Female",
+    "done": "Registration completed successfully"
+  }
+}
