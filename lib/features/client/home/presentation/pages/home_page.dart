@@ -6,69 +6,163 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
-import '../widgets/home_app_bar.dart';
 
 /// Main client screen body (Bosh sahifa tab) hosted inside [MainShellPage].
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _role = 0; // 0 = passenger, 1 = driver
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.accent,
-      body: SafeArea(
-        bottom: false,
+      backgroundColor: AppColors.headerDark,
+      body: Column(
+        children: [
+          _Header(
+            role: _role,
+            onRoleChanged: (i) => setState(() => _role = i),
+            onBellTap: () => context.router.push(const NotificationsRoute()),
+          ),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+              child: Container(
+                color: AppColors.accent,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 24.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const _FeaturedGrid(),
+                      SizedBox(height: 14.h),
+                      const _CompactGrid(),
+                      SizedBox(height: 22.h),
+                      Text('home.my_active_orders'.tr(),
+                          style: AppText.bodyLarge.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w700)),
+                      SizedBox(height: 14.h),
+                      _OrderCard(
+                        headerColor: AppColors.blue,
+                        status: 'home.status_driver_coming'.tr(),
+                        headerIcon: Icons.directions_car_filled,
+                        service: 'home.intercity_taxi'.tr(),
+                      ),
+                      SizedBox(height: 16.h),
+                      _OrderCard(
+                        headerColor: AppColors.statusGreen,
+                        status: 'home.status_accepted'.tr(),
+                        headerIcon: Icons.local_taxi,
+                        service: 'home.cargo'.tr(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────── Header ───────────────────────────
+
+class _Header extends StatelessWidget {
+  final int role;
+  final ValueChanged<int> onRoleChanged;
+  final VoidCallback onBellTap;
+
+  const _Header({
+    required this.role,
+    required this.onRoleChanged,
+    required this.onBellTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 18.h),
         child: Column(
           children: [
-            HomeAppBar(
-              onLeadingTap: () {},
-              onBellTap: () => context.router.push(const NotificationsRoute()),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
-                child: Column(
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _RoleToggle(),
-                    SizedBox(height: 18.h),
-                    Center(
-                      child: Text(
-                        'home.greeting'.tr(namedArgs: {'name': 'Jamshid'}),
-                        style: AppText.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    const Center(child: _WalletCard(balance: '50 000')),
-                    SizedBox(height: 20.h),
-                    Center(
-                      child: Text('home.choose_service'.tr(),
-                          style: AppText.screenTitle
-                              .copyWith(color: AppColors.textPrimary)),
-                    ),
-                    SizedBox(height: 16.h),
-                    const _ServiceGrid(),
-                    SizedBox(height: 24.h),
-                    Text('home.active_orders'.tr(),
+                    Text('AutoWay',
                         style: AppText.bodyLarge.copyWith(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w700)),
-                    SizedBox(height: 12.h),
-                    _OrderCard(
-                      title: 'home.region_taxi'.tr(),
-                      status: 'home.status_pending'.tr(),
-                      timeLabel: 'home.departure_time'.tr(),
-                    ),
-                    SizedBox(height: 16.h),
-                    _OrderCard(
-                      title: 'home.parcel'.tr(),
-                      status: 'home.status_active'.tr(),
-                      timeLabel: 'home.send_time'.tr(),
-                    ),
+                            color: AppColors.textOnDark,
+                            fontWeight: FontWeight.w800)),
+                    Text('home.tagline'.tr(),
+                        style: AppText.label
+                            .copyWith(color: AppColors.textSecondary)),
                   ],
                 ),
+                const Spacer(),
+                _BellButton(count: 9, onTap: onBellTap),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            _RoleToggle(role: role, onChanged: onRoleChanged),
+            SizedBox(height: 18.h),
+            _WalletRow(balance: '50 000'),
+            SizedBox(height: 14.h),
+            const _DashedLine(),
+            SizedBox(height: 14.h),
+            _ActiveOrderBanner(service: 'home.intercity_taxi'.tr()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BellButton extends StatelessWidget {
+  final int count;
+  final VoidCallback onTap;
+
+  const _BellButton({required this.count, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 34.r,
+        height: 34.r,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(Icons.notifications_none,
+                size: 28.sp, color: AppColors.textOnDark),
+            Positioned(
+              right: -2.w,
+              top: -2.h,
+              child: Container(
+                padding: EdgeInsets.all(4.r),
+                constraints: BoxConstraints(minWidth: 18.r, minHeight: 18.r),
+                decoration: const BoxDecoration(
+                  color: AppColors.error,
+                  shape: BoxShape.circle,
+                ),
+                child: Text('$count',
+                    textAlign: TextAlign.center,
+                    style: AppText.label.copyWith(
+                        color: AppColors.textOnDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w700)),
               ),
             ),
           ],
@@ -78,101 +172,258 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _RoleToggle extends StatefulWidget {
-  const _RoleToggle();
+class _RoleToggle extends StatelessWidget {
+  final int role;
+  final ValueChanged<int> onChanged;
 
-  @override
-  State<_RoleToggle> createState() => _RoleToggleState();
-}
-
-class _RoleToggleState extends State<_RoleToggle> {
-  int _index = 0;
+  const _RoleToggle({required this.role, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4.r),
+      padding: EdgeInsets.all(5.r),
       decoration: BoxDecoration(
-        color: AppColors.fieldFill,
-        borderRadius: BorderRadius.circular(14.r),
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
-          _seg('home.client'.tr(), 0),
-          _seg('home.driver'.tr(), 1),
+          _seg('home.passenger'.tr(), Icons.person_outline, 0),
+          _seg('home.driver'.tr(), Icons.local_taxi_outlined, 1),
         ],
       ),
     );
   }
 
-  Widget _seg(String label, int i) {
-    final selected = _index == i;
+  Widget _seg(String label, IconData icon, int i) {
+    final selected = role == i;
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => _index = i),
+        onTap: () => onChanged(i),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          height: 44.h,
+          height: 48.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? AppColors.accent : Colors.transparent,
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(12.r),
           ),
-          child: Text(label,
-              style: AppText.button.copyWith(
-                  color: selected
-                      ? AppColors.textPrimary
-                      : AppColors.textSecondary)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(label,
+                  style: AppText.button.copyWith(
+                      color: selected
+                          ? AppColors.textPrimary
+                          : AppColors.textOnDark)),
+              SizedBox(width: 8.w),
+              Icon(icon,
+                  size: 18.sp,
+                  color:
+                      selected ? AppColors.textPrimary : AppColors.textOnDark),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _WalletCard extends StatelessWidget {
+class _WalletRow extends StatelessWidget {
   final String balance;
-  const _WalletCard({required this.balance});
+  const _WalletRow({required this.balance});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.account_balance_wallet_outlined,
+            size: 26.sp, color: AppColors.textOnDark),
+        SizedBox(width: 12.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$balance ${'home.currency'.tr()}',
+                style: AppText.bodyMedium.copyWith(
+                    color: AppColors.textOnDark, fontWeight: FontWeight.w700)),
+            Text('home.balance'.tr(),
+                style:
+                    AppText.label.copyWith(color: AppColors.textSecondary)),
+          ],
+        ),
+        const Spacer(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.r),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+          ),
+          child: Row(
+            children: [
+              Text('home.top_up'.tr(),
+                  style: AppText.subtitle.copyWith(
+                      color: AppColors.textOnDark,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(width: 6.w),
+              Icon(Icons.chevron_right,
+                  size: 18.sp, color: AppColors.textOnDark),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DashedLine extends StatelessWidget {
+  const _DashedLine();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        const dashW = 6.0;
+        final count = (c.maxWidth / (dashW * 2)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(
+            count,
+            (_) => Container(
+              width: dashW,
+              height: 1,
+              color: Colors.white.withValues(alpha: 0.2),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ActiveOrderBanner extends StatelessWidget {
+  final String service;
+  const _ActiveOrderBanner({required this.service});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.fieldFill,
-        borderRadius: BorderRadius.circular(30.r),
+        color: AppColors.blue,
+        borderRadius: BorderRadius.circular(28.r),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.account_balance_wallet,
-              size: 20.sp, color: AppColors.textPrimary),
-          SizedBox(width: 8.w),
-          Text(balance,
-              style: AppText.bodyMedium.copyWith(
-                  color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
-          SizedBox(width: 10.w),
-          Text('home.top_up'.tr(),
-              style: AppText.subtitle.copyWith(
-                  color: AppColors.textSecondary,
-                  decoration: TextDecoration.underline)),
+          Flexible(
+            child: Text(
+              'home.active_order_banner'.tr(namedArgs: {'service': service}),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: AppText.button.copyWith(color: AppColors.textOnDark),
+            ),
+          ),
+          SizedBox(width: 6.w),
+          Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textOnDark),
         ],
       ),
     );
   }
 }
 
-class _ServiceGrid extends StatelessWidget {
-  const _ServiceGrid();
+// ─────────────────────── Service cards ───────────────────────
+
+class _FeaturedGrid extends StatelessWidget {
+  const _FeaturedGrid();
 
   @override
   Widget build(BuildContext context) {
     final items = [
-      (label: 'home.intercity_taxi'.tr(), enabled: true),
-      (label: 'home.post'.tr(), enabled: true),
-      (label: 'home.companion_taxi'.tr(), enabled: true),
-      (label: 'AutoWay', enabled: false),
-      (label: 'AutoWay', enabled: false),
-      (label: 'AutoWay', enabled: false),
+      (label: 'home.intercity_taxi'.tr(), icon: Icons.local_taxi, color: AppColors.accentYellow, arrow: false),
+      (label: 'home.cargo'.tr(), icon: Icons.inventory_2, color: AppColors.orange, arrow: false),
+      (label: 'home.route_taxi'.tr(), icon: Icons.location_on, color: AppColors.pink, arrow: true),
+      (label: 'home.energy'.tr(), icon: Icons.bolt, color: AppColors.blue, arrow: true),
+    ];
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12.h,
+        crossAxisSpacing: 12.w,
+        childAspectRatio: 1.25,
+      ),
+      itemBuilder: (_, i) => _FeaturedCard(
+        label: items[i].label,
+        icon: items[i].icon,
+        color: items[i].color,
+        showArrow: items[i].arrow,
+      ),
+    );
+  }
+}
+
+class _FeaturedCard extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final bool showArrow;
+
+  const _FeaturedCard({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.showArrow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(14.r),
+      decoration: BoxDecoration(
+        color: AppColors.fieldFill,
+        borderRadius: BorderRadius.circular(18.r),
+      ),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 110.w,
+              child: Text(label,
+                  style: AppText.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w700)),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Icon(icon, size: 52.sp, color: color),
+          ),
+          if (showArrow)
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Icon(Icons.chevron_right,
+                  size: 22.sp, color: AppColors.textSecondary),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactGrid extends StatelessWidget {
+  const _CompactGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      (label: 'home.intercity_short'.tr(), icon: Icons.local_taxi_outlined, color: AppColors.blue),
+      (label: 'home.cargo'.tr(), icon: Icons.inventory_2_outlined, color: AppColors.orange),
+      (label: 'home.route_taxi'.tr(), icon: Icons.route_outlined, color: AppColors.pink),
+      (label: 'home.energy'.tr(), icon: Icons.bolt_outlined, color: AppColors.statusGreen),
     ];
     return GridView.builder(
       shrinkWrap: true,
@@ -184,66 +435,146 @@ class _ServiceGrid extends StatelessWidget {
         crossAxisSpacing: 12.w,
         childAspectRatio: 1.7,
       ),
-      itemBuilder: (_, i) =>
-          _ServiceCard(label: items[i].label, enabled: items[i].enabled),
+      itemBuilder: (_, i) => _CompactCard(
+        label: items[i].label,
+        icon: items[i].icon,
+        color: items[i].color,
+      ),
     );
   }
 }
 
-class _ServiceCard extends StatelessWidget {
+class _CompactCard extends StatelessWidget {
   final String label;
-  final bool enabled;
+  final IconData icon;
+  final Color color;
 
-  const _ServiceCard({required this.label, required this.enabled});
+  const _CompactCard({
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12.r),
+      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: AppColors.fieldFill,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(18.r),
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 40.r,
+                height: 40.r,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 20.sp, color: color),
+              ),
+              Icon(Icons.chevron_right,
+                  size: 20.sp, color: AppColors.textSecondary),
+            ],
+          ),
+          const Spacer(),
+          Text(label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppText.subtitle.copyWith(
+                  color: AppColors.textPrimary, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────── Order card ───────────────────────────
+
+class _OrderCard extends StatelessWidget {
+  final Color headerColor;
+  final String status;
+  final IconData headerIcon;
+  final String service;
+
+  const _OrderCard({
+    required this.headerColor,
+    required this.status,
+    required this.headerIcon,
+    required this.service,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.accent,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: headerColor, width: 1.5),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
           Container(
-            width: 44.r,
-            height: 44.r,
-            decoration: BoxDecoration(
-              color: AppColors.accent,
-              borderRadius: BorderRadius.circular(12.r),
+            color: headerColor,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(status,
+                    style: AppText.bodyMedium.copyWith(
+                        color: AppColors.textOnDark,
+                        fontWeight: FontWeight.w700)),
+                Icon(headerIcon, size: 22.sp, color: AppColors.textOnDark),
+              ],
             ),
           ),
-          SizedBox(width: 10.w),
-          Expanded(
+          Padding(
+            padding: EdgeInsets.all(12.r),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.subtitle.copyWith(
-                        color: enabled
-                            ? AppColors.textPrimary
-                            : AppColors.textSecondary,
-                        fontWeight: FontWeight.w600)),
-                SizedBox(height: 8.h),
-                if (enabled)
-                  Icon(Icons.chevron_right,
-                      size: 20.sp, color: AppColors.textPrimary)
-                else
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      borderRadius: BorderRadius.circular(8.r),
+                const _RouteBox(
+                  from: 'Toshkent shahri',
+                  to: 'Andijon shahri, Andijon viloyati',
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(service,
+                              style: AppText.bodyLarge.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w700)),
+                          SizedBox(height: 4.h),
+                          Text(
+                              'home.depart_at'
+                                  .tr(namedArgs: {'time': '16:00, 15 aprel'}),
+                              style: AppText.subtitle.copyWith(
+                                  color: AppColors.textSecondary)),
+                        ],
+                      ),
                     ),
-                    child: Text('home.coming_soon'.tr(),
-                        style: AppText.label
-                            .copyWith(color: AppColors.textSecondary)),
-                  ),
+                    Container(
+                      width: 48.r,
+                      height: 48.r,
+                      decoration: BoxDecoration(
+                        color: AppColors.fieldFill,
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: Icon(Icons.chevron_right,
+                          size: 24.sp, color: AppColors.textPrimary),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -253,109 +584,11 @@ class _ServiceCard extends StatelessWidget {
   }
 }
 
-class _OrderCard extends StatelessWidget {
-  final String title;
-  final String status;
-  final String timeLabel;
-
-  const _OrderCard({
-    required this.title,
-    required this.status,
-    required this.timeLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title,
-                  style: AppText.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w700)),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(status,
-                    style: AppText.label.copyWith(color: AppColors.textOnDark)),
-              ),
-            ],
-          ),
-          SizedBox(height: 14.h),
-          const _RouteBlock(
-            from: 'Toshkent shahri',
-            to: 'Sirdaryo tumani, Guliston',
-          ),
-          SizedBox(height: 14.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(timeLabel,
-                  style: AppText.subtitle
-                      .copyWith(color: AppColors.textSecondary)),
-              Text('16:00 | 15 mart',
-                  style: AppText.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w600)),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.h),
-            child: Divider(height: 1, color: AppColors.border),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('home.price'.tr(),
-                      style: AppText.subtitle
-                          .copyWith(color: AppColors.textSecondary)),
-                  SizedBox(height: 2.h),
-                  Text('400 000 som',
-                      style: AppText.bodyMedium.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700)),
-                ],
-              ),
-              Container(
-                width: 44.r,
-                height: 44.r,
-                decoration: BoxDecoration(
-                  color: AppColors.fieldFill,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(Icons.chevron_right,
-                    size: 22.sp, color: AppColors.textPrimary),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _RouteBlock extends StatelessWidget {
+class _RouteBox extends StatelessWidget {
   final String from;
   final String to;
 
-  const _RouteBlock({required this.from, required this.to});
+  const _RouteBox({required this.from, required this.to});
 
   @override
   Widget build(BuildContext context) {
@@ -367,32 +600,31 @@ class _RouteBlock extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _row(Icons.circle, from, filled: true),
+          _row(Icons.location_on, from),
           Padding(
-            padding: EdgeInsets.only(left: 5.w),
+            padding: EdgeInsets.only(left: 9.w),
             child: SizedBox(
-              height: 18.h,
-              child: VerticalDivider(width: 1, color: AppColors.border),
+              height: 16.h,
+              child: VerticalDivider(
+                  width: 1, thickness: 1, color: AppColors.border),
             ),
           ),
-          _row(Icons.arrow_downward, to, filled: false),
+          _row(Icons.flag, to),
         ],
       ),
     );
   }
 
-  Widget _row(IconData icon, String text, {required bool filled}) {
+  Widget _row(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: filled ? 12.sp : 16.sp, color: AppColors.textPrimary),
+        Icon(icon, size: 18.sp, color: AppColors.blue),
         SizedBox(width: 12.w),
         Expanded(
           child: Text(text,
-              style:
-                  AppText.bodyMedium.copyWith(color: AppColors.textPrimary)),
+              style: AppText.bodyMedium.copyWith(color: AppColors.textPrimary)),
         ),
       ],
     );
   }
 }
-

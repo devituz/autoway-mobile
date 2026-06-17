@@ -21,6 +21,13 @@ class AppColors {
   static const Color fieldFill = Color(0xFFF1F5F9); // inputs & unselected cards
   static const Color accentYellow = Color(0xFFFFC727); // avatar / highlights
 
+  // Home / status accents
+  static const Color blue = Color(0xFF2F6BFF); // CTA banner, "driver coming"
+  static const Color statusGreen = Color(0xFF2FBF71); // "accepted"
+  static const Color orange = Color(0xFFF59E0B); // cargo illustration
+  static const Color pink = Color(0xFFEF4444); // route illustration
+  static const Color headerDark = Color(0xFF1B2440); // home dark header
+
   // Text
   static const Color textPrimary = Color(0xFF1E293B);
   static const Color textSecondary = Color(0xFF94A3B8);
