@@ -12,7 +12,8 @@ enum Gender { male, female }
 abstract class RegisterState with _$RegisterState {
   const factory RegisterState({
     @Default('uz') String language,
-    UserType? userType,
+    // Passenger pre-selected to match the design's default state.
+    @Default(UserType.passenger) UserType userType,
     @Default('') String phone,
     @Default('') String otp,
     @Default('') String name,

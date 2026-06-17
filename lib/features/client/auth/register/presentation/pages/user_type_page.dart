@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
@@ -24,7 +25,7 @@ class UserTypePage extends StatelessWidget {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
           child: BlocBuilder<RegisterCubit, RegisterState>(
             buildWhen: (p, c) => p.userType != c.userType,
             builder: (context, state) {
@@ -34,13 +35,13 @@ class UserTypePage extends StatelessWidget {
                   Text('register.choose_user_type'.tr(),
                       style: AppText.screenTitle
                           .copyWith(color: AppColors.textPrimary)),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   Expanded(
                     child: GridView.count(
                       crossAxisCount: 2,
-                      mainAxisSpacing: 14,
-                      crossAxisSpacing: 14,
-                      childAspectRatio: 1.25,
+                      mainAxisSpacing: 14.h,
+                      crossAxisSpacing: 14.w,
+                      childAspectRatio: 1.15,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         SelectableCard(
@@ -84,17 +85,15 @@ class UserTypePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   SecondaryButton(
                     label: 'register.back'.tr(),
                     onPressed: () => context.router.maybePop(),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   PrimaryButton(
                     label: 'register.continue'.tr(),
-                    onPressed: state.userType == null
-                        ? null
-                        : () => context.router.push(const PhoneRoute()),
+                    onPressed: () => context.router.push(const PhoneRoute()),
                   ),
                 ],
               );

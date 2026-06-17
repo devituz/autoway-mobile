@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
@@ -31,7 +32,7 @@ class SelectableCard extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
             color: AppColors.fieldFill,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18.r),
             border: Border.all(
               color: selected ? AppColors.borderSelected : Colors.transparent,
               width: 1.5,
@@ -40,8 +41,8 @@ class SelectableCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 26, color: fg),
-              const SizedBox(height: 10),
+              Icon(icon, size: 26.sp, color: fg),
+              SizedBox(height: 10.h),
               Text(
                 label,
                 textAlign: TextAlign.center,

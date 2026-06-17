@@ -3,13 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
-import '../widgets/labeled_field.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/secondary_button.dart';
 
@@ -25,7 +25,7 @@ class PhonePage extends StatefulWidget {
 class _PhonePageState extends State<PhonePage> {
   late final TextEditingController _controller;
 
-  // 9 national digits after the +998 prefix.
+  // 9 national digits after the fixed +998 prefix.
   static const _requiredDigits = 9;
 
   @override
@@ -48,35 +48,29 @@ class _PhonePageState extends State<PhonePage> {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('register.phone_title'.tr(),
                   style: AppText.screenTitle
                       .copyWith(color: AppColors.textPrimary)),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Text('register.phone_subtitle'.tr(),
                   style: AppText.subtitle
                       .copyWith(color: AppColors.textSecondary)),
-              const SizedBox(height: 24),
-              LabeledField(
+              SizedBox(height: 24.h),
+              _PhoneField(
                 controller: _controller,
-                hint: 'XX XXX XX XX',
-                prefixText: '+998 ',
-                keyboardType: TextInputType.phone,
-                formatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(_requiredDigits),
-                ],
                 onChanged: context.read<RegisterCubit>().setPhone,
+                maxDigits: _requiredDigits,
               ),
               const Spacer(),
               SecondaryButton(
                 label: 'register.back'.tr(),
                 onPressed: () => context.router.maybePop(),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               BlocBuilder<RegisterCubit, RegisterState>(
                 buildWhen: (p, c) => p.phone != c.phone,
                 builder: (context, state) {
@@ -92,6 +86,59 @@ class _PhonePageState extends State<PhonePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Phone field with a permanent, non-editable `+998` prefix. Only the 9
+/// national digits are editable; the prefix can never be deleted because it
+/// lives outside the [TextField].
+class _PhoneField extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final int maxDigits;
+
+  const _PhoneField({
+    required this.controller,
+    required this.onChanged,
+    required this.maxDigits,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 58.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: AppColors.fieldFill,
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Row(
+        children: [
+          Text('+998',
+              style: AppText.input.copyWith(color: AppColors.textPrimary)),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              keyboardType: TextInputType.phone,
+              style: AppText.input.copyWith(color: AppColors.textPrimary),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(maxDigits),
+              ],
+              decoration: InputDecoration(
+                isCollapsed: true,
+                border: InputBorder.none,
+                hintText: 'XX XXX XX XX',
+                hintStyle:
+                    AppText.input.copyWith(color: AppColors.textSecondary),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

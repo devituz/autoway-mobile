@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisterState {
 
- String get language; UserType? get userType; String get phone; String get otp; String get name; String get birthDate; Gender? get gender;
+ String get language;// Passenger pre-selected to match the design's default state.
+ UserType get userType; String get phone; String get otp; String get name; String get birthDate; Gender? get gender;
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +46,7 @@ abstract mixin class $RegisterStateCopyWith<$Res>  {
   factory $RegisterStateCopyWith(RegisterState value, $Res Function(RegisterState) _then) = _$RegisterStateCopyWithImpl;
 @useResult
 $Res call({
- String language, UserType? userType, String phone, String otp, String name, String birthDate, Gender? gender
+ String language, UserType userType, String phone, String otp, String name, String birthDate, Gender? gender
 });
 
 
@@ -62,11 +63,11 @@ class _$RegisterStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? language = null,Object? userType = freezed,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? language = null,Object? userType = null,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,}) {
   return _then(_self.copyWith(
 language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
-as String,userType: freezed == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
-as UserType?,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,userType: null == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
+as UserType,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,otp: null == otp ? _self.otp : otp // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,birthDate: null == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
@@ -156,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String language,  UserType? userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisterState() when $default != null:
 return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender);case _:
@@ -177,7 +178,7 @@ return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String language,  UserType? userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)  $default,) {final _that = this;
 switch (_that) {
 case _RegisterState():
 return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender);case _:
@@ -197,7 +198,7 @@ return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String language,  UserType? userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisterState() when $default != null:
 return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender);case _:
@@ -212,11 +213,12 @@ return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_
 
 
 class _RegisterState implements RegisterState {
-  const _RegisterState({this.language = 'uz', this.userType, this.phone = '', this.otp = '', this.name = '', this.birthDate = '', this.gender});
+  const _RegisterState({this.language = 'uz', this.userType = UserType.passenger, this.phone = '', this.otp = '', this.name = '', this.birthDate = '', this.gender});
   
 
 @override@JsonKey() final  String language;
-@override final  UserType? userType;
+// Passenger pre-selected to match the design's default state.
+@override@JsonKey() final  UserType userType;
 @override@JsonKey() final  String phone;
 @override@JsonKey() final  String otp;
 @override@JsonKey() final  String name;
@@ -253,7 +255,7 @@ abstract mixin class _$RegisterStateCopyWith<$Res> implements $RegisterStateCopy
   factory _$RegisterStateCopyWith(_RegisterState value, $Res Function(_RegisterState) _then) = __$RegisterStateCopyWithImpl;
 @override @useResult
 $Res call({
- String language, UserType? userType, String phone, String otp, String name, String birthDate, Gender? gender
+ String language, UserType userType, String phone, String otp, String name, String birthDate, Gender? gender
 });
 
 
@@ -270,11 +272,11 @@ class __$RegisterStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? language = null,Object? userType = freezed,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? language = null,Object? userType = null,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,}) {
   return _then(_RegisterState(
 language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
-as String,userType: freezed == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
-as UserType?,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,userType: null == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
+as UserType,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,otp: null == otp ? _self.otp : otp // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,birthDate: null == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
