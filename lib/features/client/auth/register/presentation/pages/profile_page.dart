@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
@@ -56,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -70,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Text('register.profile_title'.tr(),
                             style: AppText.screenTitle
                                 .copyWith(color: AppColors.textPrimary)),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         Text('register.profile_subtitle'.tr(),
                             style: AppText.subtitle
                                 .copyWith(color: AppColors.textSecondary)),
@@ -80,14 +81,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   const _Avatar(),
                 ],
               ),
-              const SizedBox(height: 28),
+              SizedBox(height: 28.h),
               LabeledField(
                 label: 'register.name_label'.tr(),
                 hint: 'register.name_hint'.tr(),
                 controller: _nameController,
                 onChanged: cubit.setName,
               ),
-              const SizedBox(height: 14),
+              SizedBox(height: 14.h),
               LabeledField(
                 label: 'register.birth_label'.tr(),
                 hint: 'dd.mm.yyyy',
@@ -95,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 keyboardType: TextInputType.datetime,
                 onChanged: cubit.setBirthDate,
               ),
-              const SizedBox(height: 14),
+              SizedBox(height: 14.h),
               BlocBuilder<RegisterCubit, RegisterState>(
                 buildWhen: (p, c) => p.gender != c.gender,
                 builder: (context, state) => _GenderToggle(
@@ -108,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label: 'register.back'.tr(),
                 onPressed: () => context.router.maybePop(),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               PrimaryButton(
                 label: 'register.continue'.tr(),
                 onPressed: _finish,
@@ -127,14 +128,14 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 56,
-      height: 56,
+      width: 56.r,
+      height: 56.r,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
         color: AppColors.accentYellow,
         shape: BoxShape.circle,
       ),
-      child: const Icon(Icons.person, color: AppColors.textPrimary),
+      child: Icon(Icons.person, size: 26.sp, color: AppColors.textPrimary),
     );
   }
 }
@@ -148,10 +149,10 @@ class _GenderToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
         color: AppColors.fieldFill,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
         children: [
@@ -169,11 +170,11 @@ class _GenderToggle extends StatelessWidget {
         onTap: () => onChanged(gender),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          height: 44,
+          height: 44.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? AppColors.accent : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: Text(
             label,

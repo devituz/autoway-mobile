@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
@@ -82,19 +83,19 @@ class _OtpPageState extends State<OtpPage> {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('register.otp_title'.tr(),
                   style: AppText.screenTitle
                       .copyWith(color: AppColors.textPrimary)),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Text(
                 'register.otp_subtitle'.tr(namedArgs: {'phone': '+998 $phone'}),
                 style: AppText.subtitle.copyWith(color: AppColors.textSecondary),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -106,7 +107,7 @@ class _OtpPageState extends State<OtpPage> {
                     ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               Center(
                 child: Text(
                   'register.seconds'.tr(namedArgs: {'n': '$_secondsLeft'}),
@@ -114,7 +115,7 @@ class _OtpPageState extends State<OtpPage> {
                       AppText.subtitle.copyWith(color: AppColors.textSecondary),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Center(
                 child: TextButton(
                   onPressed: _secondsLeft == 0 ? _startCountdown : null,
@@ -133,7 +134,7 @@ class _OtpPageState extends State<OtpPage> {
                 label: 'register.back'.tr(),
                 onPressed: () => context.router.maybePop(),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               PrimaryButton(
                 label: 'register.continue'.tr(),
                 onPressed: _code.length == _length
@@ -162,8 +163,8 @@ class _OtpBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 64,
-      height: 64,
+      width: 70.w,
+      height: 70.w,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
@@ -179,11 +180,11 @@ class _OtpBox extends StatelessWidget {
           fillColor: AppColors.fieldFill,
           contentPadding: EdgeInsets.zero,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(14.r),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(14.r),
             borderSide: const BorderSide(color: AppColors.borderSelected),
           ),
         ),
