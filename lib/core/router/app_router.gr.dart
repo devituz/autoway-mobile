@@ -27,6 +27,38 @@ class LanguageRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MainShellPage]
+class MainShellRoute extends PageRouteInfo<void> {
+  const MainShellRoute({List<PageRouteInfo>? children})
+    : super(MainShellRoute.name, initialChildren: children);
+
+  static const String name = 'MainShellRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MainShellPage();
+    },
+  );
+}
+
+/// generated route for
+/// [NotificationsPage]
+class NotificationsRoute extends PageRouteInfo<void> {
+  const NotificationsRoute({List<PageRouteInfo>? children})
+    : super(NotificationsRoute.name, initialChildren: children);
+
+  static const String name = 'NotificationsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const NotificationsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [OtpPage]
 class OtpRoute extends PageRouteInfo<void> {
   const OtpRoute({List<PageRouteInfo>? children})

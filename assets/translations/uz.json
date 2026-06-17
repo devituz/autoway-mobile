@@ -28,5 +28,32 @@
     "male": "Erkak",
     "female": "Ayol",
     "done": "Ro‘yxatdan muvaffaqiyatli o‘tdingiz"
+  },
+  "home": {
+    "client": "Mijoz",
+    "driver": "Haydovchi",
+    "greeting": "Hush kelibsiz, {name}!",
+    "top_up": "Toldirish",
+    "choose_service": "Hizmat turini tanlang",
+    "intercity_taxi": "Shahrlar aro taxi",
+    "post": "Pochta",
+    "companion_taxi": "Poputchik taxi",
+    "coming_soon": "Yaqin kunlarda",
+    "active_orders": "Faol buyurtmangiz",
+    "region_taxi": "Viloyat taxi",
+    "parcel": "Posilka",
+    "status_pending": "Kutilmoqda",
+    "status_active": "Aktiv",
+    "departure_time": "Ketish vaqti",
+    "send_time": "Jonatilish vaqti",
+    "price": "Narxi:",
+    "nav_home": "Bosh sahifa",
+    "nav_orders": "Buyurtmalar",
+    "nav_profile": "Profil"
+  },
+  "notifications": {
+    "messages": "Xabarlar",
+    "news": "Yangiliklar",
+    "sub_information": "Sub information"
   }
 }

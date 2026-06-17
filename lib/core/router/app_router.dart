@@ -5,6 +5,8 @@ import '../../features/client/auth/register/presentation/pages/otp_page.dart';
 import '../../features/client/auth/register/presentation/pages/phone_page.dart';
 import '../../features/client/auth/register/presentation/pages/profile_page.dart';
 import '../../features/client/auth/register/presentation/pages/user_type_page.dart';
+import '../../features/client/home/presentation/pages/main_shell_page.dart';
+import '../../features/client/home/presentation/pages/notifications_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -17,5 +19,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: PhoneRoute.page),
     AutoRoute(page: OtpRoute.page),
     AutoRoute(page: ProfileRoute.page),
+    AutoRoute(page: MainShellRoute.page),
+    AutoRoute(page: NotificationsRoute.page),
   ];
 }

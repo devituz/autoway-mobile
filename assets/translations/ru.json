@@ -28,5 +28,32 @@
     "male": "Мужчина",
     "female": "Женщина",
     "done": "Регистрация прошла успешно"
+  },
+  "home": {
+    "client": "Клиент",
+    "driver": "Водитель",
+    "greeting": "Добро пожаловать, {name}!",
+    "top_up": "Пополнить",
+    "choose_service": "Выберите тип услуги",
+    "intercity_taxi": "Междугороднее такси",
+    "post": "Почта",
+    "companion_taxi": "Попутчик такси",
+    "coming_soon": "Скоро",
+    "active_orders": "Активный заказ",
+    "region_taxi": "Областное такси",
+    "parcel": "Посылка",
+    "status_pending": "Ожидается",
+    "status_active": "Активно",
+    "departure_time": "Время отправления",
+    "send_time": "Время отправки",
+    "price": "Цена:",
+    "nav_home": "Главная",
+    "nav_orders": "Заказы",
+    "nav_profile": "Профиль"
+  },
+  "notifications": {
+    "messages": "Сообщения",
+    "news": "Новости",
+    "sub_information": "Доп. информация"
   }
 }

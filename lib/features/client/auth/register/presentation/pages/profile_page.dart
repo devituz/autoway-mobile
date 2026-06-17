@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
 import '../cubit/register_cubit.dart';
@@ -44,8 +45,8 @@ class _ProfilePageState extends State<ProfilePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('register.done'.tr())),
     );
-    // No home screen yet — return to the start of the flow.
-    context.router.popUntilRoot();
+    // Registration complete → go to the main shell, clearing the flow.
+    context.router.replaceAll([const MainShellRoute()]);
   }
 
   @override

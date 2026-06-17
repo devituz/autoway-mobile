@@ -28,5 +28,32 @@
     "male": "Male",
     "female": "Female",
     "done": "Registration completed successfully"
+  },
+  "home": {
+    "client": "Client",
+    "driver": "Driver",
+    "greeting": "Welcome, {name}!",
+    "top_up": "Top up",
+    "choose_service": "Choose a service",
+    "intercity_taxi": "Intercity taxi",
+    "post": "Post",
+    "companion_taxi": "Companion taxi",
+    "coming_soon": "Coming soon",
+    "active_orders": "Your active order",
+    "region_taxi": "Region taxi",
+    "parcel": "Parcel",
+    "status_pending": "Pending",
+    "status_active": "Active",
+    "departure_time": "Departure time",
+    "send_time": "Send time",
+    "price": "Price:",
+    "nav_home": "Home",
+    "nav_orders": "Orders",
+    "nav_profile": "Profile"
+  },
+  "notifications": {
+    "messages": "Messages",
+    "news": "News",
+    "sub_information": "Sub information"
   }
 }
