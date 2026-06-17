@@ -20,54 +20,55 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // The whole page scrolls — the dark header scrolls away with the content.
     return Scaffold(
       backgroundColor: AppColors.headerDark,
-      body: Column(
-        children: [
-          _Header(
-            role: _role,
-            onRoleChanged: (i) => setState(() => _role = i),
-            onBellTap: () => context.router.push(const NotificationsRoute()),
-          ),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
-              child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _Header(
+              role: _role,
+              onRoleChanged: (i) => setState(() => _role = i),
+              onBellTap: () => context.router.push(const NotificationsRoute()),
+            ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
                 color: AppColors.accent,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 24.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const _FeaturedGrid(),
-                      SizedBox(height: 14.h),
-                      const _CompactGrid(),
-                      SizedBox(height: 22.h),
-                      Text('home.my_active_orders'.tr(),
-                          style: AppText.bodyLarge.copyWith(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w700)),
-                      SizedBox(height: 14.h),
-                      _OrderCard(
-                        headerColor: AppColors.blue,
-                        status: 'home.status_driver_coming'.tr(),
-                        headerIcon: Icons.directions_car_filled,
-                        service: 'home.intercity_taxi'.tr(),
-                      ),
-                      SizedBox(height: 16.h),
-                      _OrderCard(
-                        headerColor: AppColors.statusGreen,
-                        status: 'home.status_accepted'.tr(),
-                        headerIcon: Icons.local_taxi,
-                        service: 'home.cargo'.tr(),
-                      ),
-                    ],
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(28.r)),
+              ),
+              padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 24.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _FeaturedGrid(),
+                  SizedBox(height: 14.h),
+                  const _CompactGrid(),
+                  SizedBox(height: 22.h),
+                  Text('home.my_active_orders'.tr(),
+                      style: AppText.bodyLarge.copyWith(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w700)),
+                  SizedBox(height: 14.h),
+                  _OrderCard(
+                    headerColor: AppColors.blue,
+                    status: 'home.status_driver_coming'.tr(),
+                    headerIcon: Icons.directions_car_filled,
+                    service: 'home.intercity_taxi'.tr(),
                   ),
-                ),
+                  SizedBox(height: 16.h),
+                  _OrderCard(
+                    headerColor: AppColors.statusGreen,
+                    status: 'home.status_accepted'.tr(),
+                    headerIcon: Icons.local_taxi,
+                    service: 'home.cargo'.tr(),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
