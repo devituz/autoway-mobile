@@ -32,8 +32,8 @@ class LanguagePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Title sits in the upper area (higher than centered).
-              SizedBox(height: 80.h),
+              // Title near the very top.
+              SizedBox(height: 24.h),
               Text(
                 'register.app_welcome'.tr(),
                 textAlign: TextAlign.center,
