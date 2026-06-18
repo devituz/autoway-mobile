@@ -74,5 +74,16 @@
     "call_center": "Contact call center",
     "commission_title": "Commission payments",
     "see_more": "See more (+{n})"
+  },
+  "filter": {
+    "title": "Filter",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "order_type": "Order type: {value}",
+    "all": "All",
+    "taxi": "Taxi",
+    "parcel": "Parcel",
+    "close": "Close",
+    "save": "Save"
   }
 }

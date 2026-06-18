@@ -74,5 +74,16 @@
     "call_center": "Call-center bilan aloqa",
     "commission_title": "Komissiya tolovlari",
     "see_more": "Yana korish (+{n})"
+  },
+  "filter": {
+    "title": "Filter",
+    "start_date": "Boshlangich sana",
+    "end_date": "Tugash sana",
+    "order_type": "Buyurtma turi: {value}",
+    "all": "Barchasi",
+    "taxi": "Taxi",
+    "parcel": "Posilka",
+    "close": "Yopish",
+    "save": "Saqlash"
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import '../widgets/payment_filter_sheet.dart';
 
 const _icons = 'assets/icons';
 
@@ -101,8 +102,12 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                                 color: AppColors.textDark,
                                 fontWeight: FontWeight.w600)),
                       ),
-                      SvgPicture.asset('$_icons/filter.svg',
-                          width: 24.sp, height: 24.sp),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => showPaymentFilter(context),
+                        child: SvgPicture.asset('$_icons/filter.svg',
+                            width: 24.sp, height: 24.sp),
+                      ),
                     ],
                   ),
                 ),
