@@ -36,6 +36,8 @@ class AppColors {
   static const Color textSecondary = Color(0xFF94A3B8); // Figma Gray/40
   static const Color textOnDark = Color(0xFFFFFFFF);
   static const Color danger = Color(0xFFBE123C); // Figma Destructive/70
+  static const Color logoutRed = Color(0xFFE11D48); // Figma Destructive/60
+  static const Color badgeRed = Color(0xFFF43F5E); // Figma Destructive/50
   static const Color creditGreen = Color(0xFF16A34A); // Figma Success/60
 
   // Borders

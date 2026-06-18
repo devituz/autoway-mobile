@@ -73,7 +73,16 @@
     "supported_by": "Supported by AvroWay",
     "call_center": "Contact call center",
     "commission_title": "Commission payments",
-    "see_more": "See more (+{n})"
+    "see_more": "See more (+{n})",
+    "messages": "Messages",
+    "rules": "Rules",
+    "video_guide": "Video guide",
+    "suggestions": "Suggestions"
+  },
+  "logout": {
+    "title": "Are you sure you want to log out?",
+    "stay": "No, stay",
+    "confirm": "Yes, log out"
   },
   "filter": {
     "title": "Filter",

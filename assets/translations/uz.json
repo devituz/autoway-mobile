@@ -73,7 +73,16 @@
     "supported_by": "AvroWay tomonidan qo‘llab quvvatlanadi",
     "call_center": "Call-center bilan aloqa",
     "commission_title": "Komissiya tolovlari",
-    "see_more": "Yana korish (+{n})"
+    "see_more": "Yana korish (+{n})",
+    "messages": "Xabarlar",
+    "rules": "Qoidalar",
+    "video_guide": "Video qollanma",
+    "suggestions": "Takliflar"
+  },
+  "logout": {
+    "title": "Ilovadan chiqishga aminmisiz?",
+    "stay": "Yoq, qolish",
+    "confirm": "Xa, chiqish"
   },
   "filter": {
     "title": "Filter",
