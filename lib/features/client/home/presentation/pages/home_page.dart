@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
@@ -60,7 +61,9 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const _FeaturedGrid(),
-                  SizedBox(height: 14.h),
+                  SizedBox(height: 12.h),
+                  const _CompactGrid(),
+                  SizedBox(height: 18.h),
                   Text('home.my_active_orders'.tr(),
                       style: AppText.bodyLarge.copyWith(
                           color: AppColors.textPrimary,
@@ -360,6 +363,8 @@ class _FeaturedGrid extends StatelessWidget {
     final items = [
       (label: 'home.intercity_taxi'.tr(), iconPath: 'assets/images/ill_taxi.png', arrow: false),
       (label: 'home.cargo'.tr(), iconPath: 'assets/images/ill_box.png', arrow: false),
+      (label: 'home.route_taxi'.tr(), iconPath: 'assets/images/ill_pin.png', arrow: true),
+      (label: 'home.energy'.tr(), iconPath: 'assets/images/ill_flash.svg', arrow: true),
     ];
     return GridView.builder(
       shrinkWrap: true,
@@ -414,11 +419,9 @@ class _FeaturedCard extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: Image.asset(
-              iconPath,
-              height: 60.h,
-              fit: BoxFit.contain,
-            ),
+            child: iconPath.endsWith('.svg')
+                ? SvgPicture.asset(iconPath, height: 56.h)
+                : Image.asset(iconPath, height: 56.h, fit: BoxFit.contain),
           ),
           if (showArrow)
             Align(
@@ -432,17 +435,16 @@ class _FeaturedCard extends StatelessWidget {
   }
 }
 
-// ignore: unused_element
 class _CompactGrid extends StatelessWidget {
   const _CompactGrid();
 
   @override
   Widget build(BuildContext context) {
     final items = [
-      (label: 'home.intercity_short'.tr(), icon: Icons.local_taxi_outlined, color: AppColors.blue),
-      (label: 'home.cargo'.tr(), icon: Icons.inventory_2_outlined, color: AppColors.orange),
-      (label: 'home.route_taxi'.tr(), icon: Icons.route_outlined, color: AppColors.pink),
-      (label: 'home.energy'.tr(), icon: Icons.bolt_outlined, color: AppColors.statusGreen),
+      (label: 'home.intercity_short'.tr(), icon: 'c_driving', color: AppColors.blue),
+      (label: 'home.cargo'.tr(), icon: 'c_box', color: AppColors.orange),
+      (label: 'home.route_taxi'.tr(), icon: 'c_routing', color: AppColors.pink),
+      (label: 'home.energy'.tr(), icon: 'c_flash', color: AppColors.statusGreen),
     ];
     return GridView.builder(
       shrinkWrap: true,
@@ -453,7 +455,7 @@ class _CompactGrid extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 12.h,
         crossAxisSpacing: 12.w,
-        childAspectRatio: 1.7,
+        childAspectRatio: 1.5,
       ),
       itemBuilder: (_, i) => _CompactCard(
         label: items[i].label,
@@ -466,14 +468,11 @@ class _CompactGrid extends StatelessWidget {
 
 class _CompactCard extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final String icon;
   final Color color;
 
-  const _CompactCard({
-    required this.label,
-    required this.icon,
-    required this.color,
-  });
+  const _CompactCard(
+      {required this.label, required this.icon, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -497,7 +496,10 @@ class _CompactCard extends StatelessWidget {
                   color: AppColors.accent,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 20.sp, color: color),
+                child: SvgPicture.asset('assets/icons/$icon.svg',
+                    width: 22.sp,
+                    height: 22.sp,
+                    colorFilter: ColorFilter.mode(color, BlendMode.srcIn)),
               ),
               Icon(Icons.chevron_right,
                   size: 20.sp, color: AppColors.textSecondary),
