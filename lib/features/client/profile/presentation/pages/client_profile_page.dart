@@ -20,8 +20,18 @@ class ClientProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: Column(
+      body: Stack(
         children: [
+          // Split background so over-scroll matches (dark top, light bottom).
+          Column(
+            children: [
+              Container(height: 250.h, color: AppColors.primary),
+              Expanded(child: Container(color: AppColors.lightGrey)),
+            ],
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
           // Dark header with rounded bottom (Figma 2232:24130).
           Container(
             decoration: BoxDecoration(
@@ -179,14 +189,12 @@ class ClientProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          // Body.
-          Expanded(
-            child: Container(
-              color: AppColors.lightGrey,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(8.w, 8.h, 8.w, 16.h),
-                child: Column(
-                  children: [
+          // Body (scrolls together with the header).
+          Container(
+            color: AppColors.lightGrey,
+            padding: EdgeInsets.fromLTRB(8.w, 8.h, 8.w, 16.h),
+            child: Column(
+              children: [
                     _MenuCard(items: [
                       _MenuData(
                         'orders_history',
@@ -227,6 +235,7 @@ class ClientProfilePage extends StatelessWidget {
                   ],
                 ),
               ),
+              ],
             ),
           ),
         ],
