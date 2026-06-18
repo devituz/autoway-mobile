@@ -1,18 +1,16 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import '../widgets/change_phone_sheet.dart';
 
 const _icons = 'assets/icons';
 
-/// Edit profile (Profil o'zgartirish) — Figma node 2066:14771.
+/// Edit profile (Profil o'zgartirish) — Figma node 2232:23771.
 @RoutePage()
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -22,55 +20,15 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  static const _otpLength = 4;
-  static const _resendSeconds = 59;
-
-  final _name = TextEditingController();
-  final _phone = TextEditingController();
-  final _otpControllers =
-      List.generate(_otpLength, (_) => TextEditingController());
-  final _otpFocusNodes = List.generate(_otpLength, (_) => FocusNode());
-
-  Timer? _timer;
-  int _secondsLeft = 0;
+  final _name = TextEditingController(text: 'Abbos Tursunov');
 
   bool _isMale = true;
   DateTime _birth = DateTime(2001, 1, 10);
 
-  void _startCountdown() {
-    _timer?.cancel();
-    setState(() => _secondsLeft = _resendSeconds);
-    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (_secondsLeft <= 1) {
-        t.cancel();
-        setState(() => _secondsLeft = 0);
-      } else {
-        setState(() => _secondsLeft--);
-      }
-    });
-  }
-
   @override
   void dispose() {
-    _timer?.cancel();
     _name.dispose();
-    _phone.dispose();
-    for (final c in _otpControllers) {
-      c.dispose();
-    }
-    for (final f in _otpFocusNodes) {
-      f.dispose();
-    }
     super.dispose();
-  }
-
-  void _onOtpChanged(int index, String value) {
-    if (value.isNotEmpty && index < _otpLength - 1) {
-      _otpFocusNodes[index + 1].requestFocus();
-    } else if (value.isEmpty && index > 0) {
-      _otpFocusNodes[index - 1].requestFocus();
-    }
-    setState(() {});
   }
 
   String _formatDate(DateTime d) {
@@ -91,6 +49,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> _changePhone() async {
+    await showChangePhoneSheet(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +65,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
               child: Column(
                 children: [
-                  _buildPhotoInfoCard(),
+                  _buildInfoCard(),
                   SizedBox(height: 16.h),
                   _buildPhoneCard(),
                 ],
@@ -111,7 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
           _BottomBar(
-            onBack: () => context.router.maybePop(),
+            onClose: () => context.router.maybePop(),
             onSave: () => context.router.maybePop(),
           ),
         ],
@@ -119,33 +81,61 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildPhotoInfoCard() {
+  Widget _buildInfoCard() {
     return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('edit.photo'.tr()),
-          SizedBox(height: 8.h),
-          _PhotoPicker(),
-          SizedBox(height: 8.h),
           _sectionTitle('edit.info'.tr()),
-          SizedBox(height: 8.h),
+          SizedBox(height: 12.h),
+          Center(
+            child: Column(
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {},
+                  child: SizedBox(
+                    width: 130.r,
+                    height: 130.r,
+                    child: CustomPaint(
+                      painter: _DashedCirclePainter(
+                        color: const Color(0xFF94A3B8),
+                        strokeWidth: 1,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: 28.sp,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'edit.upload_photo'.tr(),
+                  textAlign: TextAlign.center,
+                  style: AppText.label
+                      .copyWith(fontSize: 12.sp, color: AppColors.textMuted),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 12.h),
           _LabeledField(
             label: 'edit.name'.tr(),
             child: TextField(
               controller: _name,
               style: AppText.subtitle
                   .copyWith(fontSize: 14.sp, color: AppColors.textDark),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 isCollapsed: true,
                 border: InputBorder.none,
-                hintText: 'Value',
-                hintStyle: AppText.subtitle
-                    .copyWith(fontSize: 14.sp, color: AppColors.textSecondary),
               ),
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 12.h),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: _pickBirthDate,
@@ -158,7 +148,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 12.h),
           _GenderToggle(
             isMale: _isMale,
             onChanged: (male) => setState(() => _isMale = male),
@@ -171,104 +161,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget _buildPhoneCard() {
     return _Card(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: _sectionTitle('edit.phone_section'.tr()),
-          ),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              Expanded(
-                child: _LabeledField(
-                  label: 'edit.new_phone'.tr(),
-                  child: Row(
-                    children: [
-                      Text('+998 ',
-                          style: AppText.subtitle.copyWith(
-                              fontSize: 14.sp, color: AppColors.textDark)),
-                      Expanded(
-                        child: TextField(
-                          controller: _phone,
-                          keyboardType: TextInputType.number,
-                          maxLength: 9,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          style: AppText.subtitle.copyWith(
-                              fontSize: 14.sp, color: AppColors.textDark),
-                          decoration: const InputDecoration(
-                            isCollapsed: true,
-                            border: InputBorder.none,
-                            counterText: '',
-                            hintText: '',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 8.w),
-              GestureDetector(
-                onTap: _startCountdown,
-                child: Container(
-                  width: 106.w,
-                  height: 48.h,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.textDark,
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Text('edit.send_code'.tr(),
-                      textAlign: TextAlign.center,
-                      style: AppText.subtitle.copyWith(
-                          fontSize: 14.sp,
-                          color: AppColors.textOnDark,
-                          fontWeight: FontWeight.w500)),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              for (var i = 0; i < _otpLength; i++) ...[
-                if (i > 0) SizedBox(width: 8.w),
+          _sectionTitle('edit.phone_section'.tr()),
+          SizedBox(height: 12.h),
+          Container(
+            height: 48.h,
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            decoration: BoxDecoration(
+              color: AppColors.fieldFill,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Row(
+              children: [
                 Expanded(
-                  child: _OtpBox(
-                    controller: _otpControllers[i],
-                    focusNode: _otpFocusNodes[i],
-                    onChanged: (v) => _onOtpChanged(i, v),
+                  child: Text(
+                    '+998 95 098 5665',
+                    style: AppText.subtitle
+                        .copyWith(fontSize: 14.sp, color: AppColors.textDark),
                   ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _changePhone,
+                  child: SvgPicture.asset('$_icons/edit.svg',
+                      width: 20.sp, height: 20.sp),
                 ),
               ],
-            ],
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'edit.seconds'.tr(namedArgs: {'n': '$_secondsLeft'}),
-            textAlign: TextAlign.center,
-            style: AppText.subtitle
-                .copyWith(fontSize: 16.sp, color: AppColors.textDark),
-          ),
-          SizedBox(height: 8.h),
-          GestureDetector(
-            onTap: _secondsLeft == 0 ? _startCountdown : null,
-            child: Container(
-              width: 173.w,
-              height: 48.h,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.fieldFill,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Text('edit.resend'.tr(),
-                  style: AppText.subtitle.copyWith(
-                      fontSize: 14.sp,
-                      color: AppColors.textDark,
-                      fontWeight: FontWeight.w500)),
             ),
           ),
         ],
@@ -313,8 +232,17 @@ class _Header extends StatelessWidget {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => context.router.maybePop(),
-                  child: SvgPicture.asset('$_icons/arrow_left.svg',
-                      width: 24.sp, height: 24.sp),
+                  child: Container(
+                    width: 36.r,
+                    height: 36.r,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: SvgPicture.asset('$_icons/arrow_left.svg',
+                        width: 20.sp, height: 20.sp),
+                  ),
                 ),
                 Expanded(
                   child: Text(title,
@@ -324,8 +252,7 @@ class _Header extends StatelessWidget {
                           color: AppColors.textDark,
                           fontWeight: FontWeight.w600)),
                 ),
-                SvgPicture.asset('$_icons/bell.svg',
-                    width: 24.sp, height: 24.sp),
+                SizedBox(width: 36.r),
               ],
             ),
           ),
@@ -384,42 +311,11 @@ class _LabeledField extends StatelessWidget {
   }
 }
 
-class _PhotoPicker extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 128.h,
-      child: CustomPaint(
-        painter: _DashedBorderPainter(
-          color: AppColors.textSecondary,
-          radius: 20.r,
-          strokeWidth: 1,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8FAFC),
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          alignment: Alignment.center,
-          child: SvgPicture.asset('$_icons/add_photo.svg',
-              width: 48.sp, height: 48.sp),
-        ),
-      ),
-    );
-  }
-}
-
-class _DashedBorderPainter extends CustomPainter {
+class _DashedCirclePainter extends CustomPainter {
   final Color color;
-  final double radius;
   final double strokeWidth;
 
-  _DashedBorderPainter({
-    required this.color,
-    required this.radius,
-    required this.strokeWidth,
-  });
+  _DashedCirclePainter({required this.color, required this.strokeWidth});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -428,11 +324,11 @@ class _DashedBorderPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke;
 
-    final rrect = RRect.fromRectAndRadius(
-      Offset.zero & size,
-      Radius.circular(radius),
-    );
-    final path = Path()..addRRect(rrect);
+    final path = Path()
+      ..addOval(Rect.fromCircle(
+        center: size.center(Offset.zero),
+        radius: size.shortestSide / 2,
+      ));
 
     const dashWidth = 6.0;
     const dashGap = 4.0;
@@ -450,9 +346,8 @@ class _DashedBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DashedBorderPainter oldDelegate) {
+  bool shouldRepaint(covariant _DashedCirclePainter oldDelegate) {
     return oldDelegate.color != color ||
-        oldDelegate.radius != radius ||
         oldDelegate.strokeWidth != strokeWidth;
   }
 }
@@ -526,57 +421,11 @@ class _GenderTab extends StatelessWidget {
   }
 }
 
-class _OtpBox extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final ValueChanged<String> onChanged;
-
-  const _OtpBox({
-    required this.controller,
-    required this.focusNode,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 64.h,
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        onChanged: onChanged,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        style: AppText.subtitle.copyWith(
-            fontSize: 22.sp,
-            color: AppColors.textDark,
-            fontWeight: FontWeight.w500),
-        decoration: InputDecoration(
-          counterText: '',
-          filled: true,
-          fillColor: AppColors.fieldFill,
-          contentPadding: EdgeInsets.zero,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18.r),
-            borderSide: const BorderSide(color: AppColors.border),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18.r),
-            borderSide: const BorderSide(color: AppColors.border),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _BottomBar extends StatelessWidget {
-  final VoidCallback onBack;
+  final VoidCallback onClose;
   final VoidCallback onSave;
 
-  const _BottomBar({required this.onBack, required this.onSave});
+  const _BottomBar({required this.onClose, required this.onSave});
 
   @override
   Widget build(BuildContext context) {
@@ -598,17 +447,17 @@ class _BottomBar extends StatelessWidget {
             children: [
               Expanded(
                 child: _BarButton(
-                  label: 'edit.back'.tr(),
+                  label: 'edit.close'.tr(),
                   background: AppColors.fieldFill,
                   textColor: AppColors.textDark,
-                  onTap: onBack,
+                  onTap: onClose,
                 ),
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: _BarButton(
                   label: 'edit.save'.tr(),
-                  background: AppColors.textDark,
+                  background: AppColors.blue,
                   textColor: AppColors.textOnDark,
                   onTap: onSave,
                 ),

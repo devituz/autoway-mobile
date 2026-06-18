@@ -116,6 +116,15 @@
     "seconds": "{n} soniya",
     "resend": "Qayta jo‘natish",
     "back": "Ortga",
-    "save": "Saqlash"
+    "save": "Saqlash",
+    "upload_photo": "Profil ranmingizni yuklang",
+    "close": "Yopish"
+  },
+  "change_phone": {
+    "title": "Telefon raqaminmi ozgartirish",
+    "subtitle": "Yangi telefon raqamingizni kiriting",
+    "send_code": "Kod jonatish",
+    "close": "Yopish",
+    "continue": "Davom etish"
   }
 }

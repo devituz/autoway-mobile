@@ -116,6 +116,15 @@
     "seconds": "{n} seconds",
     "resend": "Resend",
     "back": "Back",
-    "save": "Save"
+    "save": "Save",
+    "upload_photo": "Upload your profile photo",
+    "close": "Close"
+  },
+  "change_phone": {
+    "title": "Change phone number",
+    "subtitle": "Enter your new phone number",
+    "send_code": "Send code",
+    "close": "Close",
+    "continue": "Continue"
   }
 }
