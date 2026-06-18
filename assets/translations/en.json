@@ -126,5 +126,30 @@
     "send_code": "Send code",
     "close": "Close",
     "continue": "Continue"
+  },
+  "line": {
+    "title": "Go online",
+    "new_client": "New client",
+    "new_client_msg": "A new client request has arrived. Respond in time so your rating doesn't drop!",
+    "block_msg": "A block message usually informs about the inability to access services or content.",
+    "pickup_client": "Pick up client from address",
+    "pickup_parcel": "Pick up parcel from address",
+    "client_price_offer": "Client price offer",
+    "auto_accept": "Auto-accept",
+    "services": "Services",
+    "taxi": "Taxi",
+    "seat_price": "Seat price",
+    "parcels": "Parcels",
+    "parcel_price": "Parcel price",
+    "seats_status": "Seats status",
+    "seats_hint": "Mark seats for online acceptance"
+  },
+  "extra": {
+    "title": "Additional",
+    "planned_taxi": "Planned taxi",
+    "companion": "Companion ride",
+    "msg": "A new client request has arrived. Your rating",
+    "close": "Close",
+    "continue": "Continue"
   }
 }

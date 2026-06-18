@@ -7,6 +7,7 @@ import '../../features/client/auth/register/presentation/pages/profile_page.dart
 import '../../features/client/auth/register/presentation/pages/user_type_page.dart';
 import '../../features/client/home/presentation/pages/main_shell_page.dart';
 import '../../features/client/home/presentation/pages/notifications_page.dart';
+import '../../features/client/orders/presentation/pages/go_online_page.dart';
 import '../../features/client/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/client/profile/presentation/pages/payment_history_page.dart';
 import '../../features/client/profile/presentation/pages/topup_page.dart';
@@ -27,5 +28,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: PaymentHistoryRoute.page),
     AutoRoute(page: TopUpRoute.page),
     AutoRoute(page: EditProfileRoute.page),
+    AutoRoute(page: GoOnlineRoute.page),
   ];
 }

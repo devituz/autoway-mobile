@@ -126,5 +126,30 @@
     "send_code": "Kod jonatish",
     "close": "Yopish",
     "continue": "Davom etish"
+  },
+  "line": {
+    "title": "Liniyaga chiqish",
+    "new_client": "Yangi mijoz",
+    "new_client_msg": "Yangi mijozdan taklif kelib tushdi. Retiningiz tushib ketmaslik uchun vaqtida etiboring bering!",
+    "block_msg": "Bloklash haqidagi matn odatda xizmat yoki kontentdan foydalanish imkoni yo‘qligini bildiradi.",
+    "pickup_client": "Mijozni manzilidan olib ketish",
+    "pickup_parcel": "Posilkani manzilidan olib ketish",
+    "client_price_offer": "Mijoz narx taklifi",
+    "auto_accept": "Avto qabul",
+    "services": "Hizmatlar",
+    "taxi": "Taxi",
+    "seat_price": "Orindiq narxi",
+    "parcels": "Posilkalar",
+    "parcel_price": "Pasilka narxi",
+    "seats_status": "Orindiqlar holati",
+    "seats_hint": "Onlayn qabul qilish uchun orindiqlarni belgilang"
+  },
+  "extra": {
+    "title": "Qo‘shimcha",
+    "planned_taxi": "Rejali taksi",
+    "companion": "Yo‘l-yo‘lakay ketish",
+    "msg": "Yangi mijozdan taklif kelib tushdi. Retiningiz tushib",
+    "close": "Yopish",
+    "continue": "Davom etish"
   }
 }

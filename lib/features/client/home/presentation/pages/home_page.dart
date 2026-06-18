@@ -141,7 +141,10 @@ class _Header extends StatelessWidget {
             SizedBox(height: 14.h),
             const _DashedLine(),
             SizedBox(height: 14.h),
-            _ActiveOrderBanner(service: 'home.intercity_taxi'.tr()),
+            _ActiveOrderBanner(
+              service: 'home.intercity_taxi'.tr(),
+              onTap: () => context.router.push(const GoOnlineRoute()),
+            ),
           ],
         ),
       ),
@@ -323,11 +326,15 @@ class _DashedLine extends StatelessWidget {
 
 class _ActiveOrderBanner extends StatelessWidget {
   final String service;
-  const _ActiveOrderBanner({required this.service});
+  final VoidCallback onTap;
+  const _ActiveOrderBanner({required this.service, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
       decoration: BoxDecoration(
@@ -348,6 +355,7 @@ class _ActiveOrderBanner extends StatelessWidget {
           SizedBox(width: 6.w),
           Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textOnDark),
         ],
+      ),
       ),
     );
   }

@@ -27,6 +27,22 @@ class EditProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [GoOnlinePage]
+class GoOnlineRoute extends PageRouteInfo<void> {
+  const GoOnlineRoute({List<PageRouteInfo>? children})
+    : super(GoOnlineRoute.name, initialChildren: children);
+
+  static const String name = 'GoOnlineRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const GoOnlinePage();
+    },
+  );
+}
+
+/// generated route for
 /// [LanguagePage]
 class LanguageRoute extends PageRouteInfo<void> {
   const LanguageRoute({List<PageRouteInfo>? children})
