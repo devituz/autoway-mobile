@@ -123,6 +123,22 @@ class ProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TopUpPage]
+class TopUpRoute extends PageRouteInfo<void> {
+  const TopUpRoute({List<PageRouteInfo>? children})
+    : super(TopUpRoute.name, initialChildren: children);
+
+  static const String name = 'TopUpRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TopUpPage();
+    },
+  );
+}
+
+/// generated route for
 /// [UserTypePage]
 class UserTypeRoute extends PageRouteInfo<void> {
   const UserTypeRoute({List<PageRouteInfo>? children})

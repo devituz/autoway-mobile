@@ -85,5 +85,12 @@
     "parcel": "Posilka",
     "close": "Yopish",
     "save": "Saqlash"
+  },
+  "topup": {
+    "title": "Balans to‘ldirish",
+    "balance": "Balans:",
+    "amount": "Summa",
+    "payment_method": "Tolov usuli",
+    "submit": "Toldirish"
   }
 }

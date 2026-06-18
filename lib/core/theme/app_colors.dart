@@ -19,6 +19,7 @@ class AppColors {
   static const Color onboardingDark = Color(0xFF171E31); // screen 1 navy bg
   static const Color mutedButton = Color(0xFF64748B); // screen 1 "Davom etish"
   static const Color fieldFill = Color(0xFFF1F5F9); // inputs & unselected cards
+  static const Color softGrey = Color(0xFFF6F6F6); // payment option rows
   static const Color accentYellow = Color(0xFFFFC727); // avatar / highlights
 
   // Home / status accents

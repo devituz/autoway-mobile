@@ -85,5 +85,12 @@
     "parcel": "Parcel",
     "close": "Close",
     "save": "Save"
+  },
+  "topup": {
+    "title": "Top up balance",
+    "balance": "Balance:",
+    "amount": "Amount",
+    "payment_method": "Payment method",
+    "submit": "Top up"
   }
 }

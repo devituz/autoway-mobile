@@ -8,6 +8,7 @@ import '../../features/client/auth/register/presentation/pages/user_type_page.da
 import '../../features/client/home/presentation/pages/main_shell_page.dart';
 import '../../features/client/home/presentation/pages/notifications_page.dart';
 import '../../features/client/profile/presentation/pages/payment_history_page.dart';
+import '../../features/client/profile/presentation/pages/topup_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -23,5 +24,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: MainShellRoute.page),
     AutoRoute(page: NotificationsRoute.page),
     AutoRoute(page: PaymentHistoryRoute.page),
+    AutoRoute(page: TopUpRoute.page),
   ];
 }

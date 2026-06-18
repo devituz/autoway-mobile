@@ -191,7 +191,9 @@ class _UserCard extends StatelessWidget {
               SizedBox(width: 12.w),
               Expanded(
                 child: _PillButton(
-                    label: 'profile.top_up'.tr(), filled: true, onTap: () {}),
+                    label: 'profile.top_up'.tr(),
+                    filled: true,
+                    onTap: () => context.router.push(const TopUpRoute())),
               ),
             ],
           ),
