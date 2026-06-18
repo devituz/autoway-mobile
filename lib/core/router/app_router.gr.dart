@@ -75,6 +75,22 @@ class OtpRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PaymentHistoryPage]
+class PaymentHistoryRoute extends PageRouteInfo<void> {
+  const PaymentHistoryRoute({List<PageRouteInfo>? children})
+    : super(PaymentHistoryRoute.name, initialChildren: children);
+
+  static const String name = 'PaymentHistoryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const PaymentHistoryPage();
+    },
+  );
+}
+
+/// generated route for
 /// [PhonePage]
 class PhoneRoute extends PageRouteInfo<void> {
   const PhoneRoute({List<PageRouteInfo>? children})

@@ -2,10 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
-import 'account_page.dart';
+import '../../../profile/presentation/pages/client_profile_page.dart';
 import 'home_page.dart';
 import 'orders_page.dart';
 
@@ -22,7 +23,7 @@ class MainShellPage extends StatefulWidget {
 class _MainShellPageState extends State<MainShellPage> {
   int _index = 0;
 
-  static const _tabs = [HomePage(), OrdersPage(), AccountPage()];
+  static const _tabs = [HomePage(), OrdersPage(), ClientProfilePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,9 @@ class _BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (icon: Icons.apps, label: 'home.nav_home'.tr()),
-      (icon: Icons.directions_car_outlined, label: 'home.nav_orders'.tr()),
-      (icon: Icons.person_outline, label: 'home.nav_profile'.tr()),
+      (icon: 'nav_home', label: 'home.nav_home'.tr()),
+      (icon: 'nav_orders', label: 'home.nav_orders'.tr()),
+      (icon: 'nav_profile', label: 'home.nav_profile'.tr()),
     ];
     return Container(
       decoration: BoxDecoration(
@@ -78,7 +79,7 @@ class _BottomNav extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label;
   final bool active;
   final VoidCallback onTap;
@@ -92,7 +93,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? AppColors.primary : AppColors.textSecondary;
+    final color = active ? AppColors.textDark : AppColors.textSecondary;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -101,10 +102,14 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 24.sp, color: color),
+            SvgPicture.asset('assets/icons/$icon.svg',
+                width: 24.sp,
+                height: 24.sp,
+                colorFilter: ColorFilter.mode(color, BlendMode.srcIn)),
             SizedBox(height: 4.h),
             Text(label,
                 style: AppText.label.copyWith(
+                    fontSize: 10.sp,
                     color: color,
                     fontWeight: active ? FontWeight.w600 : FontWeight.w400)),
           ],

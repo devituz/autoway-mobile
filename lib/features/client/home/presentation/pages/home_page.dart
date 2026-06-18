@@ -22,30 +22,45 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // The whole page scrolls — the dark header scrolls away with the content.
     return Scaffold(
-      backgroundColor: AppColors.headerDark,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _Header(
-              role: _role,
-              onRoleChanged: (i) => setState(() => _role = i),
-              onBellTap: () => context.router.push(const NotificationsRoute()),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.accent,
-                borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(28.r)),
+      backgroundColor: AppColors.accent,
+      body: Stack(
+        children: [
+          // Background split: top is dark, bottom is white.
+          // This ensures that top overscroll bounces show dark and bottom overscroll shows white.
+          Column(
+            children: [
+              Container(
+                height: 380.h,
+                color: AppColors.headerDark,
               ),
+              Expanded(
+                child: Container(
+                  color: AppColors.accent,
+                ),
+              ),
+            ],
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _Header(
+                  role: _role,
+                  onRoleChanged: (i) => setState(() => _role = i),
+                  onBellTap: () => context.router.push(const NotificationsRoute()),
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(28.r)),
+                  ),
               padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 24.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const _FeaturedGrid(),
                   SizedBox(height: 14.h),
-                  const _CompactGrid(),
-                  SizedBox(height: 22.h),
                   Text('home.my_active_orders'.tr(),
                       style: AppText.bodyLarge.copyWith(
                           color: AppColors.textPrimary,
@@ -70,7 +85,9 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-    );
+    ],
+  ),
+);
   }
 }
 
@@ -341,14 +358,13 @@ class _FeaturedGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (label: 'home.intercity_taxi'.tr(), icon: Icons.local_taxi, color: AppColors.accentYellow, arrow: false),
-      (label: 'home.cargo'.tr(), icon: Icons.inventory_2, color: AppColors.orange, arrow: false),
-      (label: 'home.route_taxi'.tr(), icon: Icons.location_on, color: AppColors.pink, arrow: true),
-      (label: 'home.energy'.tr(), icon: Icons.bolt, color: AppColors.blue, arrow: true),
+      (label: 'home.intercity_taxi'.tr(), iconPath: 'assets/icons/taxi.png', arrow: false),
+      (label: 'home.cargo'.tr(), iconPath: 'assets/icons/yuk.png', arrow: false),
     ];
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -358,8 +374,7 @@ class _FeaturedGrid extends StatelessWidget {
       ),
       itemBuilder: (_, i) => _FeaturedCard(
         label: items[i].label,
-        icon: items[i].icon,
-        color: items[i].color,
+        iconPath: items[i].iconPath,
         showArrow: items[i].arrow,
       ),
     );
@@ -368,14 +383,12 @@ class _FeaturedGrid extends StatelessWidget {
 
 class _FeaturedCard extends StatelessWidget {
   final String label;
-  final IconData icon;
-  final Color color;
+  final String iconPath;
   final bool showArrow;
 
   const _FeaturedCard({
     required this.label,
-    required this.icon,
-    required this.color,
+    required this.iconPath,
     required this.showArrow,
   });
 
@@ -401,7 +414,12 @@ class _FeaturedCard extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: Icon(icon, size: 52.sp, color: color),
+            child: Image.asset(
+              iconPath,
+              width: 52.r,
+              height: 52.r,
+              fit: BoxFit.contain,
+            ),
           ),
           if (showArrow)
             Align(
@@ -415,6 +433,7 @@ class _FeaturedCard extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _CompactGrid extends StatelessWidget {
   const _CompactGrid();
 
@@ -429,6 +448,7 @@ class _CompactGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

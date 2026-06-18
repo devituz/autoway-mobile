@@ -91,10 +91,10 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/icons/
     - assets/translations/
-    # Poppins bundled locally so google_fonts serves it offline (no runtime
-    # network fetch). Filenames match the variants google_fonts expects.
     - assets/google_fonts/
+    - assets/icons/
 
 flutter_native_splash:
   color: "#282828"

@@ -54,5 +54,25 @@
     "messages": "Сообщения",
     "news": "Новости",
     "sub_information": "Доп. информация"
+  },
+  "profile": {
+    "title": "Профиль",
+    "id": "ID: {id}",
+    "balance": "Баланс:",
+    "payment_history": "История платежей",
+    "top_up": "Пополнить",
+    "orders_history": "История заказов",
+    "app_language": "Язык приложения",
+    "settings": "Настройки",
+    "guide": "Руководство",
+    "about": "О проекте",
+    "public_offer": "Публичная оферта",
+    "privacy": "Политика конфиденциальности",
+    "logout": "Выйти",
+    "follow_us": "Следите за нами в социальных сетях",
+    "supported_by": "При поддержке AvroWay",
+    "call_center": "Связь с колл-центром",
+    "commission_title": "Комиссионные платежи",
+    "see_more": "Показать ещё (+{n})"
   }
 }

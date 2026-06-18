@@ -54,5 +54,25 @@
     "messages": "Messages",
     "news": "News",
     "sub_information": "Sub information"
+  },
+  "profile": {
+    "title": "Profile",
+    "id": "ID: {id}",
+    "balance": "Balance:",
+    "payment_history": "Payment history",
+    "top_up": "Top up",
+    "orders_history": "Orders history",
+    "app_language": "App language",
+    "settings": "Settings",
+    "guide": "Guide",
+    "about": "About the project",
+    "public_offer": "Public offer",
+    "privacy": "Privacy policy",
+    "logout": "Log out",
+    "follow_us": "Follow us on social media",
+    "supported_by": "Supported by AvroWay",
+    "call_center": "Contact call center",
+    "commission_title": "Commission payments",
+    "see_more": "See more (+{n})"
   }
 }

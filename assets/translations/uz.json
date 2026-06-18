@@ -54,5 +54,25 @@
     "messages": "Xabarlar",
     "news": "Yangiliklar",
     "sub_information": "Sub information"
+  },
+  "profile": {
+    "title": "Profile",
+    "id": "ID: {id}",
+    "balance": "Balans:",
+    "payment_history": "To‘lovlar tarixi",
+    "top_up": "Toldirish",
+    "orders_history": "Buyurtmalar tarixi",
+    "app_language": "Ilova tili",
+    "settings": "Sozlamalar",
+    "guide": "Qollanma",
+    "about": "Loyiha haqida",
+    "public_offer": "Ommaviy offerta",
+    "privacy": "Maxfiylik siyosati",
+    "logout": "Chiqish",
+    "follow_us": "Bizni ijtimoiy tarmoqlarda kuzatib boring",
+    "supported_by": "AvroWay tomonidan qo‘llab quvvatlanadi",
+    "call_center": "Call-center bilan aloqa",
+    "commission_title": "Komissiya tolovlari",
+    "see_more": "Yana korish (+{n})"
   }
 }

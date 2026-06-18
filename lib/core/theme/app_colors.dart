@@ -26,12 +26,16 @@ class AppColors {
   static const Color statusGreen = Color(0xFF2FBF71); // "accepted"
   static const Color orange = Color(0xFFF59E0B); // cargo illustration
   static const Color pink = Color(0xFFEF4444); // route illustration
-  static const Color headerDark = Color(0xFF1B2440); // home dark header
+  static const Color headerDark = Color(0xFF1E293B); // home dark header
 
   // Text
   static const Color textPrimary = Color(0xFF1E293B);
-  static const Color textSecondary = Color(0xFF94A3B8);
+  static const Color textDark = Color(0xFF0F172A); // Figma Gray/90
+  static const Color textMuted = Color(0xFF64748B); // Figma Gray/50
+  static const Color textSecondary = Color(0xFF94A3B8); // Figma Gray/40
   static const Color textOnDark = Color(0xFFFFFFFF);
+  static const Color danger = Color(0xFFBE123C); // Figma Destructive/70
+  static const Color creditGreen = Color(0xFF16A34A); // Figma Success/60
 
   // Borders
   static const Color border = Color(0xFFE2E8F0);
