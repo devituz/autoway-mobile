@@ -25,6 +25,7 @@ class AppColors {
   // Home / status accents
   static const Color blue = Color(0xFF2F6BFF); // CTA banner, "driver coming"
   static const Color statusGreen = Color(0xFF2FBF71); // "accepted"
+  static const Color statusOrange = Color(0xFFF5A623); // "pending"
   static const Color orange = Color(0xFFF59E0B); // cargo illustration
   static const Color pink = Color(0xFFEF4444); // route illustration
   static const Color headerDark = Color(0xFF1E293B); // home dark header

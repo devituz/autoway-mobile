@@ -6,9 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import '../../../orders/presentation/pages/orders_page.dart';
 import '../../../profile/presentation/pages/client_profile_page.dart';
 import 'home_page.dart';
-import 'orders_page.dart';
 
 /// App shell hosting the bottom navigation (Bosh sahifa / Buyurtmalar / Profil).
 /// Tabs are kept alive via [IndexedStack] so their scroll/state persists.

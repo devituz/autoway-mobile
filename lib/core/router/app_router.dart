@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 
 import '../../features/client/auth/register/presentation/pages/language_page.dart';
 import '../../features/client/auth/register/presentation/pages/otp_page.dart';
@@ -7,7 +8,9 @@ import '../../features/client/auth/register/presentation/pages/profile_page.dart
 import '../../features/client/auth/register/presentation/pages/user_type_page.dart';
 import '../../features/client/home/presentation/pages/main_shell_page.dart';
 import '../../features/client/home/presentation/pages/notifications_page.dart';
+import '../../features/client/orders/domain/order_status.dart';
 import '../../features/client/orders/presentation/pages/go_online_page.dart';
+import '../../features/client/orders/presentation/pages/order_detail_page.dart';
 import '../../features/client/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/client/profile/presentation/pages/payment_history_page.dart';
 import '../../features/client/profile/presentation/pages/topup_page.dart';
@@ -29,5 +32,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: TopUpRoute.page),
     AutoRoute(page: EditProfileRoute.page),
     AutoRoute(page: GoOnlineRoute.page),
+    AutoRoute(page: OrderDetailRoute.page),
   ];
 }
