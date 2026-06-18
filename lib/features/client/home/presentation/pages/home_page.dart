@@ -358,8 +358,8 @@ class _FeaturedGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (label: 'home.intercity_taxi'.tr(), iconPath: 'assets/icons/taxi.png', arrow: false),
-      (label: 'home.cargo'.tr(), iconPath: 'assets/icons/yuk.png', arrow: false),
+      (label: 'home.intercity_taxi'.tr(), iconPath: 'assets/images/ill_taxi.png', arrow: false),
+      (label: 'home.cargo'.tr(), iconPath: 'assets/images/ill_box.png', arrow: false),
     ];
     return GridView.builder(
       shrinkWrap: true,
@@ -416,8 +416,7 @@ class _FeaturedCard extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: Image.asset(
               iconPath,
-              width: 52.r,
-              height: 52.r,
+              height: 60.h,
               fit: BoxFit.contain,
             ),
           ),
