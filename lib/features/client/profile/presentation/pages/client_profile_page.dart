@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import '../widgets/language_sheet.dart';
 
 const _icons = 'assets/icons';
 
@@ -56,10 +57,14 @@ class ClientProfilePage extends StatelessWidget {
                   const _UserCard(
                       name: 'Jamshid Sobirov', id: '78946', balance: '50,000'),
                   SizedBox(height: 12.h),
-                  _MenuCard(items: const [
-                    _MenuData('orders_history', 'profile.orders_history'),
-                    _MenuData('language', 'profile.app_language'),
-                    _MenuData('settings', 'profile.settings'),
+                  _MenuCard(items: [
+                    _MenuData(
+                        'orders_history', 'profile.orders_history',
+                        onTap: () =>
+                            context.router.push(const PaymentHistoryRoute())),
+                    _MenuData('language', 'profile.app_language',
+                        onTap: () => _openLanguageSheet(context)),
+                    const _MenuData('settings', 'profile.settings'),
                   ]),
                   SizedBox(height: 12.h),
                   _MenuCard(items: const [
@@ -78,6 +83,16 @@ class ClientProfilePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _openLanguageSheet(BuildContext context) async {
+    final code = await showLanguageSheet(
+      context,
+      current: context.locale.languageCode,
+    );
+    if (code != null && context.mounted) {
+      await context.setLocale(Locale(code));
+    }
   }
 }
 
@@ -143,15 +158,19 @@ class _UserCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
-              Container(
-                width: 44.r,
-                height: 44.r,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.fieldFill,
-                  borderRadius: BorderRadius.circular(16.r),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => context.router.push(const EditProfileRoute()),
+                child: Container(
+                  width: 44.r,
+                  height: 44.r,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.fieldFill,
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child: _svg('edit'),
                 ),
-                child: _svg('edit'),
               ),
             ],
           ),
@@ -236,7 +255,8 @@ class _MenuData {
   final String icon;
   final String labelKey;
   final bool danger;
-  const _MenuData(this.icon, this.labelKey, {this.danger = false});
+  final VoidCallback? onTap;
+  const _MenuData(this.icon, this.labelKey, {this.danger = false, this.onTap});
 }
 
 class _MenuCard extends StatelessWidget {
@@ -265,7 +285,7 @@ class _MenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: data.onTap ?? () {},
       borderRadius: BorderRadius.circular(16.r),
       child: SizedBox(
         height: 56.h,

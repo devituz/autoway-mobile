@@ -92,5 +92,21 @@
     "amount": "Summa",
     "payment_method": "Tolov usuli",
     "submit": "Toldirish"
+  },
+  "edit": {
+    "title": "Profil ozgartirish",
+    "photo": "Profil rasmi",
+    "info": "Profil malumotlari",
+    "name": "Ismingiz",
+    "birth": "Tugilgan sanangiz",
+    "male": "Erkak",
+    "female": "Ayol",
+    "phone_section": "Telefon raqam",
+    "new_phone": "Yangi telefon raqamingiz:",
+    "send_code": "KOD jonatish",
+    "seconds": "{n} soniya",
+    "resend": "Qayta jo‘natish",
+    "back": "Ortga",
+    "save": "Saqlash"
   }
 }

@@ -92,5 +92,21 @@
     "amount": "Amount",
     "payment_method": "Payment method",
     "submit": "Top up"
+  },
+  "edit": {
+    "title": "Edit profile",
+    "photo": "Profile photo",
+    "info": "Profile details",
+    "name": "Your name",
+    "birth": "Date of birth",
+    "male": "Male",
+    "female": "Female",
+    "phone_section": "Phone number",
+    "new_phone": "Your new phone number:",
+    "send_code": "Send code",
+    "seconds": "{n} seconds",
+    "resend": "Resend",
+    "back": "Back",
+    "save": "Save"
   }
 }
