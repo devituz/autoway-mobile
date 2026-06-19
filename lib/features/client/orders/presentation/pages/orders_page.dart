@@ -1,10 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../../core/router/app_router.dart';
+import 'order_detail_page.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
 import '../../domain/order_status.dart';
@@ -184,7 +183,7 @@ class _OrderCard extends StatelessWidget {
     final headerColor = status.color;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => context.router.push(OrderDetailRoute(status: status)),
+      onTap: () => showOrderDetailSheet(context, status),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.accent,

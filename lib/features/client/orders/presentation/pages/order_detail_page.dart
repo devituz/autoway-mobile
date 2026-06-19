@@ -10,6 +10,18 @@ import '../../domain/order_status.dart';
 
 const _icons = 'assets/icons';
 
+/// Presents the order detail as a bottom sheet that slides up from the bottom
+/// (matches the Figma modal presentation — scrim on top, rounded sheet below).
+Future<void> showOrderDetailSheet(BuildContext context, OrderStatus status) {
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black54,
+    builder: (_) => _OrderDetailSheet(status: status),
+  );
+}
+
 /// Configurable order-detail screen (Figma board 2210:27324, node 2193:6194).
 /// The [status] drives the header color/label/icon, the title/subtitle, the
 /// action circles and the bottom buttons via [OrderStatusX].
@@ -26,49 +38,92 @@ class OrderDetailPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 1) Header bar
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    status.labelKey.tr(),
-                    style: AppText.subtitle.copyWith(
-                      fontSize: 15.sp,
-                      color: AppColors.textOnDark,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Icon(
-                    status.headerIcon,
-                    size: 24.sp,
-                    color: AppColors.textOnDark,
-                  ),
-                ],
-              ),
-            ),
-            // 2) Scrollable body sheet
-            Expanded(
-              child: Container(
+            _OrderHeaderBar(status: status),
+            Expanded(child: _OrderContent(status: status)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OrderDetailSheet extends StatelessWidget {
+  final OrderStatus status;
+  const _OrderDetailSheet({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.94,
+      child: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+        child: Container(
+          color: status.color,
+          child: Column(
+            children: [
+              SizedBox(height: 8.h),
+              Container(
+                width: 112.w,
+                height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppColors.lightGrey,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.r),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(8.r),
-                  child: Column(
-                    children: [
-                      _StatusBlock(status: status),
-                      SizedBox(height: 8.h),
-                      _DetailsBlock(status: status),
-                    ],
-                  ),
+                  color: Colors.white.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(60.r),
                 ),
               ),
+              _OrderHeaderBar(status: status),
+              Expanded(child: _OrderContent(status: status)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OrderHeaderBar extends StatelessWidget {
+  final OrderStatus status;
+  const _OrderHeaderBar({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            status.labelKey.tr(),
+            style: AppText.subtitle.copyWith(
+              fontSize: 15.sp,
+              color: AppColors.textOnDark,
+              fontWeight: FontWeight.w500,
             ),
+          ),
+          Icon(status.headerIcon, size: 24.sp, color: AppColors.textOnDark),
+        ],
+      ),
+    );
+  }
+}
+
+class _OrderContent extends StatelessWidget {
+  final OrderStatus status;
+  const _OrderContent({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.lightGrey,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(8.r),
+        child: Column(
+          children: [
+            _StatusBlock(status: status),
+            SizedBox(height: 8.h),
+            _DetailsBlock(status: status),
           ],
         ),
       ),
@@ -117,18 +172,12 @@ class _StatusBlock extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Container(
-                      width: 48.r,
-                      height: 48.r,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: AppColors.lightGrey,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.person,
-                        size: 26.sp,
-                        color: AppColors.textMuted,
+                    ClipOval(
+                      child: Image.asset(
+                        'assets/images/driver_avatar.png',
+                        width: 48.r,
+                        height: 48.r,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -366,18 +415,13 @@ class _DetailsBlock extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                width: 44.w,
-                height: 55.h,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.fieldFill,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Icon(
-                  Icons.image_outlined,
-                  size: 22.sp,
-                  color: AppColors.textMuted,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.asset(
+                  'assets/images/order_thumb.png',
+                  width: 44.w,
+                  height: 55.h,
+                  fit: BoxFit.cover,
                 ),
               ),
             ],
