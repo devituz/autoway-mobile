@@ -260,18 +260,58 @@ class IntercityRateDriverRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [IntercityRegionPickPage]
-class IntercityRegionPickRoute extends PageRouteInfo<void> {
-  const IntercityRegionPickRoute({List<PageRouteInfo>? children})
-    : super(IntercityRegionPickRoute.name, initialChildren: children);
+class IntercityRegionPickRoute
+    extends PageRouteInfo<IntercityRegionPickRouteArgs> {
+  IntercityRegionPickRoute({
+    Key? key,
+    bool toDestination = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+         IntercityRegionPickRoute.name,
+         args: IntercityRegionPickRouteArgs(
+           key: key,
+           toDestination: toDestination,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'IntercityRegionPickRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const IntercityRegionPickPage();
+      final args = data.argsAs<IntercityRegionPickRouteArgs>(
+        orElse: () => const IntercityRegionPickRouteArgs(),
+      );
+      return IntercityRegionPickPage(
+        key: args.key,
+        toDestination: args.toDestination,
+      );
     },
   );
+}
+
+class IntercityRegionPickRouteArgs {
+  const IntercityRegionPickRouteArgs({this.key, this.toDestination = false});
+
+  final Key? key;
+
+  final bool toDestination;
+
+  @override
+  String toString() {
+    return 'IntercityRegionPickRouteArgs{key: $key, toDestination: $toDestination}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! IntercityRegionPickRouteArgs) return false;
+    return key == other.key && toDestination == other.toDestination;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ toDestination.hashCode;
 }
 
 /// generated route for

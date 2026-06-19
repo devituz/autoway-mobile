@@ -15,29 +15,37 @@ import '../widgets/intercity_place_search_scaffold.dart';
 /// list ([IntercityDistrictPickPage]).
 @RoutePage()
 class IntercityRegionPickPage extends StatelessWidget {
-  const IntercityRegionPickPage({super.key});
+  /// Whether this picker selects the destination ("Qayerga") instead of the
+  /// departure ("Qayerdan"). Drives the title and is forwarded to the district
+  /// picker so the whole branch stays consistent.
+  final bool toDestination;
+
+  const IntercityRegionPickPage({super.key, this.toDestination = false});
 
   static const List<String> _regions = [
     'Toshkent shahri',
     'Andijon viloyati',
-    'Buhoro viloyati',
+    'Buxoro viloyati',
     'Samarqand viloyati',
     'Sirdaryo viloyati',
     'Navoiy viloyati',
     'Namangan viloyati',
-    'Jizzah viloyati',
-    'Qoraqolpogiston Respublikasi',
+    'Jizzax viloyati',
+    'Qoraqalpog‘iston Respublikasi',
   ];
 
   @override
   Widget build(BuildContext context) {
     return IntercityPlaceSearchScaffold(
-      title: 'intercity.addr_from_title'.tr(),
+      title:
+          (toDestination ? 'intercity.addr_to_title' : 'intercity.addr_from_title')
+              .tr(),
       items: [
         for (final region in _regions)
           _RegionRow(
             label: region,
-            onTap: () => context.router.push(IntercityDistrictPickRoute()),
+            onTap: () => context.router
+                .push(IntercityDistrictPickRoute(regionName: region)),
           ),
       ],
     );

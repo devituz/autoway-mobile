@@ -289,7 +289,8 @@
     "rate_reason_other": "Other reason",
     "rate_comment_hint": "Leave your feedback:",
     "rate_dispute": "Dispute",
-    "rate_save": "Save"
+    "rate_save": "Save",
+    "addr_to_title": "To"
   },
   "order": {
     "tab_active": "Active",

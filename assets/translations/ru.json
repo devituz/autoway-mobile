@@ -289,7 +289,8 @@
     "rate_reason_other": "Другая причина",
     "rate_comment_hint": "Оставьте отзыв:",
     "rate_dispute": "Подать жалобу",
-    "rate_save": "Сохранить"
+    "rate_save": "Сохранить",
+    "addr_to_title": "Куда"
   },
   "order": {
     "tab_active": "Активные",

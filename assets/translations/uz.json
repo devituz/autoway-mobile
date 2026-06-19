@@ -289,7 +289,8 @@
     "rate_reason_other": "Boshqa sabab",
     "rate_comment_hint": "Fikringizni qoldiring:",
     "rate_dispute": "Etiroz bildirish",
-    "rate_save": "Saqlash"
+    "rate_save": "Saqlash",
+    "addr_to_title": "Qayerga"
   },
   "order": {
     "tab_active": "Aktiv",

@@ -169,12 +169,16 @@ class _OrderInfoCard extends StatelessWidget {
                           children: [
                             _RoutePoint(
                               value: 'Toshkent shahri',
-                              onTap: () => context.router.push(const IntercityRegionPickRoute()),
+                              onTap: () => context.router.push(
+                                  IntercityRegionPickRoute(
+                                      toDestination: false)),
                             ),
                             Divider(height: 16.h, color: AppColors.border),
                             _RoutePoint(
                               value: 'Andijon shahri, Andijon viloyati',
-                              onTap: () => context.router.push(const IntercityRegionPickRoute()),
+                              onTap: () => context.router.push(
+                                  IntercityRegionPickRoute(
+                                      toDestination: true)),
                             ),
                           ],
                         ),
