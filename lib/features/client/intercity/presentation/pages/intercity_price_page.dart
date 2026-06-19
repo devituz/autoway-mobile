@@ -33,11 +33,11 @@ class _IntercityPricePageState extends State<IntercityPricePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset('assets/images/map_bg.png', fit: BoxFit.cover),
+          const Positioned.fill(
+            child: ColoredBox(color: Color(0x99282828)),
           ),
           Align(
             alignment: Alignment.bottomCenter,

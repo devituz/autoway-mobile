@@ -23,13 +23,19 @@ class MainShellPage extends StatefulWidget {
 class _MainShellPageState extends State<MainShellPage> {
   int _index = 0;
 
-  static const _tabs = [HomePage(), OrdersPage(), ClientProfilePage()];
-
   @override
   Widget build(BuildContext context) {
+    // Depend on the active locale so a language switch rebuilds the shell (and
+    // its bottom nav) in place. Keying the IndexedStack by locale forces the
+    // cached tab pages to rebuild with the new translations too.
+    final localeCode = context.locale.languageCode;
     return Scaffold(
       backgroundColor: AppColors.accent,
-      body: IndexedStack(index: _index, children: _tabs),
+      body: IndexedStack(
+        key: ValueKey(localeCode),
+        index: _index,
+        children: const [HomePage(), OrdersPage(), ClientProfilePage()],
+      ),
       bottomNavigationBar: _BottomNav(
         index: _index,
         onChanged: (i) => setState(() => _index = i),

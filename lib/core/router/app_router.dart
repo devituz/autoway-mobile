@@ -52,15 +52,25 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: IntercityRegionPickRoute.page),
     AutoRoute(page: IntercityDistrictPickRoute.page),
     AutoRoute(page: IntercityOrderDetailsRoute.page),
-    AutoRoute(page: IntercityTimeRoute.page),
-    AutoRoute(page: IntercityExtraRoute.page),
-    AutoRoute(page: IntercityPriceRoute.page),
+    // Modal sheets — slide up from the bottom over the previous screen.
+    _sheet(IntercityTimeRoute.page),
+    _sheet(IntercityExtraRoute.page),
+    _sheet(IntercityPriceRoute.page),
     AutoRoute(page: IntercityDriversRoute.page),
     AutoRoute(page: IntercityDriverDetailRoute.page),
     AutoRoute(page: IntercityDriverLocationRoute.page),
     AutoRoute(page: IntercityTripStatusRoute.page),
-    AutoRoute(page: IntercityCancelOrderRoute.page),
+    _sheet(IntercityCancelOrderRoute.page),
     AutoRoute(page: IntercityCancelledRoute.page),
-    AutoRoute(page: IntercityRateDriverRoute.page),
+    _sheet(IntercityRateDriverRoute.page),
   ];
+
+  /// A bottom-sheet style route: rises from the bottom, keeps the previous
+  /// screen painted behind (the page paints its own translucent scrim).
+  static CustomRoute _sheet(PageInfo page) => CustomRoute(
+        page: page,
+        transitionsBuilder: TransitionsBuilders.slideBottom,
+        opaque: false,
+        barrierDismissible: true,
+      );
 }

@@ -186,12 +186,16 @@ class _AddressSheet extends StatelessWidget {
                       icon: 'mt_location',
                       label: 'intercity.from'.tr(),
                       value: 'Toshkent shahri',
+                      onSelect: () => context.router
+                          .push(IntercityRegionPickRoute(toDestination: false)),
                     ),
                     Divider(height: 16.h, color: AppColors.border),
                     _AddressRow(
                       icon: 'mt_flag',
                       label: 'intercity.to'.tr(),
                       value: 'Andijon viloyati, Andijon shahri',
+                      onSelect: () => context.router
+                          .push(IntercityRegionPickRoute(toDestination: true)),
                     ),
                   ],
                 ),
@@ -233,8 +237,12 @@ class _AddressRow extends StatelessWidget {
   final String icon;
   final String label;
   final String value;
+  final VoidCallback onSelect;
   const _AddressRow(
-      {required this.icon, required this.label, required this.value});
+      {required this.icon,
+      required this.label,
+      required this.value,
+      required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -262,19 +270,24 @@ class _AddressRow extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8.w),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: AppColors.accent,
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          child: Row(
-            children: [
-              Text('intercity.select'.tr(),
-                  style: AppText.label.copyWith(
-                      fontSize: 12.sp, color: AppColors.selectBlue)),
-              Icon(Icons.chevron_right, size: 16.sp, color: AppColors.selectBlue),
-            ],
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onSelect,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: AppColors.accent,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Row(
+              children: [
+                Text('intercity.select'.tr(),
+                    style: AppText.label.copyWith(
+                        fontSize: 12.sp, color: AppColors.selectBlue)),
+                Icon(Icons.chevron_right,
+                    size: 16.sp, color: AppColors.selectBlue),
+              ],
+            ),
           ),
         ),
       ],

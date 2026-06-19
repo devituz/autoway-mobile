@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,22 +34,45 @@ class AutoWayApp extends StatefulWidget {
   State<AutoWayApp> createState() => _AutoWayAppState();
 }
 
+/// Lets us tell auto_route to re-evaluate (rebuild) the live route stack on
+/// demand — used to refresh every page's translations after a locale change.
+class _LocaleReevaluate extends ReevaluateListenable {
+  void bump() => notifyListeners();
+}
+
 class _AutoWayAppState extends State<AutoWayApp> {
-  AppRouter _appRouter = AppRouter();
+  // A SINGLE router for the app's lifetime — never recreated. Recreating it (or
+  // key-swapping MaterialApp) would reset the navigation stack to the initial
+  // route, throwing the user back to the start when they switch language.
+  final AppRouter _appRouter = AppRouter();
+
+  // Fired on every locale change. Wired into auto_route via [reevaluateListenable]
+  // so the WHOLE current page stack rebuilds in place (re-evaluating every
+  // `.tr()`, including persistent chrome like the bottom nav) WITHOUT changing
+  // the routes — language switches instantly, right where the user is.
+  final _LocaleReevaluate _reeval = _LocaleReevaluate();
   Locale? _lastLocale;
+
+  late final RouterConfig<UrlState> _routerConfig = _appRouter.config(
+    reevaluateListenable: _reeval,
+  );
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final locale = context.locale;
-    // When the locale changes, build a FRESH router delegate. Reusing the same
-    // delegate across the key-swapped MaterialApp causes a "delegate already in
-    // use" conflict (black screen / rebuild loop). A fresh delegate also makes
-    // every cached auto_route page rebuild with the new translations.
     if (_lastLocale != null && _lastLocale != locale) {
-      _appRouter = AppRouter();
+      // Rebuild the live route stack after this frame (notifying mid-build
+      // would be illegal).
+      WidgetsBinding.instance.addPostFrameCallback((_) => _reeval.bump());
     }
     _lastLocale = locale;
+  }
+
+  @override
+  void dispose() {
+    _reeval.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,7 +87,6 @@ class _AutoWayAppState extends State<AutoWayApp> {
       builder: (context, child) => BlocProvider(
         create: (_) => RegisterCubit(),
         child: MaterialApp.router(
-          key: ValueKey(context.locale.languageCode),
           title: 'AutoWay',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
@@ -72,7 +95,7 @@ class _AutoWayAppState extends State<AutoWayApp> {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          routerConfig: _appRouter.config(),
+          routerConfig: _routerConfig,
         ),
       ),
     );
