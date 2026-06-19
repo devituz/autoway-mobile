@@ -152,6 +152,13 @@
     "close": "Закрыть",
     "continue": "Продолжить"
   },
+  "intercity": {
+    "your_address": "Ваш адрес:",
+    "from": "Откуда:",
+    "to": "Куда:",
+    "select": "Выбрать",
+    "continue": "Продолжить"
+  },
   "order": {
     "tab_active": "Активные",
     "tab_archive": "Архив",

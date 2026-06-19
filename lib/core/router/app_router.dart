@@ -8,6 +8,7 @@ import '../../features/client/auth/register/presentation/pages/profile_page.dart
 import '../../features/client/auth/register/presentation/pages/user_type_page.dart';
 import '../../features/client/home/presentation/pages/main_shell_page.dart';
 import '../../features/client/home/presentation/pages/notifications_page.dart';
+import '../../features/client/intercity/presentation/pages/intercity_address_page.dart';
 import '../../features/client/orders/domain/order_status.dart';
 import '../../features/client/orders/presentation/pages/go_online_page.dart';
 import '../../features/client/orders/presentation/pages/order_detail_page.dart';
@@ -33,5 +34,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: EditProfileRoute.page),
     AutoRoute(page: GoOnlineRoute.page),
     AutoRoute(page: OrderDetailRoute.page),
+    AutoRoute(page: IntercityAddressRoute.page),
   ];
 }

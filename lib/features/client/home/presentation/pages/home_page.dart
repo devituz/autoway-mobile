@@ -369,10 +369,15 @@ class _FeaturedGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (label: 'home.intercity_taxi'.tr(), iconPath: 'assets/images/ill_taxi.png', arrow: false),
-      (label: 'home.cargo'.tr(), iconPath: 'assets/images/ill_box.png', arrow: false),
-      (label: 'home.route_taxi'.tr(), iconPath: 'assets/images/ill_pin.png', arrow: true),
-      (label: 'home.energy'.tr(), iconPath: 'assets/images/ill_flash.svg', arrow: true),
+      (
+        label: 'home.intercity_taxi'.tr(),
+        iconPath: 'assets/images/ill_taxi.png',
+        arrow: false,
+        onTap: () => context.router.push(const IntercityAddressRoute()),
+      ),
+      (label: 'home.cargo'.tr(), iconPath: 'assets/images/ill_box.png', arrow: false, onTap: null),
+      (label: 'home.route_taxi'.tr(), iconPath: 'assets/images/ill_pin.png', arrow: true, onTap: null),
+      (label: 'home.energy'.tr(), iconPath: 'assets/images/ill_flash.svg', arrow: true, onTap: null),
     ];
     return GridView.builder(
       shrinkWrap: true,
@@ -389,6 +394,7 @@ class _FeaturedGrid extends StatelessWidget {
         label: items[i].label,
         iconPath: items[i].iconPath,
         showArrow: items[i].arrow,
+        onTap: items[i].onTap,
       ),
     );
   }
@@ -398,16 +404,21 @@ class _FeaturedCard extends StatelessWidget {
   final String label;
   final String iconPath;
   final bool showArrow;
+  final VoidCallback? onTap;
 
   const _FeaturedCard({
     required this.label,
     required this.iconPath,
     required this.showArrow,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: AppColors.fieldFill,
@@ -438,6 +449,7 @@ class _FeaturedCard extends StatelessWidget {
                   size: 22.sp, color: AppColors.textSecondary),
             ),
         ],
+      ),
       ),
     );
   }

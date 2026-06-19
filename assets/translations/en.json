@@ -152,6 +152,13 @@
     "close": "Close",
     "continue": "Continue"
   },
+  "intercity": {
+    "your_address": "Your address:",
+    "from": "From:",
+    "to": "To:",
+    "select": "Select",
+    "continue": "Continue"
+  },
   "order": {
     "tab_active": "Active",
     "tab_archive": "Archive",

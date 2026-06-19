@@ -43,6 +43,22 @@ class GoOnlineRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [IntercityAddressPage]
+class IntercityAddressRoute extends PageRouteInfo<void> {
+  const IntercityAddressRoute({List<PageRouteInfo>? children})
+    : super(IntercityAddressRoute.name, initialChildren: children);
+
+  static const String name = 'IntercityAddressRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const IntercityAddressPage();
+    },
+  );
+}
+
+/// generated route for
 /// [LanguagePage]
 class LanguageRoute extends PageRouteInfo<void> {
   const LanguageRoute({List<PageRouteInfo>? children})

@@ -152,6 +152,13 @@
     "close": "Yopish",
     "continue": "Davom etish"
   },
+  "intercity": {
+    "your_address": "Manzilingiz:",
+    "from": "Qayerdan:",
+    "to": "Qayerga:",
+    "select": "Tanlash",
+    "continue": "Davom etish"
+  },
   "order": {
     "tab_active": "Aktiv",
     "tab_archive": "Arhiv",
