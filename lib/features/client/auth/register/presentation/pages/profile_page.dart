@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import '../../../../../../core/widgets/app_snackbar.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
 import '../widgets/labeled_field.dart';
@@ -113,16 +114,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   final cubit = context.read<RegisterCubit>();
                   if (state.status == AuthStatus.success) {
                     cubit.resetStatus();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('register.done'.tr())),
-                    );
+                    AppSnackbar.success(context, 'register.done'.tr());
                     context.router.replaceAll([const MainShellRoute()]);
                   } else if (state.status == AuthStatus.failure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(state.errorMessage ??
-                              'Ro‘yxatdan o‘tishda xatolik')),
-                    );
+                    AppSnackbar.error(context,
+                        state.errorMessage ?? 'Ro‘yxatdan o‘tishda xatolik');
                     cubit.resetStatus();
                   }
                 },
@@ -133,7 +129,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   final loading = state.status == AuthStatus.loading;
                   return PrimaryButton(
                     label: 'register.continue'.tr(),
-                    onPressed: (valid && !loading) ? _finish : null,
+                    loading: loading,
+                    onPressed: valid ? _finish : null,
                   );
                 },
               ),

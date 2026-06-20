@@ -1,11 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import '../../../../../core/widgets/app_snackbar.dart';
+import '../cubit/profile_cubit.dart';
+import '../cubit/profile_state.dart';
 import '../widgets/change_phone_sheet.dart';
 
 const _icons = 'assets/icons';
@@ -20,15 +24,41 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final _name = TextEditingController(text: 'Abbos Tursunov');
+  final _name = TextEditingController();
 
   bool _isMale = true;
   DateTime _birth = DateTime(2001, 1, 10);
 
   @override
+  void initState() {
+    super.initState();
+    // Prefill from the already-loaded /me profile.
+    final user = context.read<ProfileCubit>().state.user;
+    if (user != null) {
+      _name.text = user.fullName;
+      _isMale = user.gender != 'female';
+      final parsed = DateTime.tryParse(user.birthDate);
+      if (parsed != null) _birth = parsed;
+    }
+  }
+
+  @override
   void dispose() {
     _name.dispose();
     super.dispose();
+  }
+
+  /// Backend wants ISO yyyy-MM-dd.
+  String get _isoBirth =>
+      '${_birth.year.toString().padLeft(4, '0')}-${_birth.month.toString().padLeft(2, '0')}-${_birth.day.toString().padLeft(2, '0')}';
+
+  void _save() {
+    FocusScope.of(context).unfocus();
+    context.read<ProfileCubit>().updateProfile(
+          fullName: _name.text.trim(),
+          birthDate: _isoBirth,
+          gender: _isMale ? 'male' : 'female',
+        );
   }
 
   String _formatDate(DateTime d) {
@@ -55,28 +85,45 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.fieldFill,
-      body: Column(
-        children: [
-          _Header(title: 'edit.title'.tr()),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
-              child: Column(
-                children: [
-                  _buildInfoCard(),
-                  SizedBox(height: 16.h),
-                  _buildPhoneCard(),
-                ],
+    return BlocListener<ProfileCubit, ProfileState>(
+      listenWhen: (p, c) => p.status != c.status,
+      listener: (context, state) {
+        if (state.status == ProfileStatus.saved) {
+          context.read<ProfileCubit>().clearStatus();
+          AppSnackbar.success(context, 'edit.title'.tr());
+          context.router.maybePop();
+        } else if (state.status == ProfileStatus.failure) {
+          AppSnackbar.error(
+              context, state.errorMessage ?? 'Saqlashda xatolik');
+          context.read<ProfileCubit>().clearStatus();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.fieldFill,
+        body: Column(
+          children: [
+            _Header(title: 'edit.title'.tr()),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
+                child: Column(
+                  children: [
+                    _buildInfoCard(),
+                    SizedBox(height: 16.h),
+                    _buildPhoneCard(),
+                  ],
+                ),
               ),
             ),
-          ),
-          _BottomBar(
-            onClose: () => context.router.maybePop(),
-            onSave: () => context.router.maybePop(),
-          ),
-        ],
+            BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) => _BottomBar(
+                saving: state.status == ProfileStatus.saving,
+                onClose: () => context.router.maybePop(),
+                onSave: _save,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -424,8 +471,10 @@ class _GenderTab extends StatelessWidget {
 class _BottomBar extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback onSave;
+  final bool saving;
 
-  const _BottomBar({required this.onClose, required this.onSave});
+  const _BottomBar(
+      {required this.onClose, required this.onSave, this.saving = false});
 
   @override
   Widget build(BuildContext context) {
@@ -456,10 +505,10 @@ class _BottomBar extends StatelessWidget {
               SizedBox(width: 12.w),
               Expanded(
                 child: _BarButton(
-                  label: 'edit.save'.tr(),
+                  label: saving ? '...' : 'edit.save'.tr(),
                   background: AppColors.blue,
                   textColor: AppColors.textOnDark,
-                  onTap: onSave,
+                  onTap: saving ? () {} : onSave,
                 ),
               ),
             ],

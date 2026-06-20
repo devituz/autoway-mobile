@@ -1,20 +1,56 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import '../cubit/profile_cubit.dart';
+import '../cubit/profile_state.dart';
 import '../widgets/language_sheet.dart';
 import '../widgets/logout_sheet.dart';
 
 const _icons = 'assets/icons';
 
+/// Formats an amount with thin-space thousands separators: 50000 -> "50 000".
+String _money(num value) {
+  final s = value.toInt().toString();
+  final buf = StringBuffer();
+  for (var i = 0; i < s.length; i++) {
+    if (i > 0 && (s.length - i) % 3 == 0) buf.write(' ');
+    buf.write(s[i]);
+  }
+  return buf.toString();
+}
+
 /// Client app — Profile tab (Profil). 1:1 with the Figma design (node 2232:24130).
-class ClientProfilePage extends StatelessWidget {
+class ClientProfilePage extends StatefulWidget {
   const ClientProfilePage({super.key});
+
+  @override
+  State<ClientProfilePage> createState() => _ClientProfilePageState();
+}
+
+class _ClientProfilePageState extends State<ClientProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Load the real profile from /me the first time the tab is shown.
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => context.read<ProfileCubit>().load());
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final confirmed = await showLogoutSheet(context);
+    if (confirmed != true || !context.mounted) return;
+    await context.read<ProfileCubit>().logout();
+    if (context.mounted) {
+      context.router.replaceAll([const LanguageRoute()]);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,19 +148,30 @@ class ClientProfilePage extends StatelessWidget {
                                   size: 26.sp, color: Colors.white),
                             ),
                             SizedBox(width: 8.w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Abbos Tursunov',
-                                    style: AppText.subtitle.copyWith(
-                                        fontSize: 18.sp,
-                                        color: AppColors.textOnDark,
-                                        fontWeight: FontWeight.w600)),
-                                Text('ID: 78946',
-                                    style: AppText.subtitle.copyWith(
-                                        fontSize: 14.sp,
-                                        color: AppColors.textOnDark)),
-                              ],
+                            BlocBuilder<ProfileCubit, ProfileState>(
+                              builder: (context, state) {
+                                final u = state.user;
+                                final name = (u?.fullName.isNotEmpty ?? false)
+                                    ? u!.fullName
+                                    : '—';
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(name,
+                                        style: AppText.subtitle.copyWith(
+                                            fontSize: 18.sp,
+                                            color: AppColors.textOnDark,
+                                            fontWeight: FontWeight.w600)),
+                                    Text(
+                                        'profile.id'.tr(namedArgs: {
+                                          'id': '${u?.idBalance ?? 0}'
+                                        }),
+                                        style: AppText.subtitle.copyWith(
+                                            fontSize: 14.sp,
+                                            color: AppColors.textOnDark)),
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -165,11 +212,14 @@ class ClientProfilePage extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('50 000 som',
-                                      style: AppText.subtitle.copyWith(
-                                          fontSize: 14.sp,
-                                          color: AppColors.textOnDark,
-                                          fontWeight: FontWeight.w500)),
+                                  BlocBuilder<ProfileCubit, ProfileState>(
+                                    builder: (context, state) => Text(
+                                        '${_money(state.user?.balance ?? 0)} ${'home.currency'.tr()}',
+                                        style: AppText.subtitle.copyWith(
+                                            fontSize: 14.sp,
+                                            color: AppColors.textOnDark,
+                                            fontWeight: FontWeight.w500)),
+                                  ),
                                   Text('Balansingiz',
                                       style: AppText.subtitle.copyWith(
                                           fontSize: 12.sp,
@@ -227,7 +277,7 @@ class ClientProfilePage extends StatelessWidget {
                           'logout',
                           'profile.logout',
                           danger: true,
-                          onTap: () => showLogoutSheet(context),
+                          onTap: () => _handleLogout(context),
                         ),
                       ],
                       footer: const _SocialFooter(),

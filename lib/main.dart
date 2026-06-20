@@ -6,9 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
+import 'features/client/auth/data/repositories/auth_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/app_initializer.dart';
 import 'features/client/auth/register/presentation/cubit/register_cubit.dart';
+import 'features/client/profile/presentation/cubit/profile_cubit.dart';
 
 void main() async {
   await AppInitializer.init();
@@ -56,6 +58,11 @@ class _AutoWayAppState extends State<AutoWayApp> {
 
   late final RouterConfig<UrlState> _routerConfig = _appRouter.config(
     reevaluateListenable: _reeval,
+    // Startup auth gate: a returning user with a saved token skips the
+    // language/register flow and lands straight on the main shell.
+    deepLinkBuilder: (deepLink) => sl<AuthRepository>().isLoggedIn
+        ? DeepLink.single(const MainShellRoute())
+        : deepLink,
   );
 
   @override
@@ -85,8 +92,11 @@ class _AutoWayAppState extends State<AutoWayApp> {
       designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) => BlocProvider(
-        create: (_) => RegisterCubit(sl()),
+      builder: (context, child) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => RegisterCubit(sl())),
+          BlocProvider(create: (_) => ProfileCubit(sl())),
+        ],
         child: MaterialApp.router(
           title: 'AutoWay',
           debugShowCheckedModeBanner: false,

@@ -6,17 +6,21 @@ import '../../../../../../core/theme/app_text.dart';
 
 /// Full-width dark CTA button ("Davom etish" / "Jonatish").
 ///
-/// Pass [onPressed] = null to render the disabled state.
+/// Pass [onPressed] = null to render the disabled state. While [loading] is
+/// true the button is disabled and shows a spinner instead of the label, so a
+/// network action can't be triggered twice.
 class PrimaryButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final Color color;
+  final bool loading;
 
   const PrimaryButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.color = AppColors.primary,
+    this.loading = false,
   });
 
   @override
@@ -25,7 +29,7 @@ class PrimaryButton extends StatelessWidget {
       width: double.infinity,
       height: 54.h,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: AppColors.textOnDark,
@@ -36,7 +40,17 @@ class PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
           ),
         ),
-        child: Text(label, style: AppText.button),
+        child: loading
+            ? SizedBox(
+                width: 22.r,
+                height: 22.r,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2.4,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.textOnDark),
+                ),
+              )
+            : Text(label, style: AppText.button),
       ),
     );
   }

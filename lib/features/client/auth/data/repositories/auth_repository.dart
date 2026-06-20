@@ -52,6 +52,28 @@ class AuthRepository {
         return unit;
       });
 
+  Future<Either<Failure, AuthUser>> getMe() => _guard(() => _remote.getMe());
+
+  Future<Either<Failure, ({AuthUser user, bool phoneChanged})>> updateProfile({
+    String? fullName,
+    String? birthDate,
+    String? gender,
+    String? avatarUrl,
+    String? phone,
+    String? otp,
+  }) =>
+      _guard(() => _remote.updateProfile(
+            fullName: fullName,
+            birthDate: birthDate,
+            gender: gender,
+            avatarUrl: avatarUrl,
+            phone: phone,
+            otp: otp,
+          ));
+
+  /// True if an access token is stored (used by the startup auth gate).
+  bool get isLoggedIn => (_tokenStorage.accessToken ?? '').isNotEmpty;
+
   Future<void> _persist(AuthTokens tokens) => _tokenStorage.saveTokens(
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,

@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import '../../../../../../core/widgets/app_snackbar.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
 import '../widgets/primary_button.dart';
@@ -150,11 +151,9 @@ class _OtpPageState extends State<OtpPage> {
                     cubit.resetStatus();
                     context.router.replaceAll([const MainShellRoute()]);
                   } else if (state.status == AuthStatus.failure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(state.errorMessage ??
-                              'Kod noto‘g‘ri yoki muddati tugagan')),
-                    );
+                    AppSnackbar.error(context,
+                        state.errorMessage ??
+                            'Kod noto‘g‘ri yoki muddati tugagan');
                     cubit.resetStatus();
                   }
                 },
@@ -163,7 +162,8 @@ class _OtpPageState extends State<OtpPage> {
                   final loading = state.status == AuthStatus.loading;
                   return PrimaryButton(
                     label: 'register.continue'.tr(),
-                    onPressed: (ready && !loading)
+                    loading: loading,
+                    onPressed: ready
                         ? () {
                             final cubit = context.read<RegisterCubit>();
                             cubit.setOtp(_code);

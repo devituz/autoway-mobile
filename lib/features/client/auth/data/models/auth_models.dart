@@ -32,6 +32,7 @@ class AuthUser {
   final String gender;
   final String birthDate;
   final num balance;
+  final int idBalance;
   final String language;
   final List<String> roles;
 
@@ -42,6 +43,7 @@ class AuthUser {
     required this.gender,
     required this.birthDate,
     required this.balance,
+    required this.idBalance,
     required this.language,
     required this.roles,
   });
@@ -53,6 +55,7 @@ class AuthUser {
         gender: json['gender'] as String? ?? '',
         birthDate: json['birth_date'] as String? ?? '',
         balance: json['balance'] as num? ?? 0,
+        idBalance: (json['id_balance'] as num?)?.toInt() ?? 0,
         language: json['language'] as String? ?? 'uz',
         roles: (json['roles'] as List?)?.map((e) => e.toString()).toList() ??
             const [],

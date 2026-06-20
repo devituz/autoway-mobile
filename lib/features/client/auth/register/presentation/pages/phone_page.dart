@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import '../../../../../../core/widgets/app_snackbar.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
 import '../widgets/primary_button.dart';
@@ -79,11 +80,8 @@ class _PhonePageState extends State<PhonePage> {
                     cubit.resetStatus();
                     context.router.push(const OtpRoute());
                   } else if (state.status == AuthStatus.failure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(state.errorMessage ??
-                              'Serverda xatolik yuz berdi')),
-                    );
+                    AppSnackbar.error(context,
+                        state.errorMessage ?? 'Serverda xatolik yuz berdi');
                     cubit.resetStatus();
                   }
                 },
@@ -94,7 +92,8 @@ class _PhonePageState extends State<PhonePage> {
                   final loading = state.status == AuthStatus.loading;
                   return PrimaryButton(
                     label: 'register.send'.tr(),
-                    onPressed: (valid && !loading)
+                    loading: loading,
+                    onPressed: valid
                         ? () => context.read<RegisterCubit>().requestOtp()
                         : null,
                   );
