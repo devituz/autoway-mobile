@@ -24,7 +24,12 @@ class LanguagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Reading the active locale registers a dependency on easy_localization's
+    // provider, so this (auto_route-cached) page rebuilds the instant a chip
+    // calls context.setLocale(...) — every .tr() text switches immediately.
+    final locale = context.locale;
     return Scaffold(
+      key: ValueKey('lang_${locale.languageCode}'),
       backgroundColor: AppColors.onboardingDark,
       body: SafeArea(
         child: Padding(
