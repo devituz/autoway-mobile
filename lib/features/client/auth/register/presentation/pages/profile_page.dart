@@ -43,11 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _finish() {
     FocusScope.of(context).unfocus();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('register.done'.tr())),
-    );
-    // Registration complete → go to the main shell, clearing the flow.
-    context.router.replaceAll([const MainShellRoute()]);
+    // Sends phone + code + profile fields to /auth/verify (REGISTER).
+    context.read<RegisterCubit>().verify();
   }
 
   @override
@@ -110,9 +107,35 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () => context.router.maybePop(),
               ),
               SizedBox(height: 12.h),
-              PrimaryButton(
-                label: 'register.continue'.tr(),
-                onPressed: _finish,
+              BlocConsumer<RegisterCubit, RegisterState>(
+                listenWhen: (p, c) => p.status != c.status,
+                listener: (context, state) {
+                  final cubit = context.read<RegisterCubit>();
+                  if (state.status == AuthStatus.success) {
+                    cubit.resetStatus();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('register.done'.tr())),
+                    );
+                    context.router.replaceAll([const MainShellRoute()]);
+                  } else if (state.status == AuthStatus.failure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(state.errorMessage ??
+                              'Ro‘yxatdan o‘tishda xatolik')),
+                    );
+                    cubit.resetStatus();
+                  }
+                },
+                builder: (context, state) {
+                  final valid = state.name.trim().isNotEmpty &&
+                      state.birthDate.trim().isNotEmpty &&
+                      state.gender != null;
+                  final loading = state.status == AuthStatus.loading;
+                  return PrimaryButton(
+                    label: 'register.continue'.tr(),
+                    onPressed: (valid && !loading) ? _finish : null,
+                  );
+                },
               ),
             ],
           ),

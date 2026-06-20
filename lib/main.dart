@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/app_initializer.dart';
@@ -85,7 +86,7 @@ class _AutoWayAppState extends State<AutoWayApp> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) => BlocProvider(
-        create: (_) => RegisterCubit(),
+        create: (_) => RegisterCubit(sl()),
         child: MaterialApp.router(
           title: 'AutoWay',
           debugShowCheckedModeBanner: false,

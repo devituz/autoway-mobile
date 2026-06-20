@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/client/auth/data/datasources/auth_remote_data_source.dart';
+import '../../features/client/auth/data/repositories/auth_repository.dart';
 import '../network/dio_client.dart';
 import '../network/interceptors/auth_interceptor.dart';
 import '../storage/token_storage.dart';
@@ -18,4 +20,8 @@ Future<void> initInjection() async {
   sl.registerLazySingleton(() => TokenStorage(sl()));
   sl.registerLazySingleton(() => AuthInterceptor(sl()));
   sl.registerLazySingleton(() => DioClient(sl(), sl()));
+
+  // Auth feature
+  sl.registerLazySingleton(() => AuthRemoteDataSource(sl()));
+  sl.registerLazySingleton(() => AuthRepository(sl(), sl()));
 }

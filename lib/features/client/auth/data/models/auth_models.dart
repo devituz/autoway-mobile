@@ -1,0 +1,84 @@
+/// Data models for the auth endpoints (swagger: vio.delgo.uz/api).
+///
+/// All endpoints return the `{data, error, meta, request_id}` envelope; these
+/// models map the `data` payload only — unwrapping happens in the data source.
+library;
+
+/// `POST /v1/auth/request` → data.
+class RequestOtpResult {
+  /// Whether the phone already has an account (login) or not (register).
+  final bool isRegistered;
+
+  /// Seconds the SMS code stays valid.
+  final int expiresIn;
+
+  const RequestOtpResult({
+    required this.isRegistered,
+    required this.expiresIn,
+  });
+
+  factory RequestOtpResult.fromJson(Map<String, dynamic> json) =>
+      RequestOtpResult(
+        isRegistered: json['is_registered'] as bool? ?? false,
+        expiresIn: (json['expires_in'] as num?)?.toInt() ?? 0,
+      );
+}
+
+/// `auth.UserResponse`.
+class AuthUser {
+  final int id;
+  final String fullName;
+  final String phone;
+  final String gender;
+  final String birthDate;
+  final num balance;
+  final String language;
+  final List<String> roles;
+
+  const AuthUser({
+    required this.id,
+    required this.fullName,
+    required this.phone,
+    required this.gender,
+    required this.birthDate,
+    required this.balance,
+    required this.language,
+    required this.roles,
+  });
+
+  factory AuthUser.fromJson(Map<String, dynamic> json) => AuthUser(
+        id: (json['id'] as num?)?.toInt() ?? 0,
+        fullName: json['full_name'] as String? ?? '',
+        phone: json['phone'] as String? ?? '',
+        gender: json['gender'] as String? ?? '',
+        birthDate: json['birth_date'] as String? ?? '',
+        balance: json['balance'] as num? ?? 0,
+        language: json['language'] as String? ?? 'uz',
+        roles: (json['roles'] as List?)?.map((e) => e.toString()).toList() ??
+            const [],
+      );
+}
+
+/// `POST /v1/auth/verify` & `/refresh` → data (`auth.TokenResponse`).
+class AuthTokens {
+  final String accessToken;
+  final String refreshToken;
+  final int expiresIn;
+  final AuthUser? user;
+
+  const AuthTokens({
+    required this.accessToken,
+    required this.refreshToken,
+    required this.expiresIn,
+    this.user,
+  });
+
+  factory AuthTokens.fromJson(Map<String, dynamic> json) => AuthTokens(
+        accessToken: json['access_token'] as String? ?? '',
+        refreshToken: json['refresh_token'] as String? ?? '',
+        expiresIn: (json['expires_in'] as num?)?.toInt() ?? 0,
+        user: json['user'] is Map<String, dynamic>
+            ? AuthUser.fromJson(json['user'] as Map<String, dynamic>)
+            : null,
+      );
+}

@@ -29,8 +29,13 @@ class ErrorInterceptor extends Interceptor {
 
   String _messageFor(Response? response) {
     final data = response?.data;
-    if (data is Map && data['message'] is String) {
-      return data['message'] as String;
+    // Backend wraps errors in {error: {code, message}}.
+    if (data is Map) {
+      final error = data['error'];
+      if (error is Map && error['message'] is String) {
+        return error['message'] as String;
+      }
+      if (data['message'] is String) return data['message'] as String;
     }
     return 'Serverda xatolik yuz berdi (${response?.statusCode ?? '-'})';
   }

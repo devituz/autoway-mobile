@@ -71,14 +71,31 @@ class _PhonePageState extends State<PhonePage> {
                 onPressed: () => context.router.maybePop(),
               ),
               SizedBox(height: 12.h),
-              BlocBuilder<RegisterCubit, RegisterState>(
-                buildWhen: (p, c) => p.phone != c.phone,
+              BlocConsumer<RegisterCubit, RegisterState>(
+                listenWhen: (p, c) => p.status != c.status,
+                listener: (context, state) {
+                  final cubit = context.read<RegisterCubit>();
+                  if (state.status == AuthStatus.codeSent) {
+                    cubit.resetStatus();
+                    context.router.push(const OtpRoute());
+                  } else if (state.status == AuthStatus.failure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(state.errorMessage ??
+                              'Serverda xatolik yuz berdi')),
+                    );
+                    cubit.resetStatus();
+                  }
+                },
+                buildWhen: (p, c) =>
+                    p.phone != c.phone || p.status != c.status,
                 builder: (context, state) {
                   final valid = state.phone.length == _requiredDigits;
+                  final loading = state.status == AuthStatus.loading;
                   return PrimaryButton(
                     label: 'register.send'.tr(),
-                    onPressed: valid
-                        ? () => context.router.push(const OtpRoute())
+                    onPressed: (valid && !loading)
+                        ? () => context.read<RegisterCubit>().requestOtp()
                         : null,
                   );
                 },

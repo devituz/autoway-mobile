@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 mixin _$RegisterState {
 
  String get language;// Passenger pre-selected to match the design's default state.
- UserType get userType; String get phone; String get otp; String get name; String get birthDate; Gender? get gender;
+ UserType get userType; String get phone; String get otp; String get name; String get birthDate; Gender? get gender;// Auth/network state.
+ AuthStatus get status; bool get isRegistered; String? get errorMessage;
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +27,16 @@ $RegisterStateCopyWith<RegisterState> get copyWith => _$RegisterStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterState&&(identical(other.language, language) || other.language == language)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.name, name) || other.name == name)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate)&&(identical(other.gender, gender) || other.gender == gender));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterState&&(identical(other.language, language) || other.language == language)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.name, name) || other.name == name)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.status, status) || other.status == status)&&(identical(other.isRegistered, isRegistered) || other.isRegistered == isRegistered)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,language,userType,phone,otp,name,birthDate,gender);
+int get hashCode => Object.hash(runtimeType,language,userType,phone,otp,name,birthDate,gender,status,isRegistered,errorMessage);
 
 @override
 String toString() {
-  return 'RegisterState(language: $language, userType: $userType, phone: $phone, otp: $otp, name: $name, birthDate: $birthDate, gender: $gender)';
+  return 'RegisterState(language: $language, userType: $userType, phone: $phone, otp: $otp, name: $name, birthDate: $birthDate, gender: $gender, status: $status, isRegistered: $isRegistered, errorMessage: $errorMessage)';
 }
 
 
@@ -46,7 +47,7 @@ abstract mixin class $RegisterStateCopyWith<$Res>  {
   factory $RegisterStateCopyWith(RegisterState value, $Res Function(RegisterState) _then) = _$RegisterStateCopyWithImpl;
 @useResult
 $Res call({
- String language, UserType userType, String phone, String otp, String name, String birthDate, Gender? gender
+ String language, UserType userType, String phone, String otp, String name, String birthDate, Gender? gender, AuthStatus status, bool isRegistered, String? errorMessage
 });
 
 
@@ -63,7 +64,7 @@ class _$RegisterStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? language = null,Object? userType = null,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? language = null,Object? userType = null,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,Object? status = null,Object? isRegistered = null,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,userType: null == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
@@ -72,7 +73,10 @@ as String,otp: null == otp ? _self.otp : otp // ignore: cast_nullable_to_non_nul
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,birthDate: null == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
 as String,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as Gender?,
+as Gender?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as AuthStatus,isRegistered: null == isRegistered ? _self.isRegistered : isRegistered // ignore: cast_nullable_to_non_nullable
+as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender,  AuthStatus status,  bool isRegistered,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisterState() when $default != null:
-return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender);case _:
+return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender,_that.status,_that.isRegistered,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -178,10 +182,10 @@ return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender,  AuthStatus status,  bool isRegistered,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _RegisterState():
-return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender);case _:
+return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender,_that.status,_that.isRegistered,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +202,10 @@ return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String language,  UserType userType,  String phone,  String otp,  String name,  String birthDate,  Gender? gender,  AuthStatus status,  bool isRegistered,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisterState() when $default != null:
-return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender);case _:
+return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_that.birthDate,_that.gender,_that.status,_that.isRegistered,_that.errorMessage);case _:
   return null;
 
 }
@@ -213,7 +217,7 @@ return $default(_that.language,_that.userType,_that.phone,_that.otp,_that.name,_
 
 
 class _RegisterState implements RegisterState {
-  const _RegisterState({this.language = 'uz', this.userType = UserType.passenger, this.phone = '', this.otp = '', this.name = '', this.birthDate = '', this.gender});
+  const _RegisterState({this.language = 'uz', this.userType = UserType.passenger, this.phone = '', this.otp = '', this.name = '', this.birthDate = '', this.gender, this.status = AuthStatus.initial, this.isRegistered = false, this.errorMessage});
   
 
 @override@JsonKey() final  String language;
@@ -224,6 +228,10 @@ class _RegisterState implements RegisterState {
 @override@JsonKey() final  String name;
 @override@JsonKey() final  String birthDate;
 @override final  Gender? gender;
+// Auth/network state.
+@override@JsonKey() final  AuthStatus status;
+@override@JsonKey() final  bool isRegistered;
+@override final  String? errorMessage;
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +243,16 @@ _$RegisterStateCopyWith<_RegisterState> get copyWith => __$RegisterStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterState&&(identical(other.language, language) || other.language == language)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.name, name) || other.name == name)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate)&&(identical(other.gender, gender) || other.gender == gender));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterState&&(identical(other.language, language) || other.language == language)&&(identical(other.userType, userType) || other.userType == userType)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.otp, otp) || other.otp == otp)&&(identical(other.name, name) || other.name == name)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.status, status) || other.status == status)&&(identical(other.isRegistered, isRegistered) || other.isRegistered == isRegistered)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,language,userType,phone,otp,name,birthDate,gender);
+int get hashCode => Object.hash(runtimeType,language,userType,phone,otp,name,birthDate,gender,status,isRegistered,errorMessage);
 
 @override
 String toString() {
-  return 'RegisterState(language: $language, userType: $userType, phone: $phone, otp: $otp, name: $name, birthDate: $birthDate, gender: $gender)';
+  return 'RegisterState(language: $language, userType: $userType, phone: $phone, otp: $otp, name: $name, birthDate: $birthDate, gender: $gender, status: $status, isRegistered: $isRegistered, errorMessage: $errorMessage)';
 }
 
 
@@ -255,7 +263,7 @@ abstract mixin class _$RegisterStateCopyWith<$Res> implements $RegisterStateCopy
   factory _$RegisterStateCopyWith(_RegisterState value, $Res Function(_RegisterState) _then) = __$RegisterStateCopyWithImpl;
 @override @useResult
 $Res call({
- String language, UserType userType, String phone, String otp, String name, String birthDate, Gender? gender
+ String language, UserType userType, String phone, String otp, String name, String birthDate, Gender? gender, AuthStatus status, bool isRegistered, String? errorMessage
 });
 
 
@@ -272,7 +280,7 @@ class __$RegisterStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? language = null,Object? userType = null,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? language = null,Object? userType = null,Object? phone = null,Object? otp = null,Object? name = null,Object? birthDate = null,Object? gender = freezed,Object? status = null,Object? isRegistered = null,Object? errorMessage = freezed,}) {
   return _then(_RegisterState(
 language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,userType: null == userType ? _self.userType : userType // ignore: cast_nullable_to_non_nullable
@@ -281,7 +289,10 @@ as String,otp: null == otp ? _self.otp : otp // ignore: cast_nullable_to_non_nul
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,birthDate: null == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
 as String,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as Gender?,
+as Gender?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as AuthStatus,isRegistered: null == isRegistered ? _self.isRegistered : isRegistered // ignore: cast_nullable_to_non_nullable
+as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

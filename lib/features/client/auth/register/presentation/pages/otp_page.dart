@@ -11,10 +11,11 @@ import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
 import '../cubit/register_cubit.dart';
+import '../cubit/register_state.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/secondary_button.dart';
 
-/// Register step 4 — 4-digit SMS code entry with a resend countdown.
+/// Register step 4 — 6-digit SMS code entry with a resend countdown.
 @RoutePage()
 class OtpPage extends StatefulWidget {
   const OtpPage({super.key});
@@ -24,7 +25,7 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> {
-  static const _length = 4;
+  static const _length = 6;
   static const _resendSeconds = 59;
 
   final _controllers = List.generate(_length, (_) => TextEditingController());
@@ -118,7 +119,12 @@ class _OtpPageState extends State<OtpPage> {
               SizedBox(height: 8.h),
               Center(
                 child: TextButton(
-                  onPressed: _secondsLeft == 0 ? _startCountdown : null,
+                  onPressed: _secondsLeft == 0
+                      ? () {
+                          context.read<RegisterCubit>().requestOtp();
+                          _startCountdown();
+                        }
+                      : null,
                   child: Text(
                     'register.resend'.tr(),
                     style: AppText.button.copyWith(
@@ -135,11 +141,43 @@ class _OtpPageState extends State<OtpPage> {
                 onPressed: () => context.router.maybePop(),
               ),
               SizedBox(height: 12.h),
-              PrimaryButton(
-                label: 'register.continue'.tr(),
-                onPressed: _code.length == _length
-                    ? () => context.router.push(const ProfileRoute())
-                    : null,
+              BlocConsumer<RegisterCubit, RegisterState>(
+                listenWhen: (p, c) => p.status != c.status,
+                listener: (context, state) {
+                  final cubit = context.read<RegisterCubit>();
+                  if (state.status == AuthStatus.success) {
+                    // Existing user logged in → straight to the app.
+                    cubit.resetStatus();
+                    context.router.replaceAll([const MainShellRoute()]);
+                  } else if (state.status == AuthStatus.failure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(state.errorMessage ??
+                              'Kod noto‘g‘ri yoki muddati tugagan')),
+                    );
+                    cubit.resetStatus();
+                  }
+                },
+                builder: (context, state) {
+                  final ready = _code.length == _length;
+                  final loading = state.status == AuthStatus.loading;
+                  return PrimaryButton(
+                    label: 'register.continue'.tr(),
+                    onPressed: (ready && !loading)
+                        ? () {
+                            final cubit = context.read<RegisterCubit>();
+                            cubit.setOtp(_code);
+                            if (state.isRegistered) {
+                              // Login → verify now.
+                              cubit.verify();
+                            } else {
+                              // New user → collect profile, verify there.
+                              context.router.push(const ProfileRoute());
+                            }
+                          }
+                        : null,
+                  );
+                },
               ),
             ],
           ),
@@ -163,8 +201,8 @@ class _OtpBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 70.w,
-      height: 70.w,
+      width: 48.w,
+      height: 56.w,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
