@@ -87,8 +87,9 @@ class AppRouter extends RootStackRouter {
 
   /// A bottom-sheet style route: rises from the bottom, keeps the previous
   /// screen painted behind (the page paints its own translucent scrim).
-  static CustomRoute _sheet(PageInfo page) => CustomRoute(
+  static CustomRoute _sheet(PageInfo page, {bool initial = false}) => CustomRoute(
         page: page,
+        initial: initial,
         transitionsBuilder: TransitionsBuilders.slideBottom,
         opaque: false,
         barrierDismissible: true,
