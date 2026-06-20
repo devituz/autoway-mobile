@@ -10,12 +10,17 @@ class AppConstants {
   static const Duration connectTimeout = Duration(seconds: 15);
   static const Duration receiveTimeout = Duration(seconds: 15);
 
-  // Auth endpoints (relative to baseUrl)
-  static const String authRequest = '/v1/auth/request';
+  // Auth endpoints (relative to baseUrl). Flow:
+  //   check -> (login/request | register/request) -> verify -> tokens
+  static const String authCheck = '/v1/auth/check';
+  static const String authLoginRequest = '/v1/auth/login/request';
+  static const String authRegisterRequest = '/v1/auth/register/request';
   static const String authVerify = '/v1/auth/verify';
   static const String authRefresh = '/v1/auth/refresh';
   static const String authLogout = '/v1/auth/logout';
   static const String me = '/v1/me';
+  static const String mePhoneRequest = '/v1/me/phone/request';
+  static const String uploadImage = '/v1/uploads/image';
 
   // Local storage keys
   static const String accessTokenKey = 'access_token';

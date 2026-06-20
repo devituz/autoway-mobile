@@ -14,34 +14,54 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource(this._client);
 
-  /// Step 1 — send the phone number, receive an SMS code.
-  Future<RequestOtpResult> requestOtp(String phone) async {
+  /// Step 0 — is this phone already registered? Decides login vs register.
+  Future<CheckPhoneResult> check(String phone) async {
     final res = await _client.post<Map<String, dynamic>>(
-      AppConstants.authRequest,
+      AppConstants.authCheck,
+      data: {'phone': phone},
+    );
+    return CheckPhoneResult.fromJson(_data(res));
+  }
+
+  /// LOGIN 1/2 — send an SMS code to an existing user's phone.
+  Future<RequestOtpResult> loginRequest(String phone) async {
+    final res = await _client.post<Map<String, dynamic>>(
+      AppConstants.authLoginRequest,
       data: {'phone': phone},
     );
     return RequestOtpResult.fromJson(_data(res));
   }
 
-  /// Step 2 — verify the code. For a new user pass [fullName]/[birthDate]/
-  /// [gender]/[role] (REGISTER); for an existing one omit them (LOGIN).
+  /// REGISTER 1/2 — create the account (profile) and send an SMS code.
+  Future<RequestOtpResult> registerRequest({
+    required String phone,
+    required String fullName,
+    required String birthDate,
+    required String gender,
+    required String role,
+  }) async {
+    final res = await _client.post<Map<String, dynamic>>(
+      AppConstants.authRegisterRequest,
+      data: {
+        'phone': phone,
+        'full_name': fullName,
+        'birth_date': birthDate,
+        'gender': gender,
+        'role': role,
+      },
+    );
+    return RequestOtpResult.fromJson(_data(res));
+  }
+
+  /// Step 2 — verify the code (both login & register) → tokens. Profile is no
+  /// longer sent here; it was provided in register/request.
   Future<AuthTokens> verify({
     required String phone,
     required String code,
-    String? fullName,
-    String? birthDate,
-    String? gender,
-    String? role,
   }) async {
-    final body = <String, dynamic>{'phone': phone, 'code': code};
-    if (fullName != null) body['full_name'] = fullName;
-    if (birthDate != null) body['birth_date'] = birthDate;
-    if (gender != null) body['gender'] = gender;
-    if (role != null) body['role'] = role;
-
     final res = await _client.post<Map<String, dynamic>>(
       AppConstants.authVerify,
-      data: body,
+      data: {'phone': phone, 'code': code},
     );
     return AuthTokens.fromJson(_data(res));
   }
@@ -57,6 +77,24 @@ class AuthRemoteDataSource {
 
   /// Step 4 — invalidate the current session server-side.
   Future<void> logout() => _client.post<dynamic>(AppConstants.authLogout);
+
+  /// Upload an image to object storage (`POST /v1/uploads/image`, multipart).
+  /// Returns the public URL (response `data.url`).
+  Future<String> uploadImage(String filePath) async {
+    final form = FormData.fromMap({
+      'file': await MultipartFile.fromFile(filePath),
+    });
+    final res = await _client.post<Map<String, dynamic>>(
+      AppConstants.uploadImage,
+      data: form,
+    );
+    final data = _data(res);
+    final url = data['url'] as String?;
+    if (url == null || url.isEmpty) {
+      throw const ServerException('Rasm yuklanmadi');
+    }
+    return url;
+  }
 
   /// Current user profile (`GET /v1/me`).
   Future<AuthUser> getMe() async {

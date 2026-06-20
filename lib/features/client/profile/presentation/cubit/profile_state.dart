@@ -10,6 +10,8 @@ enum ProfileStatus {
   loaded,
   saving,
   saved,
+  uploadingAvatar,
+  avatarUploaded,
   loggedOut,
   failure,
 }
@@ -20,6 +22,10 @@ abstract class ProfileState with _$ProfileState {
   const factory ProfileState({
     @Default(ProfileStatus.initial) ProfileStatus status,
     AuthUser? user,
+    // Avatar uploaded during edit, pending the PUT /me save. Also the local
+    // file path for instant preview before the upload finishes.
+    String? avatarUrl,
+    String? avatarLocalPath,
     String? errorMessage,
   }) = _ProfileState;
 }

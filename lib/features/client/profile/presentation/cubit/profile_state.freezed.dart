@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileState {
 
- ProfileStatus get status; AuthUser? get user; String? get errorMessage;
+ ProfileStatus get status; AuthUser? get user;// Avatar uploaded during edit, pending the PUT /me save. Also the local
+// file path for instant preview before the upload finishes.
+ String? get avatarUrl; String? get avatarLocalPath; String? get errorMessage;
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +27,16 @@ $ProfileStateCopyWith<ProfileState> get copyWith => _$ProfileStateCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileState&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileState&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.avatarLocalPath, avatarLocalPath) || other.avatarLocalPath == avatarLocalPath)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,user,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,user,avatarUrl,avatarLocalPath,errorMessage);
 
 @override
 String toString() {
-  return 'ProfileState(status: $status, user: $user, errorMessage: $errorMessage)';
+  return 'ProfileState(status: $status, user: $user, avatarUrl: $avatarUrl, avatarLocalPath: $avatarLocalPath, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +47,7 @@ abstract mixin class $ProfileStateCopyWith<$Res>  {
   factory $ProfileStateCopyWith(ProfileState value, $Res Function(ProfileState) _then) = _$ProfileStateCopyWithImpl;
 @useResult
 $Res call({
- ProfileStatus status, AuthUser? user, String? errorMessage
+ ProfileStatus status, AuthUser? user, String? avatarUrl, String? avatarLocalPath, String? errorMessage
 });
 
 
@@ -62,11 +64,13 @@ class _$ProfileStateCopyWithImpl<$Res>
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? user = freezed,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? user = freezed,Object? avatarUrl = freezed,Object? avatarLocalPath = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ProfileStatus,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as AuthUser?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as AuthUser?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
+as String?,avatarLocalPath: freezed == avatarLocalPath ? _self.avatarLocalPath : avatarLocalPath // ignore: cast_nullable_to_non_nullable
+as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -152,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProfileStatus status,  AuthUser? user,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProfileStatus status,  AuthUser? user,  String? avatarUrl,  String? avatarLocalPath,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfileState() when $default != null:
-return $default(_that.status,_that.user,_that.errorMessage);case _:
+return $default(_that.status,_that.user,_that.avatarUrl,_that.avatarLocalPath,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -173,10 +177,10 @@ return $default(_that.status,_that.user,_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProfileStatus status,  AuthUser? user,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProfileStatus status,  AuthUser? user,  String? avatarUrl,  String? avatarLocalPath,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _ProfileState():
-return $default(_that.status,_that.user,_that.errorMessage);case _:
+return $default(_that.status,_that.user,_that.avatarUrl,_that.avatarLocalPath,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +197,10 @@ return $default(_that.status,_that.user,_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProfileStatus status,  AuthUser? user,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProfileStatus status,  AuthUser? user,  String? avatarUrl,  String? avatarLocalPath,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfileState() when $default != null:
-return $default(_that.status,_that.user,_that.errorMessage);case _:
+return $default(_that.status,_that.user,_that.avatarUrl,_that.avatarLocalPath,_that.errorMessage);case _:
   return null;
 
 }
@@ -208,11 +212,15 @@ return $default(_that.status,_that.user,_that.errorMessage);case _:
 
 
 class _ProfileState implements ProfileState {
-  const _ProfileState({this.status = ProfileStatus.initial, this.user, this.errorMessage});
+  const _ProfileState({this.status = ProfileStatus.initial, this.user, this.avatarUrl, this.avatarLocalPath, this.errorMessage});
   
 
 @override@JsonKey() final  ProfileStatus status;
 @override final  AuthUser? user;
+// Avatar uploaded during edit, pending the PUT /me save. Also the local
+// file path for instant preview before the upload finishes.
+@override final  String? avatarUrl;
+@override final  String? avatarLocalPath;
 @override final  String? errorMessage;
 
 /// Create a copy of ProfileState
@@ -225,16 +233,16 @@ _$ProfileStateCopyWith<_ProfileState> get copyWith => __$ProfileStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileState&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileState&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.avatarLocalPath, avatarLocalPath) || other.avatarLocalPath == avatarLocalPath)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,user,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,user,avatarUrl,avatarLocalPath,errorMessage);
 
 @override
 String toString() {
-  return 'ProfileState(status: $status, user: $user, errorMessage: $errorMessage)';
+  return 'ProfileState(status: $status, user: $user, avatarUrl: $avatarUrl, avatarLocalPath: $avatarLocalPath, errorMessage: $errorMessage)';
 }
 
 
@@ -245,7 +253,7 @@ abstract mixin class _$ProfileStateCopyWith<$Res> implements $ProfileStateCopyWi
   factory _$ProfileStateCopyWith(_ProfileState value, $Res Function(_ProfileState) _then) = __$ProfileStateCopyWithImpl;
 @override @useResult
 $Res call({
- ProfileStatus status, AuthUser? user, String? errorMessage
+ ProfileStatus status, AuthUser? user, String? avatarUrl, String? avatarLocalPath, String? errorMessage
 });
 
 
@@ -262,11 +270,13 @@ class __$ProfileStateCopyWithImpl<$Res>
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? user = freezed,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? user = freezed,Object? avatarUrl = freezed,Object? avatarLocalPath = freezed,Object? errorMessage = freezed,}) {
   return _then(_ProfileState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ProfileStatus,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as AuthUser?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as AuthUser?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
+as String?,avatarLocalPath: freezed == avatarLocalPath ? _self.avatarLocalPath : avatarLocalPath // ignore: cast_nullable_to_non_nullable
+as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

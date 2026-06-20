@@ -66,16 +66,39 @@ class _OtpPageState extends State<OtpPage> {
     super.dispose();
   }
 
+  bool _submitted = false;
+
   String get _code => _controllers.map((c) => c.text).join();
 
   void _onChanged(int index, String value) {
-    if (value.isNotEmpty && index < _length - 1) {
-      _focusNodes[index + 1].requestFocus();
-    } else if (value.isEmpty && index > 0) {
-      _focusNodes[index - 1].requestFocus();
+    final digits = value.replaceAll(RegExp(r'\D'), '');
+
+    if (digits.isEmpty) {
+      // Backspace on an empty box → step back.
+      _controllers[index].text = '';
+      if (index > 0) _focusNodes[index - 1].requestFocus();
+    } else {
+      // Spread the entered digits across this box and the ones after it. This
+      // keeps fast typing and paste from being dropped (no per-box maxLength).
+      for (var i = 0; i < digits.length && index + i < _length; i++) {
+        _controllers[index + i].text = digits[i];
+      }
+      final next = index + digits.length;
+      if (next >= _length) {
+        FocusScope.of(context).unfocus();
+      } else {
+        _focusNodes[next].requestFocus();
+      }
     }
+
     context.read<RegisterCubit>().setOtp(_code);
     setState(() {});
+
+    // Auto-verify the moment all six digits are in (beats the 60s code TTL).
+    if (_code.length == _length && !_submitted) {
+      _submitted = true;
+      context.read<RegisterCubit>().verify();
+    }
   }
 
   @override
@@ -122,7 +145,7 @@ class _OtpPageState extends State<OtpPage> {
                 child: TextButton(
                   onPressed: _secondsLeft == 0
                       ? () {
-                          context.read<RegisterCubit>().requestOtp();
+                          context.read<RegisterCubit>().resendOtp();
                           _startCountdown();
                         }
                       : null,
@@ -147,7 +170,7 @@ class _OtpPageState extends State<OtpPage> {
                 listener: (context, state) {
                   final cubit = context.read<RegisterCubit>();
                   if (state.status == AuthStatus.success) {
-                    // Existing user logged in → straight to the app.
+                    // Verified (login or register) → into the app.
                     cubit.resetStatus();
                     context.router.replaceAll([const MainShellRoute()]);
                   } else if (state.status == AuthStatus.failure) {
@@ -167,13 +190,7 @@ class _OtpPageState extends State<OtpPage> {
                         ? () {
                             final cubit = context.read<RegisterCubit>();
                             cubit.setOtp(_code);
-                            if (state.isRegistered) {
-                              // Login → verify now.
-                              cubit.verify();
-                            } else {
-                              // New user → collect profile, verify there.
-                              context.router.push(const ProfileRoute());
-                            }
+                            cubit.verify();
                           }
                         : null,
                   );

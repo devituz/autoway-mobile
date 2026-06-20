@@ -23,6 +23,22 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
+  /// Picks-then-uploads happen in the UI; this just uploads the chosen file and
+  /// keeps the returned URL (+ local path for preview) for the next save.
+  Future<void> uploadAvatar(String filePath) async {
+    emit(state.copyWith(
+        status: ProfileStatus.uploadingAvatar,
+        avatarLocalPath: filePath,
+        errorMessage: null));
+    final res = await _repository.uploadImage(filePath);
+    res.fold(
+      (f) => emit(state.copyWith(
+          status: ProfileStatus.failure, errorMessage: f.message)),
+      (url) => emit(state.copyWith(
+          status: ProfileStatus.avatarUploaded, avatarUrl: url)),
+    );
+  }
+
   Future<void> updateProfile({
     String? fullName,
     String? birthDate,
@@ -34,7 +50,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       fullName: fullName,
       birthDate: birthDate,
       gender: gender,
-      avatarUrl: avatarUrl,
+      // Fall back to the avatar uploaded earlier in this edit session.
+      avatarUrl: avatarUrl ?? state.avatarUrl,
     );
     res.fold(
       (f) => emit(state.copyWith(

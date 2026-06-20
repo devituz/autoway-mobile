@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
@@ -83,6 +86,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     await showChangePhoneSheet(context);
   }
 
+  /// Pick an image from the gallery and upload it; the returned URL is kept by
+  /// the cubit and sent with the next Save.
+  Future<void> _pickAvatar() async {
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1024,
+      imageQuality: 85,
+    );
+    if (picked == null || !mounted) return;
+    await context.read<ProfileCubit>().uploadAvatar(picked.path);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProfileCubit, ProfileState>(
@@ -140,23 +155,62 @@ class _EditProfilePageState extends State<EditProfilePage> {
               children: [
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () {},
-                  child: SizedBox(
-                    width: 130.r,
-                    height: 130.r,
-                    child: CustomPaint(
-                      painter: _DashedCirclePainter(
-                        color: const Color(0xFF94A3B8),
-                        strokeWidth: 1,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.image_outlined,
-                          size: 28.sp,
-                          color: AppColors.textSecondary,
+                  onTap: _pickAvatar,
+                  child: BlocBuilder<ProfileCubit, ProfileState>(
+                    buildWhen: (p, c) =>
+                        p.avatarLocalPath != c.avatarLocalPath ||
+                        p.status != c.status,
+                    builder: (context, state) {
+                      final path = state.avatarLocalPath;
+                      final uploading =
+                          state.status == ProfileStatus.uploadingAvatar;
+                      return SizedBox(
+                        width: 130.r,
+                        height: 130.r,
+                        child: CustomPaint(
+                          painter: path == null
+                              ? _DashedCirclePainter(
+                                  color: const Color(0xFF94A3B8),
+                                  strokeWidth: 1,
+                                )
+                              : null,
+                          child: Center(
+                            child: path == null
+                                ? Icon(Icons.image_outlined,
+                                    size: 28.sp, color: AppColors.textSecondary)
+                                : Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      ClipOval(
+                                        child: Image.file(
+                                          File(path),
+                                          width: 130.r,
+                                          height: 130.r,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      if (uploading)
+                                        Container(
+                                          width: 130.r,
+                                          height: 130.r,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Color(0x66000000),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: const CircularProgressIndicator(
+                                            strokeWidth: 2.4,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    AppColors.textOnDark),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
                 SizedBox(height: 8.h),

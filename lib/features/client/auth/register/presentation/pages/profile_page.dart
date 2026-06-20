@@ -44,8 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _finish() {
     FocusScope.of(context).unfocus();
-    // Sends phone + code + profile fields to /auth/verify (REGISTER).
-    context.read<RegisterCubit>().verify();
+    // REGISTER 1/2 — creates the account and sends the OTP; we then go to the
+    // OTP screen to verify (registration completes there).
+    context.read<RegisterCubit>().submitProfile();
   }
 
   @override
@@ -111,11 +112,14 @@ class _ProfilePageState extends State<ProfilePage> {
               BlocConsumer<RegisterCubit, RegisterState>(
                 listenWhen: (p, c) => p.status != c.status,
                 listener: (context, state) {
+                  // Only the visible page navigates — the OTP screen pushed on
+                  // top must not re-trigger this listener.
+                  if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
                   final cubit = context.read<RegisterCubit>();
-                  if (state.status == AuthStatus.success) {
+                  if (state.status == AuthStatus.codeSent) {
+                    // Account created + OTP sent → verify on the next screen.
                     cubit.resetStatus();
-                    AppSnackbar.success(context, 'register.done'.tr());
-                    context.router.replaceAll([const MainShellRoute()]);
+                    context.router.push(const OtpRoute());
                   } else if (state.status == AuthStatus.failure) {
                     AppSnackbar.error(context,
                         state.errorMessage ?? 'Ro‘yxatdan o‘tishda xatolik');

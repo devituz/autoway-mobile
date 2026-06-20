@@ -7,8 +7,10 @@ enum UserType { passenger, driver, serviceA, serviceB }
 
 enum Gender { male, female }
 
-/// Network status for the async auth actions (request OTP / verify).
-enum AuthStatus { initial, loading, codeSent, success, failure }
+/// Network status for the async auth actions.
+/// - codeSent → an OTP was sent (login or register), go to the OTP screen
+/// - needProfile → phone is new, collect profile before register/request
+enum AuthStatus { initial, loading, codeSent, needProfile, success, failure }
 
 /// Single immutable state carried across the whole register flow.
 @freezed

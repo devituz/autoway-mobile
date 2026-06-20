@@ -32,31 +32,59 @@ class RegisterCubit extends Cubit<RegisterState> {
   /// E.164 phone (`+998901112233`) from the 9 stored national digits.
   String get _e164Phone => '+998${state.phone}';
 
-  /// Step 1 — request the SMS code. On success [AuthStatus.codeSent] carries
-  /// [RegisterState.isRegistered] so the OTP screen knows login vs register.
-  Future<void> requestOtp() async {
+  /// Step 0+1 — check the phone, then for an existing user send the login OTP
+  /// ([AuthStatus.codeSent] → OTP screen). A new user needs a profile first
+  /// ([AuthStatus.needProfile] → profile screen).
+  Future<void> submitPhone() async {
     emit(state.copyWith(status: AuthStatus.loading, errorMessage: null));
-    final res = await _repository.requestOtp(_e164Phone);
-    res.fold(
-      (failure) => emit(state.copyWith(
+    final check = await _repository.check(_e164Phone);
+    await check.fold(
+      (failure) async => emit(state.copyWith(
           status: AuthStatus.failure, errorMessage: failure.message)),
-      (data) => emit(state.copyWith(
-          status: AuthStatus.codeSent, isRegistered: data.isRegistered)),
+      (result) async {
+        emit(state.copyWith(isRegistered: result.isRegistered));
+        if (!result.isRegistered) {
+          emit(state.copyWith(status: AuthStatus.needProfile));
+          return;
+        }
+        final otp = await _repository.loginRequest(_e164Phone);
+        otp.fold(
+          (failure) => emit(state.copyWith(
+              status: AuthStatus.failure, errorMessage: failure.message)),
+          (_) => emit(state.copyWith(status: AuthStatus.codeSent)),
+        );
+      },
     );
   }
 
-  /// Step 2 — verify the code. Sends profile fields only when registering a new
-  /// user; existing users log in with phone + code only.
+  /// REGISTER 1/2 — submit the collected profile, which creates the account and
+  /// sends the OTP ([AuthStatus.codeSent] → OTP screen).
+  Future<void> submitProfile() async {
+    emit(state.copyWith(status: AuthStatus.loading, errorMessage: null));
+    final res = await _repository.registerRequest(
+      phone: _e164Phone,
+      fullName: state.name,
+      birthDate: _normalizeBirthDate(state.birthDate),
+      gender: state.gender?.name ?? 'male',
+      role: _role,
+    );
+    res.fold(
+      (failure) => emit(state.copyWith(
+          status: AuthStatus.failure, errorMessage: failure.message)),
+      (_) => emit(state.copyWith(status: AuthStatus.codeSent)),
+    );
+  }
+
+  /// Resend the OTP from the OTP screen. By this point the account always
+  /// exists (login user, or just created by register/request), so a plain
+  /// login OTP is correct — and it emits NO status, so the underlying screens
+  /// don't navigate again.
+  Future<void> resendOtp() => _repository.loginRequest(_e164Phone);
+
+  /// Step 2 — verify the code (login & register both) → tokens persisted.
   Future<void> verify() async {
     emit(state.copyWith(status: AuthStatus.loading, errorMessage: null));
-    final res = await _repository.verify(
-      phone: _e164Phone,
-      code: state.otp,
-      fullName: state.isRegistered ? null : state.name,
-      birthDate: state.isRegistered ? null : _normalizeBirthDate(state.birthDate),
-      gender: state.isRegistered ? null : state.gender?.name,
-      role: state.isRegistered ? null : _role,
-    );
+    final res = await _repository.verify(phone: _e164Phone, code: state.otp);
     res.fold(
       (failure) => emit(state.copyWith(
           status: AuthStatus.failure, errorMessage: failure.message)),

@@ -75,10 +75,18 @@ class _PhonePageState extends State<PhonePage> {
               BlocConsumer<RegisterCubit, RegisterState>(
                 listenWhen: (p, c) => p.status != c.status,
                 listener: (context, state) {
+                  // Only the visible page navigates — stops the OTP screen
+                  // pushed on top from re-triggering this listener.
+                  if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
                   final cubit = context.read<RegisterCubit>();
                   if (state.status == AuthStatus.codeSent) {
+                    // Existing user → OTP was sent, go enter it.
                     cubit.resetStatus();
                     context.router.push(const OtpRoute());
+                  } else if (state.status == AuthStatus.needProfile) {
+                    // New user → collect the profile before requesting the OTP.
+                    cubit.resetStatus();
+                    context.router.push(const ProfileRoute());
                   } else if (state.status == AuthStatus.failure) {
                     AppSnackbar.error(context,
                         state.errorMessage ?? 'Serverda xatolik yuz berdi');
@@ -94,7 +102,7 @@ class _PhonePageState extends State<PhonePage> {
                     label: 'register.send'.tr(),
                     loading: loading,
                     onPressed: valid
-                        ? () => context.read<RegisterCubit>().requestOtp()
+                        ? () => context.read<RegisterCubit>().submitPhone()
                         : null,
                   );
                 },

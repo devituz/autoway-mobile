@@ -70,5 +70,9 @@
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Profil rasmini tanlash uchun galereyaga ruxsat kerak.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Profil rasmini olish uchun kameraga ruxsat kerak.</string>
 	</dict>
 </plist>

@@ -4,7 +4,21 @@
 /// models map the `data` payload only — unwrapping happens in the data source.
 library;
 
-/// `POST /v1/auth/request` → data.
+/// `POST /v1/auth/check` → data. Tells which branch to take next.
+class CheckPhoneResult {
+  final bool isRegistered;
+  final bool isActive;
+
+  const CheckPhoneResult({required this.isRegistered, required this.isActive});
+
+  factory CheckPhoneResult.fromJson(Map<String, dynamic> json) =>
+      CheckPhoneResult(
+        isRegistered: json['is_registered'] as bool? ?? false,
+        isActive: json['is_active'] as bool? ?? true,
+      );
+}
+
+/// `POST /v1/auth/{login,register}/request` → data.
 class RequestOtpResult {
   /// Whether the phone already has an account (login) or not (register).
   final bool isRegistered;
@@ -67,12 +81,14 @@ class AuthTokens {
   final String accessToken;
   final String refreshToken;
   final int expiresIn;
+  final bool isNewUser;
   final AuthUser? user;
 
   const AuthTokens({
     required this.accessToken,
     required this.refreshToken,
     required this.expiresIn,
+    this.isNewUser = false,
     this.user,
   });
 
@@ -80,6 +96,7 @@ class AuthTokens {
         accessToken: json['access_token'] as String? ?? '',
         refreshToken: json['refresh_token'] as String? ?? '',
         expiresIn: (json['expires_in'] as num?)?.toInt() ?? 0,
+        isNewUser: json['is_new_user'] as bool? ?? false,
         user: json['user'] is Map<String, dynamic>
             ? AuthUser.fromJson(json['user'] as Map<String, dynamic>)
             : null,

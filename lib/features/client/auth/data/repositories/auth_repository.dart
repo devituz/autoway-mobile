@@ -15,26 +15,33 @@ class AuthRepository {
 
   AuthRepository(this._remote, this._tokenStorage);
 
-  Future<Either<Failure, RequestOtpResult>> requestOtp(String phone) =>
-      _guard(() => _remote.requestOtp(phone));
+  Future<Either<Failure, CheckPhoneResult>> check(String phone) =>
+      _guard(() => _remote.check(phone));
+
+  Future<Either<Failure, RequestOtpResult>> loginRequest(String phone) =>
+      _guard(() => _remote.loginRequest(phone));
+
+  Future<Either<Failure, RequestOtpResult>> registerRequest({
+    required String phone,
+    required String fullName,
+    required String birthDate,
+    required String gender,
+    required String role,
+  }) =>
+      _guard(() => _remote.registerRequest(
+            phone: phone,
+            fullName: fullName,
+            birthDate: birthDate,
+            gender: gender,
+            role: role,
+          ));
 
   Future<Either<Failure, AuthTokens>> verify({
     required String phone,
     required String code,
-    String? fullName,
-    String? birthDate,
-    String? gender,
-    String? role,
   }) =>
       _guard(() async {
-        final tokens = await _remote.verify(
-          phone: phone,
-          code: code,
-          fullName: fullName,
-          birthDate: birthDate,
-          gender: gender,
-          role: role,
-        );
+        final tokens = await _remote.verify(phone: phone, code: code);
         await _persist(tokens);
         return tokens;
       });
@@ -51,6 +58,9 @@ class AuthRepository {
         await _tokenStorage.clear();
         return unit;
       });
+
+  Future<Either<Failure, String>> uploadImage(String filePath) =>
+      _guard(() => _remote.uploadImage(filePath));
 
   Future<Either<Failure, AuthUser>> getMe() => _guard(() => _remote.getMe());
 
