@@ -375,7 +375,12 @@ class _FeaturedGrid extends StatelessWidget {
         arrow: false,
         onTap: () => context.router.push(const IntercityAddressRoute()),
       ),
-      (label: 'home.cargo'.tr(), iconPath: 'assets/images/ill_box.png', arrow: false, onTap: null),
+      (
+        label: 'home.cargo'.tr(),
+        iconPath: 'assets/images/ill_box.png',
+        arrow: false,
+        onTap: () => context.router.push(const CargoAddressRoute()),
+      ),
       (label: 'home.route_taxi'.tr(), iconPath: 'assets/images/ill_pin.png', arrow: true, onTap: null),
       (label: 'home.energy'.tr(), iconPath: 'assets/images/ill_flash.svg', arrow: true, onTap: null),
     ];

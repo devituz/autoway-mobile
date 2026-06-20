@@ -11,6 +11,253 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [CargoAddressPage]
+class CargoAddressRoute extends PageRouteInfo<void> {
+  const CargoAddressRoute({List<PageRouteInfo>? children})
+    : super(CargoAddressRoute.name, initialChildren: children);
+
+  static const String name = 'CargoAddressRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CargoAddressPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CargoDistrictPickPage]
+class CargoDistrictPickRoute extends PageRouteInfo<CargoDistrictPickRouteArgs> {
+  CargoDistrictPickRoute({
+    Key? key,
+    String regionName = 'Andijon viloyati',
+    List<PageRouteInfo>? children,
+  }) : super(
+         CargoDistrictPickRoute.name,
+         args: CargoDistrictPickRouteArgs(key: key, regionName: regionName),
+         initialChildren: children,
+       );
+
+  static const String name = 'CargoDistrictPickRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CargoDistrictPickRouteArgs>(
+        orElse: () => const CargoDistrictPickRouteArgs(),
+      );
+      return CargoDistrictPickPage(key: args.key, regionName: args.regionName);
+    },
+  );
+}
+
+class CargoDistrictPickRouteArgs {
+  const CargoDistrictPickRouteArgs({
+    this.key,
+    this.regionName = 'Andijon viloyati',
+  });
+
+  final Key? key;
+
+  final String regionName;
+
+  @override
+  String toString() {
+    return 'CargoDistrictPickRouteArgs{key: $key, regionName: $regionName}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CargoDistrictPickRouteArgs) return false;
+    return key == other.key && regionName == other.regionName;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ regionName.hashCode;
+}
+
+/// generated route for
+/// [CargoDriverDetailPage]
+class CargoDriverDetailRoute extends PageRouteInfo<void> {
+  const CargoDriverDetailRoute({List<PageRouteInfo>? children})
+    : super(CargoDriverDetailRoute.name, initialChildren: children);
+
+  static const String name = 'CargoDriverDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CargoDriverDetailPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CargoDriverOfferPage]
+class CargoDriverOfferRoute extends PageRouteInfo<void> {
+  const CargoDriverOfferRoute({List<PageRouteInfo>? children})
+    : super(CargoDriverOfferRoute.name, initialChildren: children);
+
+  static const String name = 'CargoDriverOfferRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CargoDriverOfferPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CargoDriversPage]
+class CargoDriversRoute extends PageRouteInfo<void> {
+  const CargoDriversRoute({List<PageRouteInfo>? children})
+    : super(CargoDriversRoute.name, initialChildren: children);
+
+  static const String name = 'CargoDriversRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CargoDriversPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CargoOrderFormPage]
+class CargoOrderFormRoute extends PageRouteInfo<void> {
+  const CargoOrderFormRoute({List<PageRouteInfo>? children})
+    : super(CargoOrderFormRoute.name, initialChildren: children);
+
+  static const String name = 'CargoOrderFormRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CargoOrderFormPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CargoRateDriverPage]
+class CargoRateDriverRoute extends PageRouteInfo<void> {
+  const CargoRateDriverRoute({List<PageRouteInfo>? children})
+    : super(CargoRateDriverRoute.name, initialChildren: children);
+
+  static const String name = 'CargoRateDriverRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CargoRateDriverPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CargoRegionPickPage]
+class CargoRegionPickRoute extends PageRouteInfo<CargoRegionPickRouteArgs> {
+  CargoRegionPickRoute({
+    Key? key,
+    bool toDestination = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CargoRegionPickRoute.name,
+         args: CargoRegionPickRouteArgs(key: key, toDestination: toDestination),
+         initialChildren: children,
+       );
+
+  static const String name = 'CargoRegionPickRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CargoRegionPickRouteArgs>(
+        orElse: () => const CargoRegionPickRouteArgs(),
+      );
+      return CargoRegionPickPage(
+        key: args.key,
+        toDestination: args.toDestination,
+      );
+    },
+  );
+}
+
+class CargoRegionPickRouteArgs {
+  const CargoRegionPickRouteArgs({this.key, this.toDestination = false});
+
+  final Key? key;
+
+  final bool toDestination;
+
+  @override
+  String toString() {
+    return 'CargoRegionPickRouteArgs{key: $key, toDestination: $toDestination}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CargoRegionPickRouteArgs) return false;
+    return key == other.key && toDestination == other.toDestination;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ toDestination.hashCode;
+}
+
+/// generated route for
+/// [CargoStatusPage]
+class CargoStatusRoute extends PageRouteInfo<CargoStatusRouteArgs> {
+  CargoStatusRoute({
+    Key? key,
+    required CargoStatus status,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CargoStatusRoute.name,
+         args: CargoStatusRouteArgs(key: key, status: status),
+         initialChildren: children,
+       );
+
+  static const String name = 'CargoStatusRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CargoStatusRouteArgs>();
+      return CargoStatusPage(key: args.key, status: args.status);
+    },
+  );
+}
+
+class CargoStatusRouteArgs {
+  const CargoStatusRouteArgs({this.key, required this.status});
+
+  final Key? key;
+
+  final CargoStatus status;
+
+  @override
+  String toString() {
+    return 'CargoStatusRouteArgs{key: $key, status: $status}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CargoStatusRouteArgs) return false;
+    return key == other.key && status == other.status;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ status.hashCode;
+}
+
+/// generated route for
 /// [EditProfilePage]
 class EditProfileRoute extends PageRouteInfo<void> {
   const EditProfileRoute({List<PageRouteInfo>? children})

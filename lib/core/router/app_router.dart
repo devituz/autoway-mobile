@@ -6,6 +6,16 @@ import '../../features/client/auth/register/presentation/pages/otp_page.dart';
 import '../../features/client/auth/register/presentation/pages/phone_page.dart';
 import '../../features/client/auth/register/presentation/pages/profile_page.dart';
 import '../../features/client/auth/register/presentation/pages/user_type_page.dart';
+import '../../features/client/cargo/domain/cargo_status.dart';
+import '../../features/client/cargo/presentation/pages/cargo_address_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_district_pick_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_driver_detail_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_driver_offer_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_drivers_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_order_form_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_rate_driver_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_region_pick_page.dart';
+import '../../features/client/cargo/presentation/pages/cargo_status_page.dart';
 import '../../features/client/home/presentation/pages/main_shell_page.dart';
 import '../../features/client/home/presentation/pages/notifications_page.dart';
 import '../../features/client/intercity/domain/intercity_trip_status.dart';
@@ -63,6 +73,16 @@ class AppRouter extends RootStackRouter {
     _sheet(IntercityCancelOrderRoute.page),
     AutoRoute(page: IntercityCancelledRoute.page),
     _sheet(IntercityRateDriverRoute.page),
+    // Cargo (Pochta / Yuk yetkazma) flow.
+    AutoRoute(page: CargoAddressRoute.page),
+    AutoRoute(page: CargoRegionPickRoute.page),
+    AutoRoute(page: CargoDistrictPickRoute.page),
+    AutoRoute(page: CargoOrderFormRoute.page),
+    AutoRoute(page: CargoDriversRoute.page),
+    AutoRoute(page: CargoDriverDetailRoute.page),
+    AutoRoute(page: CargoStatusRoute.page),
+    _sheet(CargoDriverOfferRoute.page),
+    _sheet(CargoRateDriverRoute.page),
   ];
 
   /// A bottom-sheet style route: rises from the bottom, keeps the previous
