@@ -48,7 +48,17 @@
     "depart_at": "Departure: {time}",
     "nav_home": "Home",
     "nav_orders": "Orders",
-    "nav_profile": "Profile"
+    "nav_profile": "Profile",
+    "driver_rating": "Rating",
+    "driver_activity": "Activity",
+    "driver_accept_order": "Accept order",
+    "driver_go_online": "Go online",
+    "driver_you_online": "You are online",
+    "driver_back_to_accept": "Back to accepting orders",
+    "driver_services": "Services",
+    "driver_servis": "Service",
+    "driver_taxi": "Taxi",
+    "driver_parcel": "Parcel"
   },
   "notifications": {
     "messages": "Messages",

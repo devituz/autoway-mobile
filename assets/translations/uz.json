@@ -48,7 +48,17 @@
     "depart_at": "Ketadigan vaqti: {time}",
     "nav_home": "Bosh sahifa",
     "nav_orders": "Buyurtmalar",
-    "nav_profile": "Profil"
+    "nav_profile": "Profil",
+    "driver_rating": "Reyting",
+    "driver_activity": "Faollik",
+    "driver_accept_order": "Buyurtma qabul qilish",
+    "driver_go_online": "Liniyaga chiqish",
+    "driver_you_online": "Siz liniyadasiz",
+    "driver_back_to_accept": "Buyurtma qabul qilishga qaytish",
+    "driver_services": "Hizmatlar",
+    "driver_servis": "Servis",
+    "driver_taxi": "Taxi",
+    "driver_parcel": "Posilka"
   },
   "notifications": {
     "messages": "Xabarlar",

@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import 'driver_home_view.dart';
 
 /// Main client screen body (Bosh sahifa tab) hosted inside [MainShellPage].
 class HomePage extends StatefulWidget {
@@ -21,6 +22,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Driver mode shows a different home (Figma 2193:20944 / 2222:28540).
+    if (_role == 1) {
+      return DriverHomeView(
+        role: _role,
+        onRoleChanged: (i) => setState(() => _role = i),
+      );
+    }
     // The whole page scrolls — the dark header scrolls away with the content.
     return Scaffold(
       backgroundColor: AppColors.accent,

@@ -48,7 +48,17 @@
     "depart_at": "Время отправления: {time}",
     "nav_home": "Главная",
     "nav_orders": "Заказы",
-    "nav_profile": "Профиль"
+    "nav_profile": "Профиль",
+    "driver_rating": "Рейтинг",
+    "driver_activity": "Активность",
+    "driver_accept_order": "Принять заказ",
+    "driver_go_online": "Выйти на линию",
+    "driver_you_online": "Вы на линии",
+    "driver_back_to_accept": "Вернуться к приёму заказов",
+    "driver_services": "Услуги",
+    "driver_servis": "Сервис",
+    "driver_taxi": "Такси",
+    "driver_parcel": "Посылка"
   },
   "notifications": {
     "messages": "Сообщения",
