@@ -59,8 +59,11 @@ class AuthRepository {
         return unit;
       });
 
-  Future<Either<Failure, String>> uploadImage(String filePath) =>
-      _guard(() => _remote.uploadImage(filePath));
+  Future<Either<Failure, String>> uploadImage(
+    String filePath, {
+    required String folder,
+  }) =>
+      _guard(() => _remote.uploadImage(filePath, folder: folder));
 
   Future<Either<Failure, AuthUser>> getMe() => _guard(() => _remote.getMe());
 

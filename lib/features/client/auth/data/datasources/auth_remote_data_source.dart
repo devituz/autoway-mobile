@@ -79,10 +79,12 @@ class AuthRemoteDataSource {
   Future<void> logout() => _client.post<dynamic>(AppConstants.authLogout);
 
   /// Upload an image to object storage (`POST /v1/uploads/image`, multipart).
-  /// Returns the public URL (response `data.url`).
-  Future<String> uploadImage(String filePath) async {
+  /// [folder] is REQUIRED by the backend (e.g. `avatars`, `notifications`);
+  /// the file is stored under it. Returns the public URL (response `data.url`).
+  Future<String> uploadImage(String filePath, {required String folder}) async {
     final form = FormData.fromMap({
       'file': await MultipartFile.fromFile(filePath),
+      'folder': folder,
     });
     final res = await _client.post<Map<String, dynamic>>(
       AppConstants.uploadImage,

@@ -30,7 +30,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         status: ProfileStatus.uploadingAvatar,
         avatarLocalPath: filePath,
         errorMessage: null));
-    final res = await _repository.uploadImage(filePath);
+    final res = await _repository.uploadImage(filePath, folder: 'avatars');
     res.fold(
       (f) => emit(state.copyWith(
           status: ProfileStatus.failure, errorMessage: f.message)),
