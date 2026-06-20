@@ -95,7 +95,7 @@ class _AutoWayAppState extends State<AutoWayApp> {
       builder: (context, child) => MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => RegisterCubit(sl())),
-          BlocProvider(create: (_) => ProfileCubit(sl())),
+          BlocProvider(create: (_) => ProfileCubit(sl(), sl())),
         ],
         child: MaterialApp.router(
           title: 'AutoWay',

@@ -78,26 +78,6 @@ class AuthRemoteDataSource {
   /// Step 4 — invalidate the current session server-side.
   Future<void> logout() => _client.post<dynamic>(AppConstants.authLogout);
 
-  /// Upload an image to object storage (`POST /v1/uploads/image`, multipart).
-  /// [folder] is REQUIRED by the backend (e.g. `avatars`, `notifications`);
-  /// the file is stored under it. Returns the public URL (response `data.url`).
-  Future<String> uploadImage(String filePath, {required String folder}) async {
-    final form = FormData.fromMap({
-      'file': await MultipartFile.fromFile(filePath),
-      'folder': folder,
-    });
-    final res = await _client.post<Map<String, dynamic>>(
-      AppConstants.uploadImage,
-      data: form,
-    );
-    final data = _data(res);
-    final url = data['url'] as String?;
-    if (url == null || url.isEmpty) {
-      throw const ServerException('Rasm yuklanmadi');
-    }
-    return url;
-  }
-
   /// Current user profile (`GET /v1/me`).
   Future<AuthUser> getMe() async {
     final res = await _client.get<Map<String, dynamic>>(AppConstants.me);

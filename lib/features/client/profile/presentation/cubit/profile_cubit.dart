@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/upload/upload_service.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import 'profile_state.dart';
 
@@ -7,8 +8,10 @@ import 'profile_state.dart';
 /// A single instance is shared across the main shell and the edit screen.
 class ProfileCubit extends Cubit<ProfileState> {
   final AuthRepository _repository;
+  final UploadService _uploadService;
 
-  ProfileCubit(this._repository) : super(const ProfileState());
+  ProfileCubit(this._repository, this._uploadService)
+      : super(const ProfileState());
 
   /// Loads the current user. Skips the network call if already loaded so
   /// re-entering the Profile tab doesn't flash a spinner.
@@ -30,7 +33,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         status: ProfileStatus.uploadingAvatar,
         avatarLocalPath: filePath,
         errorMessage: null));
-    final res = await _repository.uploadImage(filePath, folder: 'avatars');
+    final res = await _uploadService.uploadImage(filePath, folder: 'avatars');
     res.fold(
       (f) => emit(state.copyWith(
           status: ProfileStatus.failure, errorMessage: f.message)),

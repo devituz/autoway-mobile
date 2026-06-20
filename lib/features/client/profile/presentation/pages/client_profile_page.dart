@@ -65,7 +65,11 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
               Expanded(child: Container(color: AppColors.lightGrey)),
             ],
           ),
-          SingleChildScrollView(
+          RefreshIndicator(
+            onRefresh: () => context.read<ProfileCubit>().load(force: true),
+            color: AppColors.primary,
+            child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
           // Dark header with rounded bottom (Figma 2232:24130).
@@ -287,6 +291,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
               ),
               ],
             ),
+          ),
           ),
         ],
       ),

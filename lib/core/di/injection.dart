@@ -8,6 +8,7 @@ import '../network/dio_client.dart';
 import '../network/interceptors/auth_interceptor.dart';
 import '../network/interceptors/refresh_interceptor.dart';
 import '../storage/token_storage.dart';
+import '../upload/upload_service.dart';
 
 final sl = GetIt.instance; // sl stands for Service Locator
 
@@ -22,6 +23,7 @@ Future<void> initInjection() async {
   sl.registerLazySingleton(() => AuthInterceptor(sl()));
   sl.registerLazySingleton(() => RefreshInterceptor(sl()));
   sl.registerLazySingleton(() => DioClient(sl(), sl(), sl()));
+  sl.registerLazySingleton(() => UploadService(sl()));
 
   // Auth feature
   sl.registerLazySingleton(() => AuthRemoteDataSource(sl()));
