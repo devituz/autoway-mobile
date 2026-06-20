@@ -90,7 +90,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       listener: (context, state) {
         if (state.status == ProfileStatus.saved) {
           context.read<ProfileCubit>().clearStatus();
-          AppSnackbar.success(context, 'edit.title'.tr());
+          AppSnackbar.success(context, 'edit.saved'.tr());
           context.router.maybePop();
         } else if (state.status == ProfileStatus.failure) {
           AppSnackbar.error(

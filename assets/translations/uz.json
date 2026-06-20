@@ -128,7 +128,8 @@
     "back": "Ortga",
     "save": "Saqlash",
     "upload_photo": "Profil ranmingizni yuklang",
-    "close": "Yopish"
+    "close": "Yopish",
+    "saved": "Profil saqlandi"
   },
   "change_phone": {
     "title": "Telefon raqaminmi ozgartirish",
