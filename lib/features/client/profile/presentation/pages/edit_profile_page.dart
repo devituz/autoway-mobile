@@ -164,52 +164,74 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       final path = state.avatarLocalPath;
                       final uploading =
                           state.status == ProfileStatus.uploadingAvatar;
-                      return SizedBox(
+                      final avatarUrl = state.user?.avatarUrl ?? '';
+
+                      final placeholder = SizedBox(
                         width: 130.r,
                         height: 130.r,
                         child: CustomPaint(
-                          painter: path == null
-                              ? _DashedCirclePainter(
-                                  color: const Color(0xFF94A3B8),
-                                  strokeWidth: 1,
-                                )
-                              : null,
+                          painter: _DashedCirclePainter(
+                            color: const Color(0xFF94A3B8),
+                            strokeWidth: 1,
+                          ),
                           child: Center(
-                            child: path == null
-                                ? Icon(Icons.image_outlined,
-                                    size: 28.sp, color: AppColors.textSecondary)
-                                : Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      ClipOval(
-                                        child: Image.file(
-                                          File(path),
-                                          width: 130.r,
-                                          height: 130.r,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      if (uploading)
-                                        Container(
-                                          width: 130.r,
-                                          height: 130.r,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0x66000000),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: const CircularProgressIndicator(
-                                            strokeWidth: 2.4,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                    AppColors.textOnDark),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
+                            child: Icon(Icons.image_outlined,
+                                size: 28.sp, color: AppColors.textSecondary),
                           ),
                         ),
                       );
+
+                      if (path != null) {
+                        return SizedBox(
+                          width: 130.r,
+                          height: 130.r,
+                          child: Center(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                ClipOval(
+                                  child: Image.file(
+                                    File(path),
+                                    width: 130.r,
+                                    height: 130.r,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                if (uploading)
+                                  Container(
+                                    width: 130.r,
+                                    height: 130.r,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0x66000000),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: const CircularProgressIndicator(
+                                      strokeWidth: 2.4,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          AppColors.textOnDark),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (avatarUrl.isNotEmpty) {
+                        return ClipOval(
+                          child: Image.network(
+                            avatarUrl,
+                            width: 130.r,
+                            height: 130.r,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                placeholder,
+                          ),
+                        );
+                      }
+
+                      return placeholder;
                     },
                   ),
                 ),

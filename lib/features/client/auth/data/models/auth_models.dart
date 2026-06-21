@@ -45,6 +45,7 @@ class AuthUser {
   final String phone;
   final String gender;
   final String birthDate;
+  final String avatarUrl;
   final num balance;
   final int idBalance;
   final String language;
@@ -56,6 +57,7 @@ class AuthUser {
     required this.phone,
     required this.gender,
     required this.birthDate,
+    required this.avatarUrl,
     required this.balance,
     required this.idBalance,
     required this.language,
@@ -68,6 +70,7 @@ class AuthUser {
         phone: json['phone'] as String? ?? '',
         gender: json['gender'] as String? ?? '',
         birthDate: json['birth_date'] as String? ?? '',
+        avatarUrl: json['avatar_url'] as String? ?? '',
         balance: json['balance'] as num? ?? 0,
         idBalance: (json['id_balance'] as num?)?.toInt() ?? 0,
         language: json['language'] as String? ?? 'uz',

@@ -140,16 +140,31 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                       children: [
                         Row(
                           children: [
-                            Container(
-                              width: 48.r,
-                              height: 48.r,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                color: Colors.white24,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.person,
-                                  size: 26.sp, color: Colors.white),
+                            BlocBuilder<ProfileCubit, ProfileState>(
+                              builder: (context, state) {
+                                final avatarUrl = state.user?.avatarUrl ?? '';
+                                final fallback = Container(
+                                  width: 48.r,
+                                  height: 48.r,
+                                  alignment: Alignment.center,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white24,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(Icons.person,
+                                      size: 26.sp, color: Colors.white),
+                                );
+                                if (avatarUrl.isEmpty) return fallback;
+                                return ClipOval(
+                                  child: Image.network(
+                                    avatarUrl,
+                                    width: 48.r,
+                                    height: 48.r,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, _, _) => fallback,
+                                  ),
+                                );
+                              },
                             ),
                             SizedBox(width: 8.w),
                             BlocBuilder<ProfileCubit, ProfileState>(
