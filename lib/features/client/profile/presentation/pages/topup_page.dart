@@ -2,13 +2,28 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import '../../../../../core/widgets/app_snackbar.dart';
+import '../cubit/profile_cubit.dart';
+import '../cubit/profile_state.dart';
 
 const _icons = 'assets/icons';
+
+/// Groups thousands with a space (e.g. 50000 → "50 000").
+String _money(num value) {
+  final s = value.toInt().toString();
+  final buf = StringBuffer();
+  for (var i = 0; i < s.length; i++) {
+    if (i > 0 && (s.length - i) % 3 == 0) buf.write(' ');
+    buf.write(s[i]);
+  }
+  return buf.toString();
+}
 
 /// Balance top-up (Balans to'ldirish) — Figma node 2066:14825.
 /// Reached from the Profile "Toldirish" button.
@@ -28,6 +43,19 @@ class _TopUpPageState extends State<TopUpPage> {
   void dispose() {
     _amount.dispose();
     super.dispose();
+  }
+
+  void _onSubmit() {
+    final amount =
+        num.tryParse(_amount.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+    if (amount <= 0) {
+      AppSnackbar.error(context, 'topup.amount'.tr());
+      return;
+    }
+    context.read<ProfileCubit>().topUp(amount);
+    AppSnackbar.success(
+        context, '${_money(amount)} ${'home.currency'.tr()}');
+    context.router.maybePop();
   }
 
   @override
@@ -52,29 +80,37 @@ class _TopUpPageState extends State<TopUpPage> {
                             color: AppColors.lightGrey,
                             borderRadius: BorderRadius.circular(16.r),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          child: BlocBuilder<ProfileCubit, ProfileState>(
+                            builder: (context, state) {
+                              final u = state.user;
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('topup.balance'.tr(),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('topup.balance'.tr(),
+                                          style: AppText.subtitle.copyWith(
+                                              fontSize: 14.sp,
+                                              color: AppColors.textMuted)),
+                                      SizedBox(height: 2.h),
+                                      Text('ID: ${u?.idBalance ?? '-'}',
+                                          style: AppText.subtitle.copyWith(
+                                              fontSize: 14.sp,
+                                              color: AppColors.textDark)),
+                                    ],
+                                  ),
+                                  Text(
+                                      '${_money(u?.balance ?? 0)} ${'home.currency'.tr()}',
                                       style: AppText.subtitle.copyWith(
-                                          fontSize: 14.sp,
-                                          color: AppColors.textMuted)),
-                                  SizedBox(height: 2.h),
-                                  Text('ID: 78946',
-                                      style: AppText.subtitle.copyWith(
-                                          fontSize: 14.sp,
-                                          color: AppColors.textDark)),
+                                          fontSize: 18.sp,
+                                          color: AppColors.textDark,
+                                          fontWeight: FontWeight.w600)),
                                 ],
-                              ),
-                              Text('50,000 so‘m',
-                                  style: AppText.subtitle.copyWith(
-                                      fontSize: 18.sp,
-                                      color: AppColors.textDark,
-                                      fontWeight: FontWeight.w600)),
-                            ],
+                              );
+                            },
                           ),
                         ),
                         SizedBox(height: 10.h),
@@ -124,7 +160,7 @@ class _TopUpPageState extends State<TopUpPage> {
                           onTap: () => setState(() => _method = 'uzum'),
                         ),
                         SizedBox(height: 10.h),
-                        _SubmitButton(onTap: () {}),
+                        _SubmitButton(onTap: _onSubmit),
                       ],
                     ),
                   ),

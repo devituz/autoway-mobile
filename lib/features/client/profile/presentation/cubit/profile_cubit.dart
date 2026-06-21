@@ -63,6 +63,15 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
+  /// Add [amount] to the local balance so the Profile reflects a top-up
+  /// immediately. NOTE: the backend has no top-up endpoint yet, so this is a
+  /// client-side (demo) increment; a real /me refresh would re-sync it.
+  void topUp(num amount) {
+    final user = state.user;
+    if (user == null || amount <= 0) return;
+    emit(state.copyWith(user: user.copyWith(balance: user.balance + amount)));
+  }
+
   Future<void> logout() async {
     emit(state.copyWith(status: ProfileStatus.loading, errorMessage: null));
     // Even if the server call fails, the local session is cleared by the

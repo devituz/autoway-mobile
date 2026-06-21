@@ -64,6 +64,20 @@ class AuthUser {
     required this.roles,
   });
 
+  AuthUser copyWith({num? balance, String? avatarUrl, String? fullName}) =>
+      AuthUser(
+        id: id,
+        fullName: fullName ?? this.fullName,
+        phone: phone,
+        gender: gender,
+        birthDate: birthDate,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        balance: balance ?? this.balance,
+        idBalance: idBalance,
+        language: language,
+        roles: roles,
+      );
+
   factory AuthUser.fromJson(Map<String, dynamic> json) => AuthUser(
         id: (json['id'] as num?)?.toInt() ?? 0,
         fullName: json['full_name'] as String? ?? '',
