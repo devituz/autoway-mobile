@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
-import '../../../../../../core/theme/app_text.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
 import '../widgets/primary_button.dart';
@@ -25,67 +24,77 @@ class UserTypePage extends StatelessWidget {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
+          padding: EdgeInsets.fromLTRB(14.w, 31.h, 14.w, 16.h),
           child: BlocBuilder<RegisterCubit, RegisterState>(
             buildWhen: (p, c) => p.userType != c.userType,
             builder: (context, state) {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('register.choose_user_type'.tr(),
-                      style: AppText.screenTitle
-                          .copyWith(color: AppColors.textPrimary)),
-                  SizedBox(height: 24.h),
-                  Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 14.h,
-                      crossAxisSpacing: 14.w,
-                      childAspectRatio: 1.15,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        SelectableCard(
-                          icon: Icons.person_outline,
-                          label: 'register.passenger'.tr(),
-                          selected: state.userType == UserType.passenger,
-                          onTap: () => cubit.setUserType(UserType.passenger),
-                        ),
-                        SelectableCard(
-                          icon: Icons.local_taxi_outlined,
-                          label: 'register.driver'.tr(),
-                          selected: state.userType == UserType.driver,
-                          onTap: () => cubit.setUserType(UserType.driver),
-                        ),
-                        SelectableCard(
-                          icon: Icons.directions_car_outlined,
-                          label: 'register.new_service'.tr(),
-                          selected: false,
-                          enabled: false,
-                          onTap: () {},
-                        ),
-                        SelectableCard(
-                          icon: Icons.directions_car_outlined,
-                          label: 'register.new_service'.tr(),
-                          selected: false,
-                          enabled: false,
-                          onTap: () {},
-                        ),
-                      ],
+                  Text(
+                    'register.choose_user_type'.tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
                     ),
                   ),
+                  SizedBox(height: 33.h),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12.h,
+                    crossAxisSpacing: 4.w,
+                    childAspectRatio: 175 / 130,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      SelectableCard(
+                        icon: Icons.person_outline,
+                        label: 'register.passenger'.tr(),
+                        selected: state.userType == UserType.passenger,
+                        onTap: () => cubit.setUserType(UserType.passenger),
+                      ),
+                      SelectableCard(
+                        icon: Icons.local_taxi_outlined,
+                        label: 'register.driver'.tr(),
+                        selected: state.userType == UserType.driver,
+                        onTap: () => cubit.setUserType(UserType.driver),
+                      ),
+                      SelectableCard(
+                        icon: Icons.directions_car_outlined,
+                        label: 'register.new_service'.tr(),
+                        selected: false,
+                        enabled: false,
+                        onTap: () {},
+                      ),
+                      SelectableCard(
+                        icon: Icons.directions_car_outlined,
+                        label: 'register.new_service'.tr(),
+                        selected: false,
+                        enabled: false,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
                   Center(
-                    child: TextButton(
-                      onPressed: () {},
+                    child: GestureDetector(
+                      onTap: () {},
                       child: Text(
                         'register.offer_agreement'.tr(),
-                        style: AppText.subtitle.copyWith(
-                          color: AppColors.textSecondary,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          height: 20 / 14,
+                          color: AppColors.textDark,
                           decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 12.h),
                   SecondaryButton(
                     label: 'register.back'.tr(),
                     onPressed: () => context.router.maybePop(),

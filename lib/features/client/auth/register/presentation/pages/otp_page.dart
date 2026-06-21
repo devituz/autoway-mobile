@@ -108,39 +108,53 @@ class _OtpPageState extends State<OtpPage> {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
+          padding: EdgeInsets.fromLTRB(16.w, 31.h, 16.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('register.otp_title'.tr(),
-                  style: AppText.screenTitle
-                      .copyWith(color: AppColors.textPrimary)),
-              SizedBox(height: 8.h),
+                  style: AppText.screenTitle.copyWith(
+                    fontSize: 20.sp,
+                    color: AppColors.textDark,
+                  )),
+              SizedBox(height: 12.h),
               Text(
                 'register.otp_subtitle'.tr(namedArgs: {'phone': '+998 $phone'}),
-                style: AppText.subtitle.copyWith(color: AppColors.textSecondary),
+                style: AppText.subtitle.copyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  height: 20 / 16,
+                  color: AppColors.textMuted,
+                ),
               ),
               SizedBox(height: 24.h),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  for (var i = 0; i < _length; i++)
-                    _OtpBox(
-                      controller: _controllers[i],
-                      focusNode: _focusNodes[i],
-                      onChanged: (v) => _onChanged(i, v),
+                  for (var i = 0; i < _length; i++) ...[
+                    if (i > 0) SizedBox(width: 8.w),
+                    Expanded(
+                      child: _OtpBox(
+                        controller: _controllers[i],
+                        focusNode: _focusNodes[i],
+                        onChanged: (v) => _onChanged(i, v),
+                      ),
                     ),
+                  ],
                 ],
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 22.h),
               Center(
                 child: Text(
                   'register.seconds'.tr(namedArgs: {'n': '$_secondsLeft'}),
-                  style:
-                      AppText.subtitle.copyWith(color: AppColors.textSecondary),
+                  style: AppText.subtitle.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 20 / 16,
+                    color: AppColors.textDark,
+                  ),
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 16.h),
               Center(
                 child: TextButton(
                   onPressed: _secondsLeft == 0
@@ -149,12 +163,25 @@ class _OtpPageState extends State<OtpPage> {
                           _startCountdown();
                         }
                       : null,
+                  style: TextButton.styleFrom(
+                    backgroundColor: AppColors.fieldFill,
+                    foregroundColor: AppColors.textDark,
+                    disabledForegroundColor: AppColors.textMuted,
+                    minimumSize: Size(173.w, 48.h),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                  ),
                   child: Text(
                     'register.resend'.tr(),
-                    style: AppText.button.copyWith(
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      height: 20 / 14,
                       color: _secondsLeft == 0
-                          ? AppColors.textPrimary
-                          : AppColors.textSecondary,
+                          ? AppColors.textDark
+                          : AppColors.textMuted,
                     ),
                   ),
                 ),
@@ -218,8 +245,7 @@ class _OtpBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 48.w,
-      height: 56.w,
+      height: 56.h,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
@@ -227,7 +253,12 @@ class _OtpBox extends StatelessWidget {
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         maxLength: 1,
-        style: AppText.screenTitle.copyWith(color: AppColors.textPrimary),
+        style: TextStyle(
+          fontSize: 22.sp,
+          fontWeight: FontWeight.w500,
+          height: 28 / 22,
+          color: AppColors.textDark,
+        ),
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: InputDecoration(
           counterText: '',
@@ -235,12 +266,12 @@ class _OtpBox extends StatelessWidget {
           fillColor: AppColors.fieldFill,
           contentPadding: EdgeInsets.zero,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(16.r),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14.r),
-            borderSide: const BorderSide(color: AppColors.borderSelected),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide(color: AppColors.textDark, width: 1.5.w),
           ),
         ),
       ),

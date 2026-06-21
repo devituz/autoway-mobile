@@ -33,30 +33,42 @@ class LanguagePage extends StatelessWidget {
       backgroundColor: AppColors.onboardingDark,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 24.h),
+          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Title near the very top.
-              SizedBox(height: 24.h),
+              SizedBox(height: 49.h),
               Text(
                 'register.app_welcome'.tr(),
                 textAlign: TextAlign.center,
-                style: AppText.subtitle.copyWith(color: AppColors.textOnDark),
+                style: AppText.subtitle.copyWith(
+                  color: AppColors.textOnDark,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 11.h),
               Text(
                 'register.welcome_title'.tr(),
                 textAlign: TextAlign.center,
-                style:
-                    AppText.welcomeTitle.copyWith(color: AppColors.textOnDark),
+                style: AppText.welcomeTitle.copyWith(
+                  color: AppColors.textOnDark,
+                  fontSize: 41.33.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const Spacer(),
               Text(
                 'register.choose_language'.tr(),
-                style: AppText.subtitle.copyWith(color: AppColors.textOnDark),
+                textAlign: TextAlign.center,
+                style: AppText.subtitle.copyWith(
+                  color: AppColors.textOnDark,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              SizedBox(height: 14.h),
+              SizedBox(height: 22.h),
               BlocBuilder<RegisterCubit, RegisterState>(
                 buildWhen: (p, c) => p.language != c.language,
                 builder: (context, state) {
@@ -82,7 +94,7 @@ class LanguagePage extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 24.h),
               PrimaryButton(
                 label: 'register.continue'.tr(),
                 color: AppColors.mutedButton,
@@ -113,10 +125,11 @@ class _LanguageChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        height: 88.h,
+        height: 98.h,
         alignment: Alignment.center,
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: AppColors.accent,
+          color: AppColors.fieldFill,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: selected ? AppColors.primary : Colors.transparent,
@@ -125,7 +138,13 @@ class _LanguageChip extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: AppText.subtitle.copyWith(color: AppColors.textPrimary),
+          textAlign: TextAlign.center,
+          style: AppText.subtitle.copyWith(
+            color: AppColors.textDark,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
+          ),
         ),
       ),
     );

@@ -49,18 +49,24 @@ class _PhonePageState extends State<PhonePage> {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
+          padding: EdgeInsets.fromLTRB(16.w, 31.h, 16.w, 16.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('register.phone_title'.tr(),
-                  style: AppText.screenTitle
-                      .copyWith(color: AppColors.textPrimary)),
-              SizedBox(height: 8.h),
+                  style: AppText.screenTitle.copyWith(
+                    fontSize: 20.sp,
+                    color: AppColors.textDark,
+                  )),
+              SizedBox(height: 12.h),
               Text('register.phone_subtitle'.tr(),
-                  style: AppText.subtitle
-                      .copyWith(color: AppColors.textSecondary)),
-              SizedBox(height: 24.h),
+                  style: AppText.subtitle.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    height: 20 / 16,
+                    color: AppColors.textMuted,
+                  )),
+              SizedBox(height: 18.h),
               _PhoneField(
                 controller: _controller,
                 onChanged: context.read<RegisterCubit>().setPhone,
@@ -131,24 +137,28 @@ class _PhoneField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fieldStyle = AppText.input.copyWith(
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w400,
+      height: 20 / 14,
+    );
     return Container(
-      height: 58.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      height: 48.h,
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColors.fieldFill,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
-          Text('+998',
-              style: AppText.input.copyWith(color: AppColors.textPrimary)),
+          Text('+998', style: fieldStyle.copyWith(color: AppColors.textDark)),
           SizedBox(width: 8.w),
           Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
               keyboardType: TextInputType.phone,
-              style: AppText.input.copyWith(color: AppColors.textPrimary),
+              style: fieldStyle.copyWith(color: AppColors.textDark),
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(maxDigits),
@@ -157,8 +167,7 @@ class _PhoneField extends StatelessWidget {
                 isCollapsed: true,
                 border: InputBorder.none,
                 hintText: 'XX XXX XX XX',
-                hintStyle:
-                    AppText.input.copyWith(color: AppColors.textSecondary),
+                hintStyle: fieldStyle.copyWith(color: AppColors.textMuted),
               ),
             ),
           ),

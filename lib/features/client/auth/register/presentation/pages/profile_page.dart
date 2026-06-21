@@ -10,7 +10,6 @@ import '../../../../../../core/theme/app_text.dart';
 import '../../../../../../core/widgets/app_snackbar.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
-import '../widgets/labeled_field.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/secondary_button.dart';
 
@@ -56,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: AppColors.accent,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
+          padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,34 +67,40 @@ class _ProfilePageState extends State<ProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('register.profile_title'.tr(),
-                            style: AppText.screenTitle
-                                .copyWith(color: AppColors.textPrimary)),
-                        SizedBox(height: 8.h),
+                            style: AppText.screenTitle.copyWith(
+                              fontSize: 20.sp,
+                              color: AppColors.textDark,
+                            )),
+                        SizedBox(height: 12.h),
                         Text('register.profile_subtitle'.tr(),
-                            style: AppText.subtitle
-                                .copyWith(color: AppColors.textSecondary)),
+                            style: AppText.subtitle.copyWith(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textMuted,
+                            )),
                       ],
                     ),
                   ),
+                  SizedBox(width: 12.w),
                   const _Avatar(),
                 ],
               ),
-              SizedBox(height: 28.h),
-              LabeledField(
+              SizedBox(height: 24.h),
+              _CompactField(
                 label: 'register.name_label'.tr(),
                 hint: 'register.name_hint'.tr(),
                 controller: _nameController,
                 onChanged: cubit.setName,
               ),
-              SizedBox(height: 14.h),
-              LabeledField(
+              SizedBox(height: 12.h),
+              _CompactField(
                 label: 'register.birth_label'.tr(),
                 hint: 'dd.mm.yyyy',
                 controller: _birthController,
                 keyboardType: TextInputType.datetime,
                 onChanged: cubit.setBirthDate,
               ),
-              SizedBox(height: 14.h),
+              SizedBox(height: 12.h),
               BlocBuilder<RegisterCubit, RegisterState>(
                 buildWhen: (p, c) => p.gender != c.gender,
                 builder: (context, state) => _GenderToggle(
@@ -152,14 +157,84 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 56.r,
-      height: 56.r,
+      width: 48.r,
+      height: 48.r,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
         color: AppColors.accentYellow,
         shape: BoxShape.circle,
       ),
-      child: Icon(Icons.person, size: 26.sp, color: AppColors.textPrimary),
+      child: Icon(Icons.person, size: 24.sp, color: AppColors.textDark),
+    );
+  }
+}
+
+/// Compact 48px input with an always-visible 10px label inside the field
+/// (Figma: bg #F1F5F9, radius 16, label 10sp #64748B, value 14sp #0F172A).
+class _CompactField extends StatelessWidget {
+  final String label;
+  final String hint;
+  final TextEditingController controller;
+  final TextInputType keyboardType;
+  final ValueChanged<String>? onChanged;
+
+  const _CompactField({
+    required this.label,
+    required this.hint,
+    required this.controller,
+    this.keyboardType = TextInputType.text,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 48.h,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: AppColors.fieldFill,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w400,
+              height: 1.0,
+              color: AppColors.textMuted,
+            ),
+          ),
+          TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            onChanged: onChanged,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              height: 20 / 14,
+              color: AppColors.textDark,
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              isCollapsed: true,
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                height: 20 / 14,
+                color: AppColors.textMuted,
+              ),
+              contentPadding: EdgeInsets.zero,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -173,12 +248,14 @@ class _GenderToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 48.h,
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
         color: AppColors.fieldFill,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _segment('register.male'.tr(), Gender.male),
           _segment('register.female'.tr(), Gender.female),
@@ -191,19 +268,22 @@ class _GenderToggle extends StatelessWidget {
     final selected = value == gender;
     return Expanded(
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () => onChanged(gender),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          height: 44.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? AppColors.accent : Colors.transparent,
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(14.r),
           ),
           child: Text(
             label,
-            style: AppText.button.copyWith(
-              color: selected ? AppColors.textPrimary : AppColors.textSecondary,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+              height: 20 / 16,
+              color: selected ? AppColors.textDark : AppColors.textMuted,
             ),
           ),
         ),
