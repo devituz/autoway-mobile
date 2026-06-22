@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -82,7 +83,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   SizedBox(width: 12.w),
-                  const _Avatar(),
                 ],
               ),
               SizedBox(height: 24.h),
@@ -97,7 +97,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 label: 'register.birth_label'.tr(),
                 hint: 'dd.mm.yyyy',
                 controller: _birthController,
-                keyboardType: TextInputType.datetime,
+                keyboardType: TextInputType.number,
+                inputFormatters: [_DateInputFormatter()],
                 onChanged: cubit.setBirthDate,
               ),
               SizedBox(height: 12.h),
@@ -151,23 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class _Avatar extends StatelessWidget {
-  const _Avatar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 48.r,
-      height: 48.r,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: AppColors.accentYellow,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(Icons.person, size: 24.sp, color: AppColors.textDark),
-    );
-  }
-}
 
 /// Compact 48px input with an always-visible 10px label inside the field
 /// (Figma: bg #F1F5F9, radius 16, label 10sp #64748B, value 14sp #0F172A).
@@ -177,6 +161,7 @@ class _CompactField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
 
   const _CompactField({
     required this.label,
@@ -184,6 +169,7 @@ class _CompactField extends StatelessWidget {
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.onChanged,
+    this.inputFormatters,
   });
 
   @override
@@ -213,6 +199,7 @@ class _CompactField extends StatelessWidget {
             controller: controller,
             keyboardType: keyboardType,
             onChanged: onChanged,
+            inputFormatters: inputFormatters,
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
@@ -235,6 +222,28 @@ class _CompactField extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Masks a date as the user types: digits only, auto-inserting dots →
+/// `dd.mm.yyyy` (e.g. 24022006 → 24.02.2006). Max 8 digits.
+class _DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    if (digits.length > 8) digits = digits.substring(0, 8);
+
+    final buf = StringBuffer();
+    for (var i = 0; i < digits.length; i++) {
+      if (i == 2 || i == 4) buf.write('.');
+      buf.write(digits[i]);
+    }
+    final text = buf.toString();
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

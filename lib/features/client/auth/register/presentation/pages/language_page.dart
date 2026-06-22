@@ -140,9 +140,10 @@ class _LanguageChip extends StatelessWidget {
           label,
           textAlign: TextAlign.center,
           style: AppText.subtitle.copyWith(
-            color: AppColors.textDark,
+            // Bold/dark only when selected; muted & regular otherwise.
+            color: selected ? AppColors.textDark : AppColors.textMuted,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w500,
+            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
             letterSpacing: 0.2,
           ),
         ),

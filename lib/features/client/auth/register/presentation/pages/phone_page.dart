@@ -124,6 +124,30 @@ class _PhonePageState extends State<PhonePage> {
 /// Phone field with a permanent, non-editable `+998` prefix. Only the 9
 /// national digits are editable; the prefix can never be deleted because it
 /// lives outside the [TextField].
+/// Formats the 9 national digits as "XX XXX XX XX" while typing (spaces are
+/// display-only; the page strips them before sending).
+class _PhoneGroupFormatter extends TextInputFormatter {
+  final int maxDigits;
+  _PhoneGroupFormatter(this.maxDigits);
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var d = newValue.text.replaceAll(RegExp(r'\D'), '');
+    if (d.length > maxDigits) d = d.substring(0, maxDigits);
+    final buf = StringBuffer();
+    for (var i = 0; i < d.length; i++) {
+      if (i == 2 || i == 5 || i == 7) buf.write(' ');
+      buf.write(d[i]);
+    }
+    final text = buf.toString();
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
+
 class _PhoneField extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
@@ -156,13 +180,12 @@ class _PhoneField extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
-              onChanged: onChanged,
+              // Display grouped as "XX XXX XX XX"; report raw digits only so the
+              // backend gets +998 + 9 digits with no spaces.
+              onChanged: (v) => onChanged(v.replaceAll(RegExp(r'\D'), '')),
               keyboardType: TextInputType.phone,
               style: fieldStyle.copyWith(color: AppColors.textDark),
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(maxDigits),
-              ],
+              inputFormatters: [_PhoneGroupFormatter(maxDigits)],
               decoration: InputDecoration(
                 isCollapsed: true,
                 border: InputBorder.none,
