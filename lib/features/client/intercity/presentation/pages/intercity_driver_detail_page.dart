@@ -95,6 +95,8 @@ class _DriverDetailSheetBodyState extends State<_DriverDetailSheetBody> {
                     BorderRadius.vertical(top: Radius.circular(16.r)),
               ),
               child: ListView(
+                // Hard boundary — no bounce inside the modal sheet.
+                physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 16.h),
                 children: [
                   const _DriverInfoCard(),
