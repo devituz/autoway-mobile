@@ -87,5 +87,7 @@
 				</dict>
 			</dict>
 		</dict>
-	</dict>
+		<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Manzilingizni aniqlash va xaritada ko'rsatish uchun joylashuvga ruxsat kerak.</string>
+</dict>
 </plist>

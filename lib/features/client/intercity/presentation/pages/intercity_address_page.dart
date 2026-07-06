@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit_lite/yandex_mapkit_lite.dart';
 
 import '../../../../../core/router/app_router.dart';
@@ -13,12 +17,89 @@ const _icons = 'assets/icons';
 
 /// Intercity-taxi flow — step 1: pick departure address on the map
 /// (Figma node 2124:8964). Opened from the home "Shaharlar aro taxi" card.
+/// The address under the center pin is reverse-geocoded live as the camera
+/// moves; on open the map asks for location permission and jumps to the
+/// user's position.
 @RoutePage()
-class IntercityAddressPage extends StatelessWidget {
+class IntercityAddressPage extends StatefulWidget {
   const IntercityAddressPage({super.key});
 
   @override
+  State<IntercityAddressPage> createState() => _IntercityAddressPageState();
+}
+
+class _IntercityAddressPageState extends State<IntercityAddressPage> {
+  static const Point _tashkent = Point(latitude: 41.3123, longitude: 69.2787);
+
+  YandexMapController? _controller;
+  Timer? _debounce;
+  String? _address; // null until the first reverse-geocode completes
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  /// Asks for location permission and re-centers the camera on the user.
+  Future<void> _goToMyLocation() async {
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) return;
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+      final pos = await Geolocator.getCurrentPosition();
+      await _controller?.moveCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: Point(latitude: pos.latitude, longitude: pos.longitude),
+            zoom: 16,
+          ),
+        ),
+        animation:
+            const MapAnimation(type: MapAnimationType.smooth, duration: 0.6),
+      );
+    } catch (_) {
+      // Location is best-effort: stay on the current camera position.
+    }
+  }
+
+  void _onCameraPositionChanged(CameraPosition position,
+      CameraUpdateReason reason, bool finished, VisibleRegion _) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      _reverseGeocode(position.target);
+    });
+  }
+
+  /// Resolves the address under the pin via the platform geocoder.
+  Future<void> _reverseGeocode(Point target) async {
+    try {
+      await setLocaleIdentifier('uz_UZ');
+      final placemarks =
+          await placemarkFromCoordinates(target.latitude, target.longitude);
+      if (!mounted || placemarks.isEmpty) return;
+      final pm = placemarks.first;
+      final parts = <String?>[
+        pm.locality?.isNotEmpty == true ? pm.locality : pm.administrativeArea,
+        pm.thoroughfare,
+        pm.subThoroughfare,
+      ].whereType<String>().where((e) => e.isNotEmpty).toList();
+      if (parts.isEmpty) return;
+      setState(() => _address = parts.join(', '));
+    } catch (_) {
+      // Geocoder can fail (offline / rate limit): keep the last known address.
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final address = _address ?? 'Toshkent shahri, Abdulla Qodiriy 33';
     return Scaffold(
       backgroundColor: AppColors.accent,
       body: Stack(
@@ -27,15 +108,16 @@ class IntercityAddressPage extends StatelessWidget {
           Positioned.fill(
             child: YandexMap(
               onMapCreated: (controller) {
+                _controller = controller;
                 controller.moveCamera(
                   CameraUpdate.newCameraPosition(
-                    const CameraPosition(
-                      target: Point(latitude: 41.3123, longitude: 69.2787),
-                      zoom: 15,
-                    ),
+                    const CameraPosition(target: _tashkent, zoom: 15),
                   ),
                 );
+                _reverseGeocode(_tashkent);
+                _goToMyLocation();
               },
+              onCameraPositionChanged: _onCameraPositionChanged,
             ),
           ),
           // Top white fade for legibility.
@@ -87,7 +169,9 @@ class IntercityAddressPage extends StatelessWidget {
                           style: AppText.label.copyWith(
                               fontSize: 12.sp, color: AppColors.textDark)),
                       SizedBox(height: 4.h),
-                      Text('Toshkent shahri, Abdulla Qodiriy 33',
+                      Text(address,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: AppText.subtitle.copyWith(
                               fontSize: 15.sp,
@@ -103,7 +187,10 @@ class IntercityAddressPage extends StatelessWidget {
           Positioned(
             right: 16.w,
             bottom: 240.h,
-            child: Container(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _goToMyLocation,
+              child: Container(
               width: 52.r,
               height: 52.r,
               alignment: Alignment.center,
@@ -119,10 +206,13 @@ class IntercityAddressPage extends StatelessWidget {
               ),
               child: SvgPicture.asset('$_icons/mt_locate.svg',
                   width: 26.r, height: 26.r),
+              ),
             ),
           ),
           // Bottom address sheet.
-          const Align(alignment: Alignment.bottomCenter, child: _AddressSheet()),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: _AddressSheet(fromAddress: address)),
         ],
       ),
     );
@@ -160,7 +250,8 @@ class _RoundIconButton extends StatelessWidget {
 }
 
 class _AddressSheet extends StatelessWidget {
-  const _AddressSheet();
+  final String fromAddress;
+  const _AddressSheet({required this.fromAddress});
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +285,7 @@ class _AddressSheet extends StatelessWidget {
                     _AddressRow(
                       icon: 'mt_location',
                       label: 'intercity.from'.tr(),
-                      value: 'Toshkent shahri',
+                      value: fromAddress,
                       onSelect: () => context.router
                           .push(IntercityRegionPickRoute(toDestination: false)),
                     ),

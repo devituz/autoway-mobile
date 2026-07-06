@@ -54,6 +54,7 @@ dependencies:
   # plugin auto-register paytida crash beradi ("You need to set API key before using MapKit").
   # Map feature ustida ishlaganda real API key bilan qayta yoqiladi.
   yandex_mapkit_lite: ^2.0.2
+  geocoding: ^3.0.0
   auto_route: ^11.1.0
   lottie: ^3.3.3
   flutter_animate: ^4.5.2

@@ -80,7 +80,9 @@ class _DriverHomeViewState extends State<DriverHomeView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  // 24 — same toggle→panel gap as the client home, so the
+                  // balance panel doesn't jump when switching roles.
+                  SizedBox(height: 24.h),
                   const _BalancePanel(),
                   Container(
                     width: double.infinity,
