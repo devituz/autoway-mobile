@@ -9,7 +9,7 @@ import YandexMapsMobile
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     // MapKit needs the key before any plugin touches it.
-    YMKMapKit.setApiKey("c1b6e4ac-a901-44d2-a433-1d2ad97c8de8")
+    YMKMapKit.setApiKey("50ebf913-c20f-4f97-ba93-8b0995fedb5e")
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 

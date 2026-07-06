@@ -1,19 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../core/router/app_router.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import '../../../profile/presentation/cubit/profile_cubit.dart';
 
 const _icons = 'assets/icons';
 
 /// Driver-mode home (Figma 2193:20944 offline / 2222:28540 online "Siz
 /// liniyadasiz"). Shown inside [HomePage] when the role toggle is set to
 /// Haydovchi. Offline shows three service cards with go-online buttons; once
-/// online a red banner appears and an active offer card replaces them.
+/// online a red pill appears in the pinned bar and an active offer card
+/// replaces the cards row.
+///
+/// Mirrors the client home structure exactly (pinned logo bar + clamping
+/// scroll + pull-to-refresh) so toggling Yo'lovchi/Haydovchi never jumps.
 class DriverHomeView extends StatefulWidget {
   final int role;
   final ValueChanged<int> onRoleChanged;
@@ -27,60 +33,131 @@ class DriverHomeView extends StatefulWidget {
 class _DriverHomeViewState extends State<DriverHomeView> {
   bool _online = false;
 
+  void _goOnline() {
+    setState(() => _online = true);
+    context.router.push(const DriverOrdersSettingsRoute());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.headerDark,
+      backgroundColor: AppColors.homeBg,
       body: Stack(
         children: [
-          Column(
-            children: [
-              Container(height: 300.h, color: AppColors.headerDark),
-              Expanded(child: Container(color: AppColors.accent)),
-            ],
+          RefreshIndicator(
+            onRefresh: () => context.read<ProfileCubit>().load(force: true),
+            color: AppColors.ctaBlue,
+            backgroundColor: AppColors.accent,
+            // Spinner drops out from under the pinned logo bar.
+            edgeOffset: MediaQuery.paddingOf(context).top + 48.h,
+            child: SingleChildScrollView(
+              // Same scroll behavior as the client home: hard boundary, no
+              // bounce, always scrollable so pull-to-refresh works.
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              child: Column(
+                children: [
+                  // Toggle block — identical geometry to the client home so
+                  // the Yo'lovchi/Haydovchi switch stays in place.
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.homePanel,
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(16.r),
+                      ),
+                    ),
+                    child: SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        // 56 = pinned logo row (48) + gap (8).
+                        padding: EdgeInsets.fromLTRB(16.w, 56.h, 16.w, 8.h),
+                        child: _RoleToggle(
+                          role: widget.role,
+                          onChanged: widget.onRoleChanged,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  const _BalancePanel(),
+                  Container(
+                    width: double.infinity,
+                    // Panel color shows through the sheet's rounded corners.
+                    color: AppColors.homePanel,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.accent,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16.r),
+                        ),
+                      ),
+                      padding: EdgeInsets.only(top: 16.h, bottom: 24.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: const _CarCard(),
+                          ),
+                          SizedBox(height: 8.h),
+                          Padding(
+                            // Indicator is inset 16 inside the card edges
+                            // (Figma 2193:21288: x 272..598).
+                            padding: EdgeInsets.symmetric(horizontal: 32.w),
+                            child: const _PageIndicator(count: 3, active: 0),
+                          ),
+                          SizedBox(height: 16.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: const _DashedLine(color: AppColors.border),
+                          ),
+                          SizedBox(height: 16.h),
+                          if (_online)
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              child: _OfferCard(
+                                onBack: () => setState(() => _online = false),
+                              ),
+                            )
+                          else
+                            _ServiceCards(onGoOnline: _goOnline),
+                          SizedBox(height: 16.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: Text(
+                              'home.driver_services'.tr(),
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w600,
+                                height: 26 / 18,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: const _HizmatlarRow(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                _Header(
-                  role: widget.role,
-                  online: _online,
-                  onRoleChanged: widget.onRoleChanged,
-                  onBellTap: () =>
-                      context.router.push(const NotificationsRoute()),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(16.r)),
-                  ),
-                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const _CarCard(),
-                      SizedBox(height: 8.h),
-                      const _DashLine(),
-                      SizedBox(height: 16.h),
-                      if (_online)
-                        _OfferCard(onBack: () => setState(() => _online = false))
-                      else
-                        _ServiceCards(onGoOnline: () =>
-                            setState(() => _online = true)),
-                      SizedBox(height: 16.h),
-                      Text('home.driver_services'.tr(),
-                          style: AppText.subtitle.copyWith(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textDark)),
-                      SizedBox(height: 16.h),
-                      const _HizmatlarRow(),
-                    ],
-                  ),
-                ),
-              ],
+          // Pinned logo bar (same as client; red pill appears when online).
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _PinnedBar(
+              online: _online,
+              onBellTap: () => context.router.push(const NotificationsRoute()),
             ),
           ),
         ],
@@ -89,83 +166,115 @@ class _DriverHomeViewState extends State<DriverHomeView> {
   }
 }
 
-// ─────────────────────────── Header ───────────────────────────
+// ─────────────────────── Pinned logo bar ───────────────────────
 
-class _Header extends StatelessWidget {
-  final int role;
+class _PinnedBar extends StatelessWidget {
   final bool online;
-  final ValueChanged<int> onRoleChanged;
   final VoidCallback onBellTap;
-  const _Header(
-      {required this.role,
-      required this.online,
-      required this.onRoleChanged,
-      required this.onBellTap});
+  const _PinnedBar({required this.online, required this.onBellTap});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 16.h),
-        child: Column(
-          children: [
-            Row(
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.homePanel,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
               children: [
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('AutoWay',
-                        style: AppText.bodyLarge.copyWith(
-                            color: AppColors.textOnDark,
-                            fontWeight: FontWeight.w800)),
-                    Text('home.tagline'.tr(),
-                        style: AppText.label
-                            .copyWith(color: AppColors.textSecondary)),
-                  ],
-                ),
-                if (online) ...[
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Container(
-                      height: 32.h,
-                      padding: EdgeInsets.all(2.r),
-                      decoration: BoxDecoration(
-                        color: AppColors.badgeRed,
-                        borderRadius: BorderRadius.circular(24.r),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppColors.logoutRed,
-                          borderRadius: BorderRadius.circular(24.r),
+                    // Two-tone logo: "Auto" white + "Way" #BFD1FF (Figma).
+                    Text.rich(
+                      TextSpan(
+                        style: AppText.logo.copyWith(
+                          color: AppColors.textOnDark,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('home.driver_you_online'.tr(),
-                                style: AppText.subtitle.copyWith(
-                                    fontSize: 13.sp,
-                                    color: AppColors.textOnDark,
-                                    fontWeight: FontWeight.w500)),
-                            SizedBox(width: 6.w),
-                            Icon(Icons.bolt,
-                                size: 16.sp, color: AppColors.textOnDark),
-                          ],
-                        ),
+                        children: const [
+                          TextSpan(text: 'Auto'),
+                          TextSpan(
+                            text: 'Way',
+                            style: TextStyle(color: AppColors.logoWay),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  SizedBox(width: 12.w),
-                ] else
+                    SizedBox(height: 2.h),
+                    Text(
+                      'home.tagline'.tr(),
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+                if (online)
+                  const Expanded(child: Center(child: _OnlinePill()))
+                else
                   const Spacer(),
                 _BellButton(count: 9, onTap: onBellTap),
               ],
             ),
-            SizedBox(height: 16.h),
-            _RoleToggle(role: role, onChanged: onRoleChanged),
-            SizedBox(height: 16.h),
-            const _StatsRow(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Siz liniyadasiz ⚡" pill (Figma 2222:28811): 2px #FB7185 ring around a
+/// #E11D48 body, r24, Poppins 500/15 white text + white flash.
+class _OnlinePill extends StatelessWidget {
+  const _OnlinePill();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 32.h,
+      padding: EdgeInsets.all(2.r),
+      decoration: BoxDecoration(
+        color: AppColors.rose40,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: AppColors.logoutRed,
+          borderRadius: BorderRadius.circular(24.r),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'home.driver_you_online'.tr(),
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w500,
+                height: 20 / 15,
+                color: AppColors.textOnDark,
+              ),
+            ),
+            SizedBox(width: 6.w),
+            SvgPicture.asset(
+              '$_icons/c_flash.svg',
+              width: 20.r,
+              height: 20.r,
+              colorFilter: const ColorFilter.mode(
+                AppColors.textOnDark,
+                BlendMode.srcIn,
+              ),
+            ),
           ],
         ),
       ),
@@ -189,22 +298,32 @@ class _BellButton extends StatelessWidget {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Icon(Icons.notifications_none,
-                size: 28.sp, color: AppColors.textOnDark),
+            Icon(
+              Icons.notifications_none,
+              size: 28.sp,
+              color: AppColors.textOnDark,
+            ),
             Positioned(
               right: -2.w,
               top: -2.h,
               child: Container(
-                padding: EdgeInsets.all(4.r),
-                constraints: BoxConstraints(minWidth: 18.r, minHeight: 18.r),
+                width: 16.r,
+                height: 16.r,
+                alignment: Alignment.center,
                 decoration: const BoxDecoration(
-                    color: AppColors.error, shape: BoxShape.circle),
-                child: Text('$count',
-                    textAlign: TextAlign.center,
-                    style: AppText.label.copyWith(
-                        color: AppColors.textOnDark,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w700)),
+                  color: AppColors.badgeRed,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '$count',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textOnDark,
+                    fontSize: 10.sp,
+                    height: 1,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
@@ -222,10 +341,12 @@ class _RoleToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(5.r),
+      height: 48.h,
+      padding: EdgeInsets.all(2.r),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(16.r),
+        color: AppColors.homeBg,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 4)],
       ),
       child: Row(
         children: [
@@ -238,30 +359,31 @@ class _RoleToggle extends StatelessWidget {
 
   Widget _seg(String label, IconData icon, int i) {
     final selected = role == i;
+    final color = selected ? AppColors.textDark : AppColors.textMuted;
     return Expanded(
       child: GestureDetector(
         onTap: () => onChanged(i),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          height: 48.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? AppColors.accent : Colors.transparent,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(label,
-                  style: AppText.button.copyWith(
-                      color: selected
-                          ? AppColors.textPrimary
-                          : AppColors.textOnDark)),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w500,
+                  height: 20 / 15,
+                  color: color,
+                ),
+              ),
               SizedBox(width: 8.w),
-              Icon(icon,
-                  size: 18.sp,
-                  color:
-                      selected ? AppColors.textPrimary : AppColors.textOnDark),
+              Icon(icon, size: 20.sp, color: color),
             ],
           ),
         ),
@@ -270,49 +392,64 @@ class _RoleToggle extends StatelessWidget {
   }
 }
 
-class _StatsRow extends StatelessWidget {
-  const _StatsRow();
+// ─────────────────────── Balance + stats panel ───────────────────────
+
+class _BalancePanel extends StatelessWidget {
+  const _BalancePanel();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Row(
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.homePanel,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      padding: EdgeInsets.all(16.r),
+      child: Row(
+        children: [
+          SvgPicture.asset('$_icons/wallet.svg', width: 24.r, height: 24.r),
+          SizedBox(width: 8.w),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.account_balance_wallet_outlined,
-                  size: 24.sp, color: AppColors.textOnDark),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('50 000 ${'home.currency'.tr()}',
-                        style: AppText.bodyMedium.copyWith(
-                            color: AppColors.textOnDark,
-                            fontWeight: FontWeight.w700)),
-                    Text('home.balance'.tr(),
-                        style: AppText.label
-                            .copyWith(color: AppColors.textSecondary)),
-                  ],
+              // Unbounded 500/14 (Figma 2193:20950).
+              Text(
+                '50 000 ${'home.currency'.tr()}',
+                style: AppText.balance.copyWith(color: AppColors.textOnDark),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'home.balance'.tr(),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  height: 16 / 12,
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
-              Icon(Icons.chevron_right,
-                  size: 20.sp, color: AppColors.textOnDark),
             ],
           ),
-        ),
-        SizedBox(width: 8.w),
-        _StatTile(
+          SizedBox(width: 8.w),
+          SvgPicture.asset(
+            '$_icons/arrow_right.svg',
+            width: 20.r,
+            height: 20.r,
+          ),
+          const Spacer(),
+          _StatTile(
             value: '7.9',
             valueColor: AppColors.orange,
-            label: 'home.driver_rating'.tr()),
-        SizedBox(width: 8.w),
-        _StatTile(
+            label: 'home.driver_rating'.tr(),
+          ),
+          SizedBox(width: 8.w),
+          _StatTile(
             value: '69%',
-            valueColor: const Color(0xFFA855F7),
-            label: 'home.driver_activity'.tr()),
-      ],
+            valueColor: AppColors.purpleStat,
+            label: 'home.driver_activity'.tr(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -330,17 +467,25 @@ class _StatTile extends StatelessWidget {
       width: 68.w,
       padding: EdgeInsets.all(8.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF334155),
+        color: AppColors.softDark,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value,
-              style: AppText.bodyMedium
-                  .copyWith(color: valueColor, fontWeight: FontWeight.w700)),
-          Text(label,
-              style: AppText.label.copyWith(color: AppColors.textSecondary)),
+          // Unbounded 500/14 (Figma 2193:21242).
+          Text(value, style: AppText.balance.copyWith(color: valueColor)),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+              height: 16 / 12,
+              color: Colors.white.withValues(alpha: 0.5),
+            ),
+          ),
         ],
       ),
     );
@@ -356,7 +501,6 @@ class _CarCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120.h,
-      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -367,40 +511,63 @@ class _CarCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('01 B 125 YC',
-                        style: AppText.bodyMedium.copyWith(
-                            fontSize: 16.sp,
-                            color: AppColors.textDark,
-                            fontWeight: FontWeight.w700)),
-                    SizedBox(height: 2.h),
-                    Text('Cobalt LTZ | Oq',
-                        style: AppText.subtitle
-                            .copyWith(color: AppColors.textMuted)),
-                  ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Plate — Unbounded 500/16 (Figma 2193:21366).
+                      Text(
+                        '01 B 125 YC',
+                        style: AppText.serviceTitle.copyWith(
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      Text(
+                        'Cobalt LTZ | Oq',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          height: 20 / 14,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Image.asset('assets/images/dr_car.png',
-                  width: 145.w, height: 60.h, fit: BoxFit.contain),
-            ],
+                Image.asset(
+                  'assets/images/dr_car.png',
+                  width: 145.w,
+                  height: 60.h,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
           ),
           Positioned(
-            right: 0,
-            top: 0,
+            right: 8.w,
+            top: 8.h,
             child: Container(
               width: 32.r,
               height: 32.r,
               alignment: Alignment.center,
               decoration: const BoxDecoration(
-                  color: AppColors.accent, shape: BoxShape.circle),
-              child: Icon(Icons.settings_outlined,
-                  size: 18.sp, color: AppColors.textDark),
+                color: AppColors.accent,
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(
+                '$_icons/settings.svg',
+                width: 20.r,
+                height: 20.r,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.textDark,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
         ],
@@ -409,8 +576,37 @@ class _CarCard extends StatelessWidget {
   }
 }
 
-class _DashLine extends StatelessWidget {
-  const _DashLine();
+/// Carousel page indicator under the car card (Figma 2193:21288): three
+/// 103x3 bars, active #0F172A, inactive #CBD5E1.
+class _PageIndicator extends StatelessWidget {
+  final int count;
+  final int active;
+  const _PageIndicator({required this.count, required this.active});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var i = 0; i < count; i++) ...[
+          if (i > 0) SizedBox(width: 8.w),
+          Expanded(
+            child: Container(
+              height: 3.h,
+              decoration: BoxDecoration(
+                color: i == active ? AppColors.textDark : AppColors.gray30,
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _DashedLine extends StatelessWidget {
+  final Color color;
+  const _DashedLine({required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +618,7 @@ class _DashLine extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(
             count,
-            (_) => Container(width: dashW, height: 2, color: AppColors.border),
+            (_) => Container(width: dashW, height: 1, color: color),
           ),
         );
       },
@@ -442,11 +638,12 @@ class _ServiceCards extends StatelessWidget {
       height: 144.h,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         physics: const BouncingScrollPhysics(),
         children: [
           _ServiceCard(
             icon: 'c_driving',
+            iconColor: AppColors.selectBlue,
             label: 'home.intercity_taxi'.tr(),
             buttonLabel: 'home.driver_accept_order'.tr(),
             dark: false,
@@ -455,6 +652,7 @@ class _ServiceCards extends StatelessWidget {
           SizedBox(width: 8.w),
           _ServiceCard(
             icon: 'c_box',
+            iconColor: AppColors.iconAmber,
             label: 'home.cargo'.tr(),
             buttonLabel: 'home.driver_go_online'.tr(),
             dark: false,
@@ -463,6 +661,7 @@ class _ServiceCards extends StatelessWidget {
           SizedBox(width: 8.w),
           _ServiceCard(
             icon: 'c_routing',
+            iconColor: AppColors.logoutRed,
             label: 'home.route_taxi'.tr(),
             buttonLabel: 'home.driver_go_online'.tr(),
             dark: true,
@@ -476,12 +675,14 @@ class _ServiceCards extends StatelessWidget {
 
 class _ServiceCard extends StatelessWidget {
   final String icon;
+  final Color iconColor;
   final String label;
   final String buttonLabel;
   final bool dark;
   final VoidCallback onTap;
   const _ServiceCard(
       {required this.icon,
+      required this.iconColor,
       required this.label,
       required this.buttonLabel,
       required this.dark,
@@ -508,22 +709,27 @@ class _ServiceCard extends StatelessWidget {
                 height: 48.r,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
-                    color: Color(0xFFF8FAFC), shape: BoxShape.circle),
-                child: SvgPicture.asset('$_icons/$icon.svg',
-                    width: 24.r,
-                    height: 24.r,
-                    colorFilter: ColorFilter.mode(
-                        dark ? AppColors.pink : AppColors.selectBlue,
-                        BlendMode.srcIn)),
+                  color: AppColors.cardLight,
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  '$_icons/$icon.svg',
+                  width: 24.r,
+                  height: 24.r,
+                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                ),
               ),
               SizedBox(width: 8.w),
               Expanded(
-                child: Text(label,
-                    style: AppText.subtitle.copyWith(
-                        fontSize: 14.sp,
-                        height: 16 / 14,
-                        color: AppColors.textDark,
-                        fontWeight: FontWeight.w600)),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    height: 16 / 14,
+                    color: AppColors.textDark,
+                  ),
+                ),
               ),
             ],
           ),
@@ -536,27 +742,37 @@ class _ServiceCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: dark ? AppColors.textDark : const Color(0xFFF0F2FA),
                 borderRadius: BorderRadius.circular(12.r),
-                border: dark
-                    ? null
-                    : Border.all(color: AppColors.selectBlue),
+                border: dark ? null : Border.all(color: AppColors.selectBlue),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
-                    child: Text(buttonLabel,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppText.subtitle.copyWith(
-                            fontSize: 14.sp,
-                            color: dark
-                                ? AppColors.textOnDark
-                                : AppColors.selectBlue,
-                            fontWeight: FontWeight.w500)),
+                    child: Text(
+                      buttonLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        height: 20 / 14,
+                        color:
+                            dark ? AppColors.textOnDark : AppColors.selectBlue,
+                      ),
+                    ),
                   ),
                   if (dark) ...[
                     SizedBox(width: 4.w),
-                    Icon(Icons.bolt, size: 18.sp, color: AppColors.textOnDark),
+                    // Orange flash on the dark pill (Figma 249,115,22).
+                    SvgPicture.asset(
+                      '$_icons/c_flash.svg',
+                      width: 20.r,
+                      height: 20.r,
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFFF97316),
+                        BlendMode.srcIn,
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -576,144 +792,111 @@ class _OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.ctaBlue,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            color: AppColors.ctaBlue,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('home.intercity_taxi'.tr(),
-                    style: AppText.subtitle.copyWith(
-                        fontSize: 15.sp,
-                        color: AppColors.textOnDark,
-                        fontWeight: FontWeight.w500)),
-                SvgPicture.asset('$_icons/ia_taxi.svg',
+          SizedBox(
+            height: 32.h,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'home.intercity_taxi'.tr(),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      height: 24 / 15,
+                      color: AppColors.textOnDark,
+                    ),
+                  ),
+                  SvgPicture.asset(
+                    '$_icons/ia_taxi.svg',
                     width: 24.r,
                     height: 24.r,
                     colorFilter: const ColorFilter.mode(
-                        AppColors.textOnDark, BlendMode.srcIn)),
-              ],
+                      AppColors.textOnDark,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Container(
-            color: AppColors.fieldFill,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.fieldFill,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
             padding: EdgeInsets.all(16.r),
             child: Column(
               children: [
-                // Pickup / dropoff card.
-                Container(
-                  padding: EdgeInsets.all(8.r),
-                  decoration: BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(4.r),
-                              child: SvgPicture.asset('$_icons/mt_location.svg',
-                                  width: 20.r, height: 20.r),
-                            ),
-                            Expanded(
-                              child: Container(
-                                  width: 1.5, color: AppColors.border),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(4.r),
-                              child: SvgPicture.asset('$_icons/mt_flag.svg',
-                                  width: 20.r, height: 20.r),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 37.h,
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text('Toshkent shahri',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppText.subtitle.copyWith(
-                                          fontSize: 16.sp,
-                                          color: AppColors.textDark,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                              ),
-                              Divider(height: 1.h, color: AppColors.border),
-                              SizedBox(
-                                height: 37.h,
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text('Andijon shahri, Andijon viloyati',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppText.subtitle.copyWith(
-                                          fontSize: 16.sp,
-                                          color: AppColors.textDark,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                const _PickupDropOffBox(
+                  from: 'Toshkent shahri',
+                  to: 'Andijon shahri, Andijon viloyati',
                 ),
                 SizedBox(height: 12.h),
-                // Taxi / Posilka selectors.
                 Row(
                   children: [
                     Expanded(
                       child: _TypeRow(
-                          label: 'home.driver_taxi'.tr(), checked: true),
+                        label: 'home.driver_taxi'.tr(),
+                        checked: true,
+                      ),
                     ),
                     SizedBox(width: 16.w),
                     Expanded(
                       child: _TypeRow(
-                          label: 'home.driver_parcel'.tr(), checked: false),
+                        label: 'home.driver_parcel'.tr(),
+                        checked: false,
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(height: 12.h),
-                Divider(height: 1.h, color: AppColors.border),
+                const _DashedLine(color: AppColors.gray30),
                 SizedBox(height: 12.h),
-                // Back-to-accept button.
+                // Back-to-accepting-orders button.
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: onBack,
                   child: Container(
                     height: 48.h,
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
                     decoration: BoxDecoration(
                       color: AppColors.logoutRed,
                       borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: AppColors.badgeRed, width: 2),
+                      border: Border.all(color: AppColors.rose40, width: 2),
                     ),
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text('home.driver_back_to_accept'.tr(),
-                              textAlign: TextAlign.center,
-                              style: AppText.subtitle.copyWith(
-                                  fontSize: 14.sp,
-                                  color: AppColors.textOnDark,
-                                  fontWeight: FontWeight.w500)),
+                          child: Text(
+                            'home.driver_back_to_accept'.tr(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              height: 20 / 14,
+                              color: AppColors.textOnDark,
+                            ),
+                          ),
                         ),
-                        Icon(Icons.bolt, size: 22.sp, color: AppColors.textOnDark),
+                        SvgPicture.asset(
+                          '$_icons/c_flash.svg',
+                          width: 24.r,
+                          height: 24.r,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.textOnDark,
+                            BlendMode.srcIn,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -722,6 +905,105 @@ class _OfferCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PickupDropOffBox extends StatelessWidget {
+  final String from;
+  final String to;
+  const _PickupDropOffBox({required this.from, required this.to});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.r),
+      decoration: BoxDecoration(
+        color: AppColors.accent,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: 28.r,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 28.r,
+                    height: 28.r,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        '$_icons/mt_location.svg',
+                        width: 20.r,
+                        height: 20.r,
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    child: _DashedVerticalLine(color: AppColors.textDark),
+                  ),
+                  SizedBox(
+                    width: 28.r,
+                    height: 28.r,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        '$_icons/mt_flag.svg',
+                        width: 20.r,
+                        height: 20.r,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 37.h,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        from,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 22 / 16,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Divider(height: 1, color: AppColors.border),
+                  SizedBox(
+                    height: 37.h,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        to,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 22 / 16,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -737,23 +1019,52 @@ class _TypeRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(label,
-              style: AppText.subtitle
-                  .copyWith(fontSize: 16.sp, color: AppColors.textDark)),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              height: 24 / 16,
+              color: AppColors.textDark,
+            ),
+          ),
         ),
         Container(
           width: 28.r,
           height: 28.r,
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: checked ? AppColors.ctaBlue : const Color(0xFFF8FAFC),
+          decoration: const BoxDecoration(
+            color: AppColors.cardLight,
             shape: BoxShape.circle,
           ),
-          child: Icon(checked ? Icons.check : Icons.remove,
-              size: 14.sp,
-              color: checked ? AppColors.textOnDark : AppColors.textSecondary),
+          child: checked
+              ? Icon(Icons.check, size: 16.sp, color: AppColors.selectBlue)
+              : Icon(Icons.remove, size: 16.sp, color: AppColors.textSecondary),
         ),
       ],
+    );
+  }
+}
+
+/// Vertical dashed connector between route points (Figma: 4/4 dash, #0F172A).
+class _DashedVerticalLine extends StatelessWidget {
+  final Color color;
+  const _DashedVerticalLine({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        const dashH = 4.0;
+        final count = (c.maxHeight / (dashH * 2)).floor().clamp(1, 100);
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(
+            count,
+            (_) => Container(width: 1, height: dashH, color: color),
+          ),
+        );
+      },
     );
   }
 }
@@ -768,11 +1079,19 @@ class _HizmatlarRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _HizmatCard(icon: 'dr_cpu', label: 'home.driver_servis'.tr()),
+          child: _HizmatCard(
+            icon: 'dr_cpu',
+            iconColor: AppColors.selectBlue,
+            label: 'home.driver_servis'.tr(),
+          ),
         ),
         SizedBox(width: 8.w),
         Expanded(
-          child: _HizmatCard(icon: 'c_flash', label: 'home.energy'.tr()),
+          child: _HizmatCard(
+            icon: 'c_flash',
+            iconColor: AppColors.iconTeal,
+            label: 'home.energy'.tr(),
+          ),
         ),
       ],
     );
@@ -781,8 +1100,10 @@ class _HizmatlarRow extends StatelessWidget {
 
 class _HizmatCard extends StatelessWidget {
   final String icon;
+  final Color iconColor;
   final String label;
-  const _HizmatCard({required this.icon, required this.label});
+  const _HizmatCard(
+      {required this.icon, required this.iconColor, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -804,26 +1125,35 @@ class _HizmatCard extends StatelessWidget {
                 height: 48.r,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
-                    color: Color(0xFFF8FAFC), shape: BoxShape.circle),
-                child: SvgPicture.asset('$_icons/$icon.svg',
-                    width: 24.r,
-                    height: 24.r,
-                    colorFilter: ColorFilter.mode(
-                        AppColors.textDark, BlendMode.srcIn)),
+                  color: AppColors.cardLight,
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  '$_icons/$icon.svg',
+                  width: 24.r,
+                  height: 24.r,
+                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                ),
               ),
-              Icon(Icons.chevron_right,
-                  size: 20.sp, color: AppColors.textSecondary),
+              Icon(
+                Icons.chevron_right,
+                size: 20.sp,
+                color: AppColors.textSecondary,
+              ),
             ],
           ),
           const Spacer(),
-          Text(label,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppText.subtitle.copyWith(
-                  fontSize: 14.sp,
-                  height: 16 / 14,
-                  color: AppColors.textDark,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+              height: 16 / 14,
+              color: AppColors.textDark,
+            ),
+          ),
         ],
       ),
     );

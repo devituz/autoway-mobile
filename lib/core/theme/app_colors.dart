@@ -55,6 +55,10 @@ class AppColors {
   static const Color danger = Color(0xFFBE123C); // Figma Destructive/70
   static const Color logoutRed = Color(0xFFE11D48); // Figma Destructive/60
   static const Color badgeRed = Color(0xFFF43F5E); // Figma Destructive/50
+  static const Color rose40 = Color(0xFFFB7185); // Figma Destructive/40 — online pill/button border
+  static const Color gray30 = Color(0xFFCBD5E1); // Figma Gray/30 — inactive dots / disabled icons
+  static const Color purpleStat = Color(0xFFA855F7); // driver "Faollik" stat value
+  static const Color switchOff = Color(0xFFDBDFE0); // settings toggle track (off)
   static const Color creditGreen = Color(0xFF16A34A); // Figma Success/60
   static const Color warningBg = Color(0xFFFFFBEB); // Figma Warning/5 — note banner
 

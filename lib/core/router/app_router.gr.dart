@@ -290,6 +290,22 @@ class CreateRouteRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [DriverOrdersSettingsPage]
+class DriverOrdersSettingsRoute extends PageRouteInfo<void> {
+  const DriverOrdersSettingsRoute({List<PageRouteInfo>? children})
+    : super(DriverOrdersSettingsRoute.name, initialChildren: children);
+
+  static const String name = 'DriverOrdersSettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DriverOrdersSettingsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [DriverRoutesPage]
 class DriverRoutesRoute extends PageRouteInfo<void> {
   const DriverRoutesRoute({List<PageRouteInfo>? children})

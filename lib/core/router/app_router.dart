@@ -30,6 +30,7 @@ import '../../features/client/orders/presentation/pages/order_detail_page.dart';
 import '../../features/client/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/client/profile/presentation/pages/payment_history_page.dart';
 import '../../features/client/profile/presentation/pages/topup_page.dart';
+import '../../features/driver/orders/presentation/pages/driver_orders_settings_page.dart';
 import '../../features/driver/profile/presentation/pages/choose_navigator_page.dart';
 import '../../features/driver/routes/presentation/pages/create_route_page.dart';
 import '../../features/driver/routes/presentation/pages/driver_routes_page.dart';
@@ -82,6 +83,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: DriverSettingsRoute.page),
     AutoRoute(page: ChooseNavigatorRoute.page),
     AutoRoute(page: DriverStatsRoute.page),
+    // Driver home — Buyurtmalar order-intake settings (Figma 2226:29983).
+    AutoRoute(page: DriverOrdersSettingsRoute.page),
     _sheet(SeatLayoutRoute.page),
   ];
 
