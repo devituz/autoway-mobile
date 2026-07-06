@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
-import '../../domain/order_status.dart';
+import '../../domain/entities/order_status.dart';
 
 const _icons = 'assets/icons';
 

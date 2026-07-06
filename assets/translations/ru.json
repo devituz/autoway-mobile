@@ -27,7 +27,9 @@
     "birth_label": "Дата рождения",
     "male": "Мужчина",
     "female": "Женщина",
-    "done": "Регистрация прошла успешно"
+    "done": "Регистрация прошла успешно",
+    "last_name_label": "Фамилия",
+    "last_name_hint": "Валиев"
   },
   "home": {
     "passenger": "Пассажир",
@@ -129,7 +131,8 @@
     "save": "Сохранить",
     "upload_photo": "Загрузите фото профиля",
     "close": "Закрыть",
-    "saved": "Профиль сохранён"
+    "saved": "Профиль сохранён",
+    "last_name": "Фамилия"
   },
   "change_phone": {
     "title": "Изменить номер телефона",
@@ -438,5 +441,94 @@
     "cstatus_act_call": "Связь",
     "cstatus_btn_complain": "Подать жалобу",
     "cstatus_btn_rate": "Оценить"
+  },
+  "driver": {
+    "profile": {
+      "my_routes": "Мои маршруты",
+      "my_transports": "Мой транспорт",
+      "pending": "В ожидании",
+      "statistics": "Статистика",
+      "settings": "Настройки"
+    },
+    "routes": {
+      "title": "Мои маршруты",
+      "section": "Данные профиля",
+      "add": "Добавить новый адрес"
+    },
+    "create_route": {
+      "title": "Создание маршрута",
+      "your_location": "Ваш адрес:",
+      "from": "Откуда:",
+      "to": "Куда:",
+      "from_empty": "Не выбрано",
+      "to_empty": "Не выбрано",
+      "select": "Выбрать",
+      "continue": "Продолжить",
+      "from_title": "Откуда",
+      "to_title": "Куда",
+      "search": "Поиск",
+      "map": "Карта"
+    },
+    "transports": {
+      "title": "Мой транспорт",
+      "section": "Информация профиля",
+      "add": "Добавить транспорт"
+    },
+    "edit_vehicle": {
+      "title": "Мой транспорт",
+      "info_section": "Данные профиля",
+      "type": "Тип транспорта",
+      "brand": "Марка транспорта",
+      "model": "Модель транспорта",
+      "color": "Цвет",
+      "color_white": "Белый",
+      "fuel": "Тип топлива",
+      "fuel_petrol": "Бензин",
+      "plate": "Госномер",
+      "photos_section": "Загрузите фотографии",
+      "photo_left": "Вид слева снаружи",
+      "photo_right": "Вид справа снаружи",
+      "photo_front_seats": "Вид передних сидений",
+      "photo_back_seats": "Вид задних сидений",
+      "seats_section": "Структура сидений",
+      "seat_count": "{n} мест",
+      "seats_hint": "Отметьте активные сиденья",
+      "extras_section": "Дополнительно:",
+      "extra_order_for_other": "Заказать для другого",
+      "extra_ac": "С кондиционером",
+      "extra_no_smoke": "Курение табака запрещено",
+      "extra_pets": "Поездка с домашними животными",
+      "extra_music": "С музыкой",
+      "extra_silence": "Хочу ехать в тишине",
+      "close": "Закрыть",
+      "save": "Сохранить"
+    },
+    "seat_layout": {
+      "title": "Схема сидений",
+      "capacity": "{count} мест",
+      "hint": "Отметьте активные сиденья",
+      "confirm": "Подтвердить"
+    },
+    "settings": {
+      "title": "Настройки",
+      "navigator": "Навигатор",
+      "messages": "Сообщения",
+      "app_language": "Язык приложения"
+    },
+    "navigator": {
+      "title": "Выберите навигатор",
+      "subtitle": "Выберите навигацию по умолчанию",
+      "yandex": "Yandex навигатор",
+      "google": "Google Maps",
+      "navigator2": "Навигатор 2",
+      "confirm": "Закрыть"
+    },
+    "stats": {
+      "title": "Статистика",
+      "rating": "Рейтинг",
+      "activity": "Активность",
+      "completed": "Выполненные заказы",
+      "earnings": "Доход"
+    }
   }
 }

@@ -42,6 +42,9 @@ class RequestOtpResult {
 class AuthUser {
   final int id;
   final String fullName;
+  final String firstName;
+  final String lastName;
+  final String middleName;
   final String phone;
   final String gender;
   final String birthDate;
@@ -54,6 +57,9 @@ class AuthUser {
   const AuthUser({
     required this.id,
     required this.fullName,
+    required this.firstName,
+    required this.lastName,
+    required this.middleName,
     required this.phone,
     required this.gender,
     required this.birthDate,
@@ -64,10 +70,19 @@ class AuthUser {
     required this.roles,
   });
 
-  AuthUser copyWith({num? balance, String? avatarUrl, String? fullName}) =>
+  AuthUser copyWith({
+    num? balance,
+    String? avatarUrl,
+    String? fullName,
+    String? firstName,
+    String? lastName,
+  }) =>
       AuthUser(
         id: id,
         fullName: fullName ?? this.fullName,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        middleName: middleName,
         phone: phone,
         gender: gender,
         birthDate: birthDate,
@@ -78,19 +93,28 @@ class AuthUser {
         roles: roles,
       );
 
-  factory AuthUser.fromJson(Map<String, dynamic> json) => AuthUser(
-        id: (json['id'] as num?)?.toInt() ?? 0,
-        fullName: json['full_name'] as String? ?? '',
-        phone: json['phone'] as String? ?? '',
-        gender: json['gender'] as String? ?? '',
-        birthDate: json['birth_date'] as String? ?? '',
-        avatarUrl: json['avatar_url'] as String? ?? '',
-        balance: json['balance'] as num? ?? 0,
-        idBalance: (json['id_balance'] as num?)?.toInt() ?? 0,
-        language: json['language'] as String? ?? 'uz',
-        roles: (json['roles'] as List?)?.map((e) => e.toString()).toList() ??
-            const [],
-      );
+  factory AuthUser.fromJson(Map<String, dynamic> json) {
+    final first = json['first_name'] as String? ?? '';
+    final last = json['last_name'] as String? ?? '';
+    final full = json['full_name'] as String? ?? '';
+    return AuthUser(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      // Prefer the server's full_name; fall back to first+last if absent.
+      fullName: full.isNotEmpty ? full : '$first $last'.trim(),
+      firstName: first,
+      lastName: last,
+      middleName: json['middle_name'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      gender: json['gender'] as String? ?? '',
+      birthDate: json['birth_date'] as String? ?? '',
+      avatarUrl: json['avatar_url'] as String? ?? '',
+      balance: json['balance'] as num? ?? 0,
+      idBalance: (json['id_balance'] as num?)?.toInt() ?? 0,
+      language: json['language'] as String? ?? 'uz',
+      roles: (json['roles'] as List?)?.map((e) => e.toString()).toList() ??
+          const [],
+    );
+  }
 }
 
 /// `POST /v1/auth/verify` & `/refresh` → data (`auth.TokenResponse`).

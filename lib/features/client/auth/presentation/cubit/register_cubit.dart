@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/repositories/auth_repository.dart';
+import '../../data/repositories/auth_repository.dart';
 import 'register_state.dart';
 
 /// Holds the data collected step-by-step during registration AND drives the
@@ -19,7 +19,11 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   void setOtp(String otp) => emit(state.copyWith(otp: otp));
 
-  void setName(String name) => emit(state.copyWith(name: name));
+  void setFirstName(String firstName) =>
+      emit(state.copyWith(firstName: firstName));
+
+  void setLastName(String lastName) =>
+      emit(state.copyWith(lastName: lastName));
 
   void setBirthDate(String date) => emit(state.copyWith(birthDate: date));
 
@@ -63,7 +67,8 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(state.copyWith(status: AuthStatus.loading, errorMessage: null));
     final res = await _repository.registerRequest(
       phone: _e164Phone,
-      fullName: state.name,
+      firstName: state.firstName.trim(),
+      lastName: state.lastName.trim(),
       birthDate: _normalizeBirthDate(state.birthDate),
       gender: state.gender?.name ?? 'male',
       role: _role,

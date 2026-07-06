@@ -15,6 +15,9 @@ class AppColors {
   static const Color grey = Color(0xFF5B6065);
   static const Color lightGrey = Color(0xFFE2E8F0);
 
+  // Driver dark stat tiles / balance card on dark headers.
+  static const Color softDark = Color(0xFF334155);
+
   // Onboarding / Register flow
   static const Color onboardingDark = Color(0xFF171E31); // screen 1 navy bg
   static const Color mutedButton = Color(0xFF64748B); // screen 1 "Davom etish"
@@ -24,6 +27,16 @@ class AppColors {
 
   // Home / status accents
   static const Color blue = Color(0xFF2F6BFF); // CTA banner, "driver coming"
+  // Home page (Figma 2231:6225) exact palette
+  static const Color homeBg = Color(0xFF0F172A); // page / header background
+  static const Color homePanel = Color(0xFF1E293B); // wallet panel
+  static const Color dashDark = Color(0xFF475569); // dashed divider on dark
+  static const Color logoWay = Color(0xFFBFD1FF); // "Way" in AutoWay logo
+  static const Color cardLight = Color(0xFFF8FAFC); // featured card / icon circle
+  static const Color orderBlue = Color(0xFF3B82F6); // order card header (blue)
+  static const Color orderGreen = Color(0xFF22C55E); // order card header (green)
+  static const Color iconAmber = Color(0xFFD97706); // compact "Yuk yetkazma" icon
+  static const Color iconTeal = Color(0xFF14B8A6); // compact "Energy" icon
   static const Color ctaBlue = Color(0xFF2563EB); // Figma Blue/60 — Davom etish
   static const Color selectBlue = Color(0xFF3761E9); // Figma Brand/60 — "Tanlash"
   static const Color brand30 = Color(0xFFA4B8F8); // Figma Brand/30 — slot count badge

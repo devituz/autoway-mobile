@@ -27,7 +27,8 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final _name = TextEditingController();
+  final _firstName = TextEditingController();
+  final _lastName = TextEditingController();
 
   bool _isMale = true;
   DateTime _birth = DateTime(2001, 1, 10);
@@ -38,7 +39,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     // Prefill from the already-loaded /me profile.
     final user = context.read<ProfileCubit>().state.user;
     if (user != null) {
-      _name.text = user.fullName;
+      // Prefer split names; fall back to splitting full_name on the first space.
+      var first = user.firstName;
+      var last = user.lastName;
+      if (first.isEmpty && last.isEmpty && user.fullName.isNotEmpty) {
+        final parts = user.fullName.trim().split(RegExp(r'\s+'));
+        first = parts.first;
+        last = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+      }
+      _firstName.text = first;
+      _lastName.text = last;
       _isMale = user.gender != 'female';
       final parsed = DateTime.tryParse(user.birthDate);
       if (parsed != null) _birth = parsed;
@@ -47,7 +57,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   void dispose() {
-    _name.dispose();
+    _firstName.dispose();
+    _lastName.dispose();
     super.dispose();
   }
 
@@ -58,7 +69,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void _save() {
     FocusScope.of(context).unfocus();
     context.read<ProfileCubit>().updateProfile(
-          fullName: _name.text.trim(),
+          firstName: _firstName.text.trim(),
+          lastName: _lastName.text.trim(),
           birthDate: _isoBirth,
           gender: _isMale ? 'male' : 'female',
         );
@@ -120,6 +132,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             _Header(title: 'edit.title'.tr()),
             Expanded(
               child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
                 child: Column(
                   children: [
@@ -249,7 +262,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
           _LabeledField(
             label: 'edit.name'.tr(),
             child: TextField(
-              controller: _name,
+              controller: _firstName,
+              style: AppText.subtitle
+                  .copyWith(fontSize: 14.sp, color: AppColors.textDark),
+              decoration: const InputDecoration(
+                isCollapsed: true,
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          _LabeledField(
+            label: 'edit.last_name'.tr(),
+            child: TextField(
+              controller: _lastName,
               style: AppText.subtitle
                   .copyWith(fontSize: 14.sp, color: AppColors.textDark),
               decoration: const InputDecoration(

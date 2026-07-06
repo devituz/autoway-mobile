@@ -116,6 +116,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
           ),
           Expanded(
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),

@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../../core/router/app_router.dart';
-import '../../../../../../core/theme/app_colors.dart';
-import '../../../../../../core/theme/app_text.dart';
-import '../../../../../../core/widgets/app_snackbar.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_text.dart';
+import '../../../../../core/widgets/app_snackbar.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
 import '../widgets/primary_button.dart';
@@ -24,20 +24,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late final TextEditingController _nameController;
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _lastNameController;
   late final TextEditingController _birthController;
 
   @override
   void initState() {
     super.initState();
     final state = context.read<RegisterCubit>().state;
-    _nameController = TextEditingController(text: state.name);
+    _firstNameController = TextEditingController(text: state.firstName);
+    _lastNameController = TextEditingController(text: state.lastName);
     _birthController = TextEditingController(text: state.birthDate);
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _birthController.dispose();
     super.dispose();
   }
@@ -89,8 +92,15 @@ class _ProfilePageState extends State<ProfilePage> {
               _CompactField(
                 label: 'register.name_label'.tr(),
                 hint: 'register.name_hint'.tr(),
-                controller: _nameController,
-                onChanged: cubit.setName,
+                controller: _firstNameController,
+                onChanged: cubit.setFirstName,
+              ),
+              SizedBox(height: 12.h),
+              _CompactField(
+                label: 'register.last_name_label'.tr(),
+                hint: 'register.last_name_hint'.tr(),
+                controller: _lastNameController,
+                onChanged: cubit.setLastName,
               ),
               SizedBox(height: 12.h),
               _CompactField(
@@ -133,7 +143,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
                 builder: (context, state) {
-                  final valid = state.name.trim().isNotEmpty &&
+                  final valid = state.firstName.trim().isNotEmpty &&
+                      state.lastName.trim().isNotEmpty &&
                       state.birthDate.trim().isNotEmpty &&
                       state.gender != null;
                   final loading = state.status == AuthStatus.loading;

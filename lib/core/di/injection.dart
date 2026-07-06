@@ -7,6 +7,7 @@ import '../../features/client/auth/data/repositories/auth_repository.dart';
 import '../network/dio_client.dart';
 import '../network/interceptors/auth_interceptor.dart';
 import '../network/interceptors/refresh_interceptor.dart';
+import '../role/role_storage.dart';
 import '../storage/token_storage.dart';
 import '../upload/upload_service.dart';
 
@@ -20,6 +21,7 @@ Future<void> initInjection() async {
 
   // Core
   sl.registerLazySingleton(() => TokenStorage(sl()));
+  sl.registerLazySingleton(() => RoleStorage(sl()));
   sl.registerLazySingleton(() => AuthInterceptor(sl()));
   sl.registerLazySingleton(() => RefreshInterceptor(sl()));
   sl.registerLazySingleton(() => DioClient(sl(), sl(), sl()));

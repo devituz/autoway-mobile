@@ -27,7 +27,9 @@
     "birth_label": "Tug‘ilgan sanangiz",
     "male": "Erkak",
     "female": "Ayol",
-    "done": "Ro‘yxatdan muvaffaqiyatli o‘tdingiz"
+    "done": "Ro‘yxatdan muvaffaqiyatli o‘tdingiz",
+    "last_name_label": "Familiyangiz",
+    "last_name_hint": "Valiyev"
   },
   "home": {
     "passenger": "Yo‘lovchi",
@@ -129,7 +131,8 @@
     "save": "Saqlash",
     "upload_photo": "Profil ranmingizni yuklang",
     "close": "Yopish",
-    "saved": "Profil saqlandi"
+    "saved": "Profil saqlandi",
+    "last_name": "Familiya"
   },
   "change_phone": {
     "title": "Telefon raqaminmi ozgartirish",
@@ -438,5 +441,94 @@
     "cstatus_act_call": "Aloqa",
     "cstatus_btn_complain": "Etiroz bildirish",
     "cstatus_btn_rate": "Baholash"
+  },
+  "driver": {
+    "profile": {
+      "my_routes": "Mening marshrutlarim",
+      "my_transports": "Transportlarim",
+      "pending": "Kutilmoqda",
+      "statistics": "Statistika",
+      "settings": "Sozlamalar"
+    },
+    "routes": {
+      "title": "Mening marshrutlarim",
+      "section": "Profil malumotlari",
+      "add": "Yangi manzil qoshish"
+    },
+    "create_route": {
+      "title": "Marshrut yaratish",
+      "your_location": "Manzilingiz:",
+      "from": "Qayerdan:",
+      "to": "Qayerga:",
+      "from_empty": "Tanlanmagan",
+      "to_empty": "Tanlanmagan",
+      "select": "Tanlash",
+      "continue": "Davom etish",
+      "from_title": "Qayerdan",
+      "to_title": "Qayerga",
+      "search": "Qidirish",
+      "map": "Karta"
+    },
+    "transports": {
+      "title": "Transportlarim",
+      "section": "Profil malumotlari",
+      "add": "Yangi transport qoshish"
+    },
+    "edit_vehicle": {
+      "title": "Transportlarim",
+      "info_section": "Profil malumotlari",
+      "type": "Transport turi",
+      "brand": "Transport markasi",
+      "model": "Transport modeli",
+      "color": "Rangi",
+      "color_white": "Oq",
+      "fuel": "Yoqilg‘i turi",
+      "fuel_petrol": "Benzin",
+      "plate": "Davlat raqami",
+      "photos_section": "Rasmlarni yuklang",
+      "photo_left": "Tashqari chap ko‘rinishi",
+      "photo_right": "Tashqari o‘ng ko‘rinishi",
+      "photo_front_seats": "Oldi o‘rindiqlar ko‘rinishi",
+      "photo_back_seats": "Orqa o‘rindiqlar ko‘rinishi",
+      "seats_section": "Orindiqlar tuzilmasi",
+      "seat_count": "{n} orindiqli",
+      "seats_hint": "Aktiv orindiqlarni belgilang",
+      "extras_section": "Qo‘shimcha:",
+      "extra_order_for_other": "Boshqasiga buyurtma berish",
+      "extra_ac": "Konditsioner bilan",
+      "extra_no_smoke": "Tamaki mahsulot chekish mumkin emas",
+      "extra_pets": "Uy hayvonlari bilan harakat",
+      "extra_music": "Qo‘shiq bilan",
+      "extra_silence": "Tinchlikda ketmoqchiman",
+      "close": "Yopish",
+      "save": "Saqlash"
+    },
+    "seat_layout": {
+      "title": "Orindiqlar tuzilmasi",
+      "capacity": "{count} orindiqli",
+      "hint": "Aktiv orindiqlarni belgilang",
+      "confirm": "Tasdiqlash"
+    },
+    "settings": {
+      "title": "Sozlamalar",
+      "navigator": "Navigator",
+      "messages": "Xabarlar",
+      "app_language": "Ilova tili"
+    },
+    "navigator": {
+      "title": "Navigatorni tanlang",
+      "subtitle": "Default navigatsiya tanlang",
+      "yandex": "Yandex navigator",
+      "google": "Google Maps",
+      "navigator2": "Navigator 2",
+      "confirm": "Yopish"
+    },
+    "stats": {
+      "title": "Statistika",
+      "rating": "Reyting",
+      "activity": "Faollik",
+      "completed": "Bajarilgan buyurtmalar",
+      "earnings": "Daromad"
+    }
   }
 }

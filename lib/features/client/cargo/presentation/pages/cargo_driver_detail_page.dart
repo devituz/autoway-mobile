@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/router/app_router.dart';
-import '../../domain/cargo_status.dart';
+import '../../domain/entities/cargo_status.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
 

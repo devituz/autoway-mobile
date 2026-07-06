@@ -258,6 +258,86 @@ class CargoStatusRouteArgs {
 }
 
 /// generated route for
+/// [ChooseNavigatorPage]
+class ChooseNavigatorRoute extends PageRouteInfo<void> {
+  const ChooseNavigatorRoute({List<PageRouteInfo>? children})
+    : super(ChooseNavigatorRoute.name, initialChildren: children);
+
+  static const String name = 'ChooseNavigatorRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ChooseNavigatorPage();
+    },
+  );
+}
+
+/// generated route for
+/// [CreateRoutePage]
+class CreateRouteRoute extends PageRouteInfo<void> {
+  const CreateRouteRoute({List<PageRouteInfo>? children})
+    : super(CreateRouteRoute.name, initialChildren: children);
+
+  static const String name = 'CreateRouteRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CreateRoutePage();
+    },
+  );
+}
+
+/// generated route for
+/// [DriverRoutesPage]
+class DriverRoutesRoute extends PageRouteInfo<void> {
+  const DriverRoutesRoute({List<PageRouteInfo>? children})
+    : super(DriverRoutesRoute.name, initialChildren: children);
+
+  static const String name = 'DriverRoutesRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DriverRoutesPage();
+    },
+  );
+}
+
+/// generated route for
+/// [DriverSettingsPage]
+class DriverSettingsRoute extends PageRouteInfo<void> {
+  const DriverSettingsRoute({List<PageRouteInfo>? children})
+    : super(DriverSettingsRoute.name, initialChildren: children);
+
+  static const String name = 'DriverSettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DriverSettingsPage();
+    },
+  );
+}
+
+/// generated route for
+/// [DriverStatsPage]
+class DriverStatsRoute extends PageRouteInfo<void> {
+  const DriverStatsRoute({List<PageRouteInfo>? children})
+    : super(DriverStatsRoute.name, initialChildren: children);
+
+  static const String name = 'DriverStatsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DriverStatsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [EditProfilePage]
 class EditProfileRoute extends PageRouteInfo<void> {
   const EditProfileRoute({List<PageRouteInfo>? children})
@@ -269,6 +349,22 @@ class EditProfileRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const EditProfilePage();
+    },
+  );
+}
+
+/// generated route for
+/// [EditVehiclePage]
+class EditVehicleRoute extends PageRouteInfo<void> {
+  const EditVehicleRoute({List<PageRouteInfo>? children})
+    : super(EditVehicleRoute.name, initialChildren: children);
+
+  static const String name = 'EditVehicleRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const EditVehiclePage();
     },
   );
 }
@@ -785,6 +881,22 @@ class ProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [SeatLayoutPage]
+class SeatLayoutRoute extends PageRouteInfo<void> {
+  const SeatLayoutRoute({List<PageRouteInfo>? children})
+    : super(SeatLayoutRoute.name, initialChildren: children);
+
+  static const String name = 'SeatLayoutRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SeatLayoutPage();
+    },
+  );
+}
+
+/// generated route for
 /// [TopUpPage]
 class TopUpRoute extends PageRouteInfo<void> {
   const TopUpRoute({List<PageRouteInfo>? children})
@@ -796,6 +908,22 @@ class TopUpRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const TopUpPage();
+    },
+  );
+}
+
+/// generated route for
+/// [TransportsPage]
+class TransportsRoute extends PageRouteInfo<void> {
+  const TransportsRoute({List<PageRouteInfo>? children})
+    : super(TransportsRoute.name, initialChildren: children);
+
+  static const String name = 'TransportsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TransportsPage();
     },
   );
 }

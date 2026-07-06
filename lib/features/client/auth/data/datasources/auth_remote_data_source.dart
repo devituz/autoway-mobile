@@ -35,7 +35,8 @@ class AuthRemoteDataSource {
   /// REGISTER 1/2 — create the account (profile) and send an SMS code.
   Future<RequestOtpResult> registerRequest({
     required String phone,
-    required String fullName,
+    required String firstName,
+    required String lastName,
     required String birthDate,
     required String gender,
     required String role,
@@ -44,7 +45,8 @@ class AuthRemoteDataSource {
       AppConstants.authRegisterRequest,
       data: {
         'phone': phone,
-        'full_name': fullName,
+        'first_name': firstName,
+        'last_name': lastName,
         'birth_date': birthDate,
         'gender': gender,
         'role': role,
@@ -88,7 +90,9 @@ class AuthRemoteDataSource {
   /// change additionally needs [otp]. Returns the updated user + whether the
   /// phone actually changed.
   Future<({AuthUser user, bool phoneChanged})> updateProfile({
-    String? fullName,
+    String? firstName,
+    String? lastName,
+    String? middleName,
     String? birthDate,
     String? gender,
     String? avatarUrl,
@@ -96,7 +100,9 @@ class AuthRemoteDataSource {
     String? otp,
   }) async {
     final body = <String, dynamic>{};
-    if (fullName != null) body['full_name'] = fullName;
+    if (firstName != null) body['first_name'] = firstName;
+    if (lastName != null) body['last_name'] = lastName;
+    if (middleName != null) body['middle_name'] = middleName;
     if (birthDate != null) body['birth_date'] = birthDate;
     if (gender != null) body['gender'] = gender;
     if (avatarUrl != null) body['avatar_url'] = avatarUrl;

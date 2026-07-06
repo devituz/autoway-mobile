@@ -23,14 +23,16 @@ class AuthRepository {
 
   Future<Either<Failure, RequestOtpResult>> registerRequest({
     required String phone,
-    required String fullName,
+    required String firstName,
+    required String lastName,
     required String birthDate,
     required String gender,
     required String role,
   }) =>
       _guard(() => _remote.registerRequest(
             phone: phone,
-            fullName: fullName,
+            firstName: firstName,
+            lastName: lastName,
             birthDate: birthDate,
             gender: gender,
             role: role,
@@ -62,7 +64,9 @@ class AuthRepository {
   Future<Either<Failure, AuthUser>> getMe() => _guard(() => _remote.getMe());
 
   Future<Either<Failure, ({AuthUser user, bool phoneChanged})>> updateProfile({
-    String? fullName,
+    String? firstName,
+    String? lastName,
+    String? middleName,
     String? birthDate,
     String? gender,
     String? avatarUrl,
@@ -70,7 +74,9 @@ class AuthRepository {
     String? otp,
   }) =>
       _guard(() => _remote.updateProfile(
-            fullName: fullName,
+            firstName: firstName,
+            lastName: lastName,
+            middleName: middleName,
             birthDate: birthDate,
             gender: gender,
             avatarUrl: avatarUrl,

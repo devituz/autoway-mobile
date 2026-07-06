@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Typography design tokens (sizes/weights from Figma).
 ///
@@ -67,5 +68,24 @@ class AppText {
   static TextStyle get input => TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w500,
+      );
+
+  // Unbounded family — home header & cards (Figma 2231:6225)
+  static TextStyle get logo => GoogleFonts.unbounded(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w600,
+        height: 16 / 14,
+      );
+
+  static TextStyle get balance => GoogleFonts.unbounded(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w500,
+        height: 17.36 / 14,
+      );
+
+  static TextStyle get serviceTitle => GoogleFonts.unbounded(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w500,
+        height: 26 / 16,
       );
 }

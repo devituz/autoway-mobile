@@ -26,4 +26,6 @@ class AppConstants {
   static const String accessTokenKey = 'access_token';
   static const String refreshTokenKey = 'refresh_token';
   static const String localeKey = 'locale';
+  // Active app role: 0 = passenger (Yo'lovchi), 1 = driver (Haydovchi).
+  static const String roleKey = 'app_role';
 }

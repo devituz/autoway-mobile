@@ -69,7 +69,10 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             onRefresh: () => context.read<ProfileCubit>().load(force: true),
             color: AppColors.primary,
             child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+            // Hard scroll boundary — no overscroll bounce, so the split
+            // background can never peek out weirdly past the content edges.
+            physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics()),
             child: Column(
               children: [
           // Dark header with rounded bottom (Figma 2232:24130).

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../../core/theme/app_colors.dart';
-import '../../../../../../core/theme/app_text.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_text.dart';
 
 /// Filled text field with an optional floating label (screens 3 & 5).
 class LabeledField extends StatelessWidget {

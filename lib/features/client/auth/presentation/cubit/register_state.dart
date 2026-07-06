@@ -21,7 +21,8 @@ abstract class RegisterState with _$RegisterState {
     @Default(UserType.passenger) UserType userType,
     @Default('') String phone,
     @Default('') String otp,
-    @Default('') String name,
+    @Default('') String firstName,
+    @Default('') String lastName,
     @Default('') String birthDate,
     Gender? gender,
     // Auth/network state.

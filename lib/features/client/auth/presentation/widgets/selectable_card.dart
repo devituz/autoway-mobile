@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../../core/theme/app_colors.dart';
-import '../../../../../../core/theme/app_text.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_text.dart';
 
 /// Icon + label card used for user-type selection (screen 2).
 class SelectableCard extends StatelessWidget {

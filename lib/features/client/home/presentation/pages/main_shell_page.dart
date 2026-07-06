@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../../../core/role/role_cubit.dart';
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../core/theme/app_text.dart';
+import '../../../../driver/profile/presentation/pages/driver_profile_page.dart';
 import '../../../orders/presentation/pages/orders_page.dart';
 import '../../../profile/presentation/pages/client_profile_page.dart';
 import 'home_page.dart';
@@ -29,12 +32,19 @@ class _MainShellPageState extends State<MainShellPage> {
     // its bottom nav) in place. Keying the IndexedStack by locale forces the
     // cached tab pages to rebuild with the new translations too.
     final localeCode = context.locale.languageCode;
+    // Mirror the persisted role: Haydovchi mode swaps the Profil tab to the
+    // driver profile screen.
+    final isDriver = context.watch<RoleCubit>().state == 1;
     return Scaffold(
       backgroundColor: AppColors.accent,
       body: IndexedStack(
-        key: ValueKey(localeCode),
+        key: ValueKey('${localeCode}_$isDriver'),
         index: _index,
-        children: const [HomePage(), OrdersPage(), ClientProfilePage()],
+        children: [
+          const HomePage(),
+          const OrdersPage(),
+          isDriver ? const DriverProfilePage() : const ClientProfilePage(),
+        ],
       ),
       bottomNavigationBar: _BottomNav(
         index: _index,

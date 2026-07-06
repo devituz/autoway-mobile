@@ -67,6 +67,7 @@ class _TopUpPageState extends State<TopUpPage> {
           _Header(title: 'topup.title'.tr()),
           Expanded(
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
               child: Column(
                 children: [

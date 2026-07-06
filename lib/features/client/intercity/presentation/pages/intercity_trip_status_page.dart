@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
-import '../../domain/intercity_trip_status.dart';
+import '../../domain/entities/intercity_trip_status.dart';
 
 const _icons = 'assets/icons';
 

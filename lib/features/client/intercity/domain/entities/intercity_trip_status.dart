@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_colors.dart';
 
 /// Action circles shown inside the trip-status card.
 enum TripAction { cancel, location, telegram, call }

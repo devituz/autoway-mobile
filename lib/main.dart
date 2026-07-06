@@ -5,11 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/di/injection.dart';
+import 'core/role/role_cubit.dart';
 import 'core/router/app_router.dart';
 import 'features/client/auth/data/repositories/auth_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/app_initializer.dart';
-import 'features/client/auth/register/presentation/cubit/register_cubit.dart';
+import 'features/client/auth/presentation/cubit/register_cubit.dart';
 import 'features/client/profile/presentation/cubit/profile_cubit.dart';
 
 void main() async {
@@ -37,7 +38,7 @@ class AutoWayApp extends StatefulWidget {
   State<AutoWayApp> createState() => _AutoWayAppState();
 }
 
-/// Lets us tell auto_route to re-evaluate (rebuild) the live route stack on
+/// Lets us tell auto_route to re-evaluate (rebuild) t//rhe live route stack on
 /// demand — used to refresh every page's translations after a locale change.
 class _LocaleReevaluate extends ReevaluateListenable {
   void bump() => notifyListeners();
@@ -96,6 +97,8 @@ class _AutoWayAppState extends State<AutoWayApp> {
         providers: [
           BlocProvider(create: (_) => RegisterCubit(sl())),
           BlocProvider(create: (_) => ProfileCubit(sl(), sl())),
+          // App-wide role (passenger/driver), persisted across restarts.
+          BlocProvider(create: (_) => RoleCubit(sl())),
         ],
         child: MaterialApp.router(
           title: 'AutoWay',

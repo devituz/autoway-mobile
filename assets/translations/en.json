@@ -27,7 +27,9 @@
     "birth_label": "Date of birth",
     "male": "Male",
     "female": "Female",
-    "done": "Registration completed successfully"
+    "done": "Registration completed successfully",
+    "last_name_label": "Last name",
+    "last_name_hint": "Valiyev"
   },
   "home": {
     "passenger": "Passenger",
@@ -129,7 +131,8 @@
     "save": "Save",
     "upload_photo": "Upload your profile photo",
     "close": "Close",
-    "saved": "Profile saved"
+    "saved": "Profile saved",
+    "last_name": "Last name"
   },
   "change_phone": {
     "title": "Change phone number",
@@ -438,5 +441,94 @@
     "cstatus_act_call": "Call",
     "cstatus_btn_complain": "File a complaint",
     "cstatus_btn_rate": "Rate"
+  },
+  "driver": {
+    "profile": {
+      "my_routes": "My routes",
+      "my_transports": "My transport",
+      "pending": "Pending",
+      "statistics": "Statistics",
+      "settings": "Settings"
+    },
+    "routes": {
+      "title": "My routes",
+      "section": "Profile information",
+      "add": "Add new address"
+    },
+    "create_route": {
+      "title": "Create route",
+      "your_location": "Your location:",
+      "from": "From:",
+      "to": "To:",
+      "from_empty": "Not selected",
+      "to_empty": "Not selected",
+      "select": "Select",
+      "continue": "Continue",
+      "from_title": "From",
+      "to_title": "To",
+      "search": "Search",
+      "map": "Map"
+    },
+    "transports": {
+      "title": "My vehicles",
+      "section": "Profile information",
+      "add": "Add new vehicle"
+    },
+    "edit_vehicle": {
+      "title": "My transport",
+      "info_section": "Profile details",
+      "type": "Vehicle type",
+      "brand": "Vehicle brand",
+      "model": "Vehicle model",
+      "color": "Color",
+      "color_white": "White",
+      "fuel": "Fuel type",
+      "fuel_petrol": "Petrol",
+      "plate": "License plate",
+      "photos_section": "Upload photos",
+      "photo_left": "Exterior left view",
+      "photo_right": "Exterior right view",
+      "photo_front_seats": "Front seats view",
+      "photo_back_seats": "Rear seats view",
+      "seats_section": "Seat layout",
+      "seat_count": "{n} seats",
+      "seats_hint": "Mark the active seats",
+      "extras_section": "Additional:",
+      "extra_order_for_other": "Order for someone else",
+      "extra_ac": "With air conditioning",
+      "extra_no_smoke": "No smoking allowed",
+      "extra_pets": "Travel with pets",
+      "extra_music": "With music",
+      "extra_silence": "I want to ride in silence",
+      "close": "Close",
+      "save": "Save"
+    },
+    "seat_layout": {
+      "title": "Seat layout",
+      "capacity": "{count} seats",
+      "hint": "Mark the active seats",
+      "confirm": "Confirm"
+    },
+    "settings": {
+      "title": "Settings",
+      "navigator": "Navigator",
+      "messages": "Messages",
+      "app_language": "App language"
+    },
+    "navigator": {
+      "title": "Choose navigator",
+      "subtitle": "Select default navigation",
+      "yandex": "Yandex navigator",
+      "google": "Google Maps",
+      "navigator2": "Navigator 2",
+      "confirm": "Close"
+    },
+    "stats": {
+      "title": "Statistics",
+      "rating": "Rating",
+      "activity": "Activity",
+      "completed": "Completed orders",
+      "earnings": "Earnings"
+    }
   }
 }

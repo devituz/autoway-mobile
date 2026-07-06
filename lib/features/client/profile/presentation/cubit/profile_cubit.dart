@@ -43,14 +43,18 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> updateProfile({
-    String? fullName,
+    String? firstName,
+    String? lastName,
+    String? middleName,
     String? birthDate,
     String? gender,
     String? avatarUrl,
   }) async {
     emit(state.copyWith(status: ProfileStatus.saving, errorMessage: null));
     final res = await _repository.updateProfile(
-      fullName: fullName,
+      firstName: firstName,
+      lastName: lastName,
+      middleName: middleName,
       birthDate: birthDate,
       gender: gender,
       // Fall back to the avatar uploaded earlier in this edit session.
