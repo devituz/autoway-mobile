@@ -660,15 +660,6 @@ class _ServiceCards extends StatelessWidget {
             dark: false,
             onTap: onGoOnline,
           ),
-          SizedBox(width: 8.w),
-          _ServiceCard(
-            icon: 'c_routing',
-            iconColor: AppColors.logoutRed,
-            label: 'home.route_taxi'.tr(),
-            buttonLabel: 'home.driver_go_online'.tr(),
-            dark: true,
-            onTap: onGoOnline,
-          ),
         ],
       ),
     );
