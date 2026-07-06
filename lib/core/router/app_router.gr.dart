@@ -402,22 +402,6 @@ class IntercityAddressRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [IntercityCancelledPage]
-class IntercityCancelledRoute extends PageRouteInfo<void> {
-  const IntercityCancelledRoute({List<PageRouteInfo>? children})
-    : super(IntercityCancelledRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityCancelledRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityCancelledPage();
-    },
-  );
-}
-
-/// generated route for
 /// [IntercityDistrictPickPage]
 class IntercityDistrictPickRoute
     extends PageRouteInfo<IntercityDistrictPickRouteArgs> {
@@ -471,22 +455,6 @@ class IntercityDistrictPickRouteArgs {
 
   @override
   int get hashCode => key.hashCode ^ regionName.hashCode;
-}
-
-/// generated route for
-/// [IntercityDriverDetailPage]
-class IntercityDriverDetailRoute extends PageRouteInfo<void> {
-  const IntercityDriverDetailRoute({List<PageRouteInfo>? children})
-    : super(IntercityDriverDetailRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityDriverDetailRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityDriverDetailPage();
-    },
-  );
 }
 
 /// generated route for
@@ -591,54 +559,6 @@ class IntercityRegionPickRouteArgs {
 
   @override
   int get hashCode => key.hashCode ^ toDestination.hashCode;
-}
-
-/// generated route for
-/// [IntercityTripStatusPage]
-class IntercityTripStatusRoute
-    extends PageRouteInfo<IntercityTripStatusRouteArgs> {
-  IntercityTripStatusRoute({
-    Key? key,
-    required IntercityTripStatus status,
-    List<PageRouteInfo>? children,
-  }) : super(
-         IntercityTripStatusRoute.name,
-         args: IntercityTripStatusRouteArgs(key: key, status: status),
-         initialChildren: children,
-       );
-
-  static const String name = 'IntercityTripStatusRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<IntercityTripStatusRouteArgs>();
-      return IntercityTripStatusPage(key: args.key, status: args.status);
-    },
-  );
-}
-
-class IntercityTripStatusRouteArgs {
-  const IntercityTripStatusRouteArgs({this.key, required this.status});
-
-  final Key? key;
-
-  final IntercityTripStatus status;
-
-  @override
-  String toString() {
-    return 'IntercityTripStatusRouteArgs{key: $key, status: $status}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! IntercityTripStatusRouteArgs) return false;
-    return key == other.key && status == other.status;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ status.hashCode;
 }
 
 /// generated route for

@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../core/router/app_router.dart';
 import '../../domain/entities/intercity_trip_status.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
@@ -22,16 +21,27 @@ const int _commissionPerSeat = 3000;
 /// Figma node 2177:14897 is the same page with two seats picked, which this
 /// page reproduces via local seat-selection state (header tag, total price and
 /// the booking CTA all update accordingly).
-@RoutePage()
-class IntercityDriverDetailPage extends StatefulWidget {
-  const IntercityDriverDetailPage({super.key});
-
-  @override
-  State<IntercityDriverDetailPage> createState() =>
-      _IntercityDriverDetailPageState();
+/// Shown as a real modal bottom sheet. Resolves to the initial trip status
+/// when the user books ("Bron qilish"), null when dismissed.
+Future<IntercityTripStatus?> showIntercityDriverDetailSheet(
+    BuildContext context) {
+  return showModalBottomSheet<IntercityTripStatus>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => const _DriverDetailSheetBody(),
+  );
 }
 
-class _IntercityDriverDetailPageState extends State<IntercityDriverDetailPage> {
+class _DriverDetailSheetBody extends StatefulWidget {
+  const _DriverDetailSheetBody();
+
+  @override
+  State<_DriverDetailSheetBody> createState() => _DriverDetailSheetBodyState();
+}
+
+class _DriverDetailSheetBodyState extends State<_DriverDetailSheetBody> {
   // Seat slots: 4 freely-selectable, the two "band" tiles are occupied.
   static const int _requiredSeats = 2; // "Bosh o'rindiqlar: 2"
   final Set<int> _selected = {0}; // 0 = first selectable (pre-selected)
@@ -63,11 +73,10 @@ class _IntercityDriverDetailPageState extends State<IntercityDriverDetailPage> {
   @override
   Widget build(BuildContext context) {
     final remaining = _requiredSeats - _count;
-    return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
-      body: Column(
+    return FractionallySizedBox(
+      heightFactor: 0.93,
+      child: Column(
         children: [
-          SizedBox(height: MediaQuery.of(context).padding.top + 25.h),
           // Drag handle.
           Container(
             width: 112.w,
@@ -845,7 +854,8 @@ class _BottomBar extends StatelessWidget {
               top: false,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => context.router.push(IntercityTripStatusRoute(status: IntercityTripStatus.awaiting)),
+                onTap: () =>
+                    Navigator.of(context).pop(IntercityTripStatus.awaiting),
                 child: Container(
                   height: 56.h,
                   padding: EdgeInsets.only(right: 16.w),

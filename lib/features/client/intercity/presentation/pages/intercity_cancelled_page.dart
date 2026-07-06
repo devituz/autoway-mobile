@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,25 +14,24 @@ const _icons = 'assets/icons';
 /// dark map backdrop: a red "Qabul qilinmadi" status bar, then a light content
 /// area with two stacked white cards — the first explaining the order was not
 /// confirmed (with cancel / re-search actions), the second the order summary.
-@RoutePage()
-class IntercityCancelledPage extends StatelessWidget {
-  const IntercityCancelledPage({super.key});
+/// Shown as a real modal bottom sheet over the previous screen.
+Future<void> showIntercityCancelledSheet(BuildContext context) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => const _CancelledSheetBody(),
+  );
+}
+
+class _CancelledSheetBody extends StatelessWidget {
+  const _CancelledSheetBody();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
-      body: Stack(
-        children: [
-          // Static map background.
-          Positioned.fill(
-            child: Image.asset('assets/images/map_bg.png', fit: BoxFit.cover),
-          ),
-          // Red wrapper sheet.
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: FractionallySizedBox(
-              heightFactor: 0.945,
+    return FractionallySizedBox(
+              heightFactor: 0.93,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -86,26 +84,6 @@ class IntercityCancelledPage extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ),
-          // Grabber handle on the dark backdrop.
-          Positioned(
-            top: 70.h,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                width: 112.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
-                  borderRadius: BorderRadius.circular(60.r),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -153,13 +131,13 @@ class _StatusCard extends StatelessWidget {
               _ActionButton(
                 icon: 'od_close',
                 label: 'intercity.cancelled_cancel'.tr(),
-                onTap: () => context.router.maybePop(),
+                onTap: () => Navigator.of(context).pop(),
               ),
               SizedBox(width: 24.w),
               _ActionButton(
                 icon: 'refresh',
                 label: 'intercity.cancelled_research'.tr(),
-                onTap: () => context.router.maybePop(),
+                onTap: () => Navigator.of(context).pop(),
               ),
             ],
           ),

@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import 'intercity_cancelled_page.dart';
+import 'intercity_driver_detail_page.dart';
+import 'intercity_trip_status_page.dart';
 
 const _icons = 'assets/icons';
 const _images = 'assets/images';
@@ -228,7 +230,7 @@ class _OfferCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => context.router.push(const IntercityDriverDetailRoute()),
+      onTap: () => _openDriverDetail(context),
       child: Container(
         decoration: BoxDecoration(
           color: featured ? AppColors.orderBlue : AppColors.ctaBlue,
@@ -485,5 +487,17 @@ class _DashedDivider extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+
+/// Drives the booking chain: driver-detail sheet -> trip-status sheet ->
+/// (on cancel confirmation) cancelled sheet.
+Future<void> _openDriverDetail(BuildContext context) async {
+  final booked = await showIntercityDriverDetailSheet(context);
+  if (booked == null || !context.mounted) return;
+  final result = await showIntercityTripStatusSheet(context, booked);
+  if (result == 'cancelled' && context.mounted) {
+    await showIntercityCancelledSheet(context);
   }
 }

@@ -23,43 +23,47 @@ const _icons = 'assets/icons';
 /// area holds the white status card (title/driver/actions) and the white
 /// order-detail card (number/price/route/buttons). Per-state differences live
 /// in [IntercityTripStatusX].
-@RoutePage()
-class IntercityTripStatusPage extends StatelessWidget {
+/// Shown as a real modal bottom sheet. Resolves to 'cancelled' when the user
+/// confirms cancellation (the caller then opens the cancelled sheet).
+Future<String?> showIntercityTripStatusSheet(
+    BuildContext context, IntercityTripStatus status) {
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => _TripStatusSheetBody(status: status),
+  );
+}
+
+class _TripStatusSheetBody extends StatelessWidget {
   final IntercityTripStatus status;
 
-  const IntercityTripStatusPage({super.key, required this.status});
+  const _TripStatusSheetBody({required this.status});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
-      body: Column(
-        children: [
-          // Status-bar spacer (dark area at the top).
-          SizedBox(height: MediaQuery.of(context).padding.top + 20.h),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: status.color,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0x147D8184),
-                    blurRadius: 12,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  _StatusHeaderBar(status: status),
-                  Expanded(child: _ContentBar(status: status)),
-                ],
-              ),
+    return FractionallySizedBox(
+      heightFactor: 0.93,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: status.color,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0x147D8184),
+              blurRadius: 12,
+              offset: const Offset(0, -4),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          children: [
+            _StatusHeaderBar(status: status),
+            Expanded(child: _ContentBar(status: status)),
+          ],
+        ),
       ),
     );
   }
@@ -749,10 +753,11 @@ class _Line extends StatelessWidget {
 }
 
 
-/// Opens the cancel-confirmation sheet; on confirm goes to the cancelled page.
+/// Opens the cancel-confirmation sheet; on confirm closes this status sheet
+/// with a 'cancelled' result so the caller can open the cancelled sheet.
 Future<void> _confirmCancel(BuildContext context) async {
   final confirmed = await showIntercityCancelOrderSheet(context);
   if (confirmed == true && context.mounted) {
-    context.router.push(const IntercityCancelledRoute());
+    Navigator.of(context).pop('cancelled');
   }
 }
