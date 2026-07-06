@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,18 +6,25 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
 
 /// Intercity-taxi flow — "Ketish vaqti" departure-time picker (Figma node
-/// 2113:7824). A white bottom sheet over the dark map background: day tabs
-/// (Bugun / Ertaga / Sana tanlash) + a horizontal strip of time slots, each
-/// showing how many cars leave at that time.
-@RoutePage()
-class IntercityTimePage extends StatefulWidget {
-  const IntercityTimePage({super.key});
-
-  @override
-  State<IntercityTimePage> createState() => _IntercityTimePageState();
+/// 2113:7824). Shown as a real modal bottom sheet.
+Future<void> showIntercityTimeSheet(BuildContext context) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => const _TimeSheetBody(),
+  );
 }
 
-class _IntercityTimePageState extends State<IntercityTimePage> {
+class _TimeSheetBody extends StatefulWidget {
+  const _TimeSheetBody();
+
+  @override
+  State<_TimeSheetBody> createState() => _TimeSheetBodyState();
+}
+
+class _TimeSheetBodyState extends State<_TimeSheetBody> {
   int _dayTab = 0;
   int _slot = 2;
 
@@ -33,16 +39,7 @@ class _IntercityTimePageState extends State<IntercityTimePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          const Positioned.fill(
-            child: ColoredBox(color: Color(0x99282828)),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _Sheet(
+    return _Sheet(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -93,7 +90,7 @@ class _IntercityTimePageState extends State<IntercityTimePage> {
                         child: _SheetButton(
                           label: 'intercity.time_close'.tr(),
                           filled: false,
-                          onTap: () => context.router.maybePop(),
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ),
                       SizedBox(width: 8.w),
@@ -101,18 +98,12 @@ class _IntercityTimePageState extends State<IntercityTimePage> {
                         child: _SheetButton(
                           label: 'intercity.time_continue'.tr(),
                           filled: true,
-                          onTap: () {
-                            // TODO(nav): -> IntercityExtraPage
-                          },
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ),
                     ],
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

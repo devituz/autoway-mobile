@@ -402,22 +402,6 @@ class IntercityAddressRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [IntercityCancelOrderPage]
-class IntercityCancelOrderRoute extends PageRouteInfo<void> {
-  const IntercityCancelOrderRoute({List<PageRouteInfo>? children})
-    : super(IntercityCancelOrderRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityCancelOrderRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityCancelOrderPage();
-    },
-  );
-}
-
-/// generated route for
 /// [IntercityCancelledPage]
 class IntercityCancelledRoute extends PageRouteInfo<void> {
   const IntercityCancelledRoute({List<PageRouteInfo>? children})
@@ -538,22 +522,6 @@ class IntercityDriversRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [IntercityExtraPage]
-class IntercityExtraRoute extends PageRouteInfo<void> {
-  const IntercityExtraRoute({List<PageRouteInfo>? children})
-    : super(IntercityExtraRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityExtraRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityExtraPage();
-    },
-  );
-}
-
-/// generated route for
 /// [IntercityOrderDetailsPage]
 class IntercityOrderDetailsRoute extends PageRouteInfo<void> {
   const IntercityOrderDetailsRoute({List<PageRouteInfo>? children})
@@ -565,38 +533,6 @@ class IntercityOrderDetailsRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const IntercityOrderDetailsPage();
-    },
-  );
-}
-
-/// generated route for
-/// [IntercityPricePage]
-class IntercityPriceRoute extends PageRouteInfo<void> {
-  const IntercityPriceRoute({List<PageRouteInfo>? children})
-    : super(IntercityPriceRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityPriceRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityPricePage();
-    },
-  );
-}
-
-/// generated route for
-/// [IntercityRateDriverPage]
-class IntercityRateDriverRoute extends PageRouteInfo<void> {
-  const IntercityRateDriverRoute({List<PageRouteInfo>? children})
-    : super(IntercityRateDriverRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityRateDriverRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityRateDriverPage();
     },
   );
 }
@@ -655,22 +591,6 @@ class IntercityRegionPickRouteArgs {
 
   @override
   int get hashCode => key.hashCode ^ toDestination.hashCode;
-}
-
-/// generated route for
-/// [IntercityTimePage]
-class IntercityTimeRoute extends PageRouteInfo<void> {
-  const IntercityTimeRoute({List<PageRouteInfo>? children})
-    : super(IntercityTimeRoute.name, initialChildren: children);
-
-  static const String name = 'IntercityTimeRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const IntercityTimePage();
-    },
-  );
 }
 
 /// generated route for

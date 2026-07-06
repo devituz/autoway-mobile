@@ -20,18 +20,13 @@ import '../../features/client/home/presentation/pages/main_shell_page.dart';
 import '../../features/client/home/presentation/pages/notifications_page.dart';
 import '../../features/client/intercity/domain/entities/intercity_trip_status.dart';
 import '../../features/client/intercity/presentation/pages/intercity_address_page.dart';
-import '../../features/client/intercity/presentation/pages/intercity_cancel_order_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_cancelled_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_district_pick_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_driver_detail_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_driver_location_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_drivers_page.dart';
-import '../../features/client/intercity/presentation/pages/intercity_extra_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_order_details_page.dart';
-import '../../features/client/intercity/presentation/pages/intercity_price_page.dart';
-import '../../features/client/intercity/presentation/pages/intercity_rate_driver_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_region_pick_page.dart';
-import '../../features/client/intercity/presentation/pages/intercity_time_page.dart';
 import '../../features/client/intercity/presentation/pages/intercity_trip_status_page.dart';
 import '../../features/client/orders/domain/entities/order_status.dart';
 import '../../features/client/orders/presentation/pages/go_online_page.dart';
@@ -71,16 +66,11 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: IntercityDistrictPickRoute.page),
     AutoRoute(page: IntercityOrderDetailsRoute.page),
     // Modal sheets — slide up from the bottom over the previous screen.
-    _sheet(IntercityTimeRoute.page),
-    _sheet(IntercityExtraRoute.page),
-    _sheet(IntercityPriceRoute.page),
     AutoRoute(page: IntercityDriversRoute.page),
     AutoRoute(page: IntercityDriverDetailRoute.page),
     AutoRoute(page: IntercityDriverLocationRoute.page),
     AutoRoute(page: IntercityTripStatusRoute.page),
-    _sheet(IntercityCancelOrderRoute.page),
     AutoRoute(page: IntercityCancelledRoute.page),
-    _sheet(IntercityRateDriverRoute.page),
     // Cargo (Pochta / Yuk yetkazma) flow.
     AutoRoute(page: CargoAddressRoute.page),
     AutoRoute(page: CargoRegionPickRoute.page),

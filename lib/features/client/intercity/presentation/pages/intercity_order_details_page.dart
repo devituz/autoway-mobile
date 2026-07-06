@@ -3,10 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import 'intercity_extra_page.dart';
+import 'intercity_time_page.dart';
 
 const _icons = 'assets/icons';
 
@@ -197,7 +200,7 @@ class _OrderInfoCard extends StatelessWidget {
                           style: AppText.subtitle.copyWith(
                               fontSize: 14.sp, color: AppColors.primary)),
                       Text('300.000-450.000 som',
-                          style: TextStyle(
+                          style: GoogleFonts.unbounded(
                               fontSize: 12.sp, color: AppColors.textDark)),
                     ],
                   ),
@@ -217,7 +220,7 @@ class _OrderInfoCard extends StatelessWidget {
               _StatChip(
                 icon: 'ia_taxi',
                 richText: TextSpan(
-                  style: TextStyle(
+                  style: GoogleFonts.unbounded(
                       fontSize: 12.sp, color: AppColors.textMuted),
                   children: [
                     const TextSpan(text: '26 '),
@@ -238,7 +241,8 @@ class _OrderInfoCard extends StatelessWidget {
           _FieldRow(
             icon: 'ia_calendar_tick',
             title: 'intercity.addr_departure'.tr(),
-            onTap: () => context.router.push(const IntercityTimeRoute()),
+            bordered: true,
+            onTap: () => showIntercityTimeSheet(context),
           ),
         ],
       ),
@@ -380,7 +384,7 @@ class _StatChip extends StatelessWidget {
             Text.rich(richText!)
           else
             Text(text ?? '',
-                style: TextStyle(
+                style: GoogleFonts.unbounded(
                     fontSize: 12.sp, color: AppColors.textMuted)),
         ],
       ),
@@ -589,7 +593,7 @@ class _ExtrasCard extends StatelessWidget {
             icon: 'ia_snow',
             title: 'intercity.addr_extras'.tr(),
             subtitle: 'intercity.addr_extras_sub'.tr(),
-            onTap: () => context.router.push(const IntercityExtraRoute()),
+            onTap: () => showIntercityExtraSheet(context),
           ),
           SizedBox(height: 16.h),
           // Bagaj toggle + luggage size chips.
@@ -689,9 +693,10 @@ class _LuggageChip extends StatelessWidget {
                   child: Text(title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.unbounded(
                           fontSize: 9.sp,
-                          fontWeight: FontWeight.w600,
+                          fontWeight:
+                              selected ? FontWeight.w600 : FontWeight.w500,
                           color: selected
                               ? AppColors.selectBlue
                               : AppColors.textDark)),
@@ -768,7 +773,7 @@ class _BottomBar extends StatelessWidget {
                   ],
                 ),
                 Text('3 000 so’m',
-                    style: TextStyle(
+                    style: GoogleFonts.unbounded(
                         fontSize: 15.sp, color: AppColors.textOnDark)),
               ],
             ),
@@ -857,12 +862,14 @@ class _FieldRow extends StatelessWidget {
   final String icon;
   final String title;
   final String? subtitle;
+  final bool bordered;
   final VoidCallback onTap;
 
   const _FieldRow({
     required this.icon,
     required this.title,
     this.subtitle,
+    this.bordered = false,
     required this.onTap,
   });
 
@@ -876,6 +883,7 @@ class _FieldRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(16.r),
+          border: bordered ? Border.all(color: AppColors.border) : null,
         ),
         child: Row(
           children: [
@@ -921,15 +929,15 @@ class _Toggle extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         width: 40.w,
         height: 24.h,
-        padding: EdgeInsets.all(2.r),
+        padding: EdgeInsets.all(3.r),
         alignment: value ? Alignment.centerRight : Alignment.centerLeft,
         decoration: BoxDecoration(
-          color: value ? AppColors.selectBlue : AppColors.border,
+          color: value ? AppColors.selectBlue : const Color(0xFFDADEE0),
           borderRadius: BorderRadius.circular(80.r),
         ),
         child: Container(
-          width: 20.r,
-          height: 20.r,
+          width: 18.r,
+          height: 18.r,
           decoration: const BoxDecoration(
             color: AppColors.accent,
             shape: BoxShape.circle,

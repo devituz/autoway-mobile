@@ -20,10 +20,11 @@ extension IntercityTripStatusX on IntercityTripStatus {
   Color get color => switch (this) {
         // Figma Warning/50 #F59E0B.
         IntercityTripStatus.awaiting => AppColors.orange,
-        // Figma Success/50 #22C55E — closest token is statusGreen (#2FBF71).
-        IntercityTripStatus.accepted => AppColors.statusGreen,
-        // Figma Blue/50 #3B82F6 — closest token is blue (#2F6BFF).
-        IntercityTripStatus.coming || IntercityTripStatus.onway => AppColors.blue,
+        // Figma Success/50 #22C55E.
+        IntercityTripStatus.accepted => AppColors.orderGreen,
+        // Figma Blue/50 #3B82F6.
+        IntercityTripStatus.coming || IntercityTripStatus.onway =>
+          AppColors.orderBlue,
         // Figma Gray/50 #64748B.
         IntercityTripStatus.completed => AppColors.textMuted,
       };

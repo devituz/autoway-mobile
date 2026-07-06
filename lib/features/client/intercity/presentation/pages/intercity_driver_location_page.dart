@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yandex_mapkit_lite/yandex_mapkit_lite.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
@@ -24,9 +25,20 @@ class IntercityDriverLocationPage extends StatelessWidget {
       backgroundColor: AppColors.accent,
       body: Stack(
         children: [
-          // Static map background.
+          // Live Yandex map centered on Tashkent (driver's area, as in Figma).
           Positioned.fill(
-            child: Image.asset('$_images/ic_driver_map.png', fit: BoxFit.cover),
+            child: YandexMap(
+              onMapCreated: (controller) {
+                controller.moveCamera(
+                  CameraUpdate.newCameraPosition(
+                    const CameraPosition(
+                      target: Point(latitude: 41.3123, longitude: 69.2787),
+                      zoom: 15,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           // Driver (taxi) marker — roughly upper-centre.
           const Align(

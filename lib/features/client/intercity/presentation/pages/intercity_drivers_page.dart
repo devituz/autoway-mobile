@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -149,7 +150,8 @@ class _DriversHeader extends StatelessWidget {
                             text: TextSpan(
                               style: AppText.subtitle.copyWith(
                                   fontSize: 15.sp,
-                                  color: AppColors.lightGrey),
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFFCBD5E1)),
                               children: [
                                 TextSpan(
                                     text: 'intercity.drivers_departure_at'.tr()),
@@ -172,13 +174,13 @@ class _DriversHeader extends StatelessWidget {
                             style: AppText.subtitle.copyWith(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.lightGrey)),
+                                color: const Color(0xFFCBD5E1))),
                         SizedBox(width: 2.w),
                         SvgPicture.asset('$_icons/ia_man.svg',
                             width: 24.r,
                             height: 24.r,
-                            colorFilter: ColorFilter.mode(
-                                AppColors.lightGrey, BlendMode.srcIn)),
+                            colorFilter: const ColorFilter.mode(
+                                Color(0xFFCBD5E1), BlendMode.srcIn)),
                       ],
                     ),
                   ),
@@ -229,7 +231,7 @@ class _OfferCard extends StatelessWidget {
       onTap: () => context.router.push(const IntercityDriverDetailRoute()),
       child: Container(
         decoration: BoxDecoration(
-          color: featured ? AppColors.blue : AppColors.ctaBlue,
+          color: featured ? AppColors.orderBlue : AppColors.ctaBlue,
           border: Border.all(
               color: featured ? AppColors.selectBlue : AppColors.textSecondary),
           borderRadius: BorderRadius.circular(16.r),
@@ -283,7 +285,8 @@ class _OfferCard extends StatelessWidget {
                                   text: '15 aprel, ',
                                   style: AppText.bodyMedium.copyWith(
                                       fontSize: 16.sp,
-                                      color: AppColors.textMuted)),
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textDark)),
                               TextSpan(
                                   text: '16:00',
                                   style: AppText.bodyMedium.copyWith(
@@ -296,7 +299,7 @@ class _OfferCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Divider(height: 24.h, color: AppColors.fieldFill),
+                  _DashedDivider(height: 24.h),
                   // Price + seats.
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +309,7 @@ class _OfferCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(price,
-                                style: AppText.screenTitle.copyWith(
+                                style: GoogleFonts.unbounded(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.textDark)),
@@ -321,7 +324,7 @@ class _OfferCard extends StatelessWidget {
                       _SeatGrid(seats: seats),
                     ],
                   ),
-                  Divider(height: 24.h, color: AppColors.fieldFill),
+                  _DashedDivider(height: 24.h),
                   // Amenities.
                   Row(
                     children: [
@@ -335,7 +338,7 @@ class _OfferCard extends StatelessWidget {
                           width: 24.r, height: 24.r),
                     ],
                   ),
-                  Divider(height: 24.h, color: AppColors.fieldFill),
+                  _DashedDivider(height: 24.h),
                   // Driver + arrow.
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -436,8 +439,7 @@ class _Seat extends StatelessWidget {
       height: 24.r,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        // Success/50 #22C55E (closest existing token).
-        color: free ? AppColors.statusGreen : AppColors.lightGrey,
+        color: free ? AppColors.orderGreen : const Color(0xFFCBD5E1),
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: switch (state) {
@@ -453,6 +455,35 @@ class _Seat extends StatelessWidget {
                 ColorFilter.mode(AppColors.textMuted, BlendMode.srcIn)),
         _ => const SizedBox.shrink(),
       },
+    );
+  }
+}
+
+/// Light dashed divider used inside the offer cards (Figma dashed lines).
+class _DashedDivider extends StatelessWidget {
+  final double height;
+  const _DashedDivider({required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      child: Center(
+        child: LayoutBuilder(
+          builder: (context, c) {
+            const dashW = 6.0;
+            final count = (c.maxWidth / (dashW * 2)).floor();
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                count,
+                (_) => Container(
+                    width: dashW, height: 1, color: AppColors.fieldFill),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yandex_mapkit_lite/yandex_mapkit_lite.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -12,9 +13,6 @@ const _icons = 'assets/icons';
 
 /// Intercity-taxi flow — step 1: pick departure address on the map
 /// (Figma node 2124:8964). Opened from the home "Shaharlar aro taxi" card.
-///
-/// The live map (yandex_mapkit_lite) is currently disabled, so the Figma map
-/// raster is used as a static background; the pin/controls/sheet are overlaid.
 @RoutePage()
 class IntercityAddressPage extends StatelessWidget {
   const IntercityAddressPage({super.key});
@@ -25,9 +23,20 @@ class IntercityAddressPage extends StatelessWidget {
       backgroundColor: AppColors.accent,
       body: Stack(
         children: [
-          // Static map background.
+          // Live Yandex map centered on Tashkent (Xadra area, as in Figma).
           Positioned.fill(
-            child: Image.asset('assets/images/map_bg.png', fit: BoxFit.cover),
+            child: YandexMap(
+              onMapCreated: (controller) {
+                controller.moveCamera(
+                  CameraUpdate.newCameraPosition(
+                    const CameraPosition(
+                      target: Point(latitude: 41.3123, longitude: 69.2787),
+                      zoom: 15,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           // Top white fade for legibility.
           Positioned(
@@ -219,8 +228,8 @@ class _AddressSheet extends StatelessWidget {
                               color: AppColors.textOnDark,
                               fontWeight: FontWeight.w500)),
                       SizedBox(width: 4.w),
-                      Icon(Icons.arrow_forward,
-                          size: 18.sp, color: AppColors.textOnDark),
+                      Icon(Icons.chevron_right,
+                          size: 20.sp, color: AppColors.textOnDark),
                     ],
                   ),
                 ),
@@ -285,7 +294,7 @@ class _AddressRow extends StatelessWidget {
                     style: AppText.label.copyWith(
                         fontSize: 12.sp, color: AppColors.selectBlue)),
                 Icon(Icons.chevron_right,
-                    size: 16.sp, color: AppColors.selectBlue),
+                    size: 16.sp, color: const Color(0xFFC5D2FB)),
               ],
             ),
           ),

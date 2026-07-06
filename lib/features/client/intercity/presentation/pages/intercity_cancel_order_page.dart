@@ -1,10 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
 
@@ -15,19 +13,24 @@ const _icons = 'assets/icons';
 /// a destructive note that the deposit is non-refundable, then a "Bekor qilish"
 /// (cancel) / "Ortga qaytish" (go back) button pair.
 ///
-/// Designed as a page (@RoutePage) but visually a bottom sheet floating over a
-/// dimmed dark backdrop, mirroring the Figma frame.
-@RoutePage()
-class IntercityCancelOrderPage extends StatelessWidget {
-  const IntercityCancelOrderPage({super.key});
+/// Shown as a real modal bottom sheet. Resolves to `true` when the user
+/// confirms the cancellation, `false`/null otherwise.
+Future<bool?> showIntercityCancelOrderSheet(BuildContext context) {
+  return showModalBottomSheet<bool>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => const _CancelSheetBody(),
+  );
+}
+
+class _CancelSheetBody extends StatelessWidget {
+  const _CancelSheetBody();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0x99282828),
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
+    return Container(
           width: double.infinity,
           decoration: BoxDecoration(
             color: AppColors.accent,
@@ -98,7 +101,8 @@ class IntercityCancelOrderPage extends StatelessWidget {
                             child: _SheetButton(
                               label: 'intercity.cancel_confirm'.tr(),
                               filled: false,
-                              onTap: () => context.router.push(const IntercityCancelledRoute()),
+                              onTap: () =>
+                                  Navigator.of(context).pop(true),
                             ),
                           ),
                           SizedBox(width: 8.w),
@@ -106,7 +110,8 @@ class IntercityCancelOrderPage extends StatelessWidget {
                             child: _SheetButton(
                               label: 'intercity.cancel_go_back'.tr(),
                               filled: true,
-                              onTap: () => context.router.maybePop(),
+                              onTap: () =>
+                                  Navigator.of(context).pop(false),
                             ),
                           ),
                         ],
@@ -117,8 +122,6 @@ class IntercityCancelOrderPage extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
     );
   }
 }

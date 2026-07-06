@@ -1,9 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
@@ -11,17 +11,28 @@ import '../../../../../core/theme/app_text.dart';
 const _icons = 'assets/icons';
 
 /// Intercity-taxi flow — "Narx taklif qilish" price-offer sheet (Figma node
-/// 2174:13602). The client proposes a fare for the selected number of seats;
-/// a warning note explains the driver must confirm it.
-@RoutePage()
-class IntercityPricePage extends StatefulWidget {
-  const IntercityPricePage({super.key});
-
-  @override
-  State<IntercityPricePage> createState() => _IntercityPricePageState();
+/// 2174:13602). Shown as a real modal bottom sheet.
+Future<void> showIntercityPriceSheet(BuildContext context) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (ctx) => Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
+      child: const _PriceSheetBody(),
+    ),
+  );
 }
 
-class _IntercityPricePageState extends State<IntercityPricePage> {
+class _PriceSheetBody extends StatefulWidget {
+  const _PriceSheetBody();
+
+  @override
+  State<_PriceSheetBody> createState() => _PriceSheetBodyState();
+}
+
+class _PriceSheetBodyState extends State<_PriceSheetBody> {
   final _controller = TextEditingController(text: '750 000');
 
   @override
@@ -32,16 +43,7 @@ class _IntercityPricePageState extends State<IntercityPricePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          const Positioned.fill(
-            child: ColoredBox(color: Color(0x99282828)),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _Sheet(
+    return _Sheet(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -82,7 +84,7 @@ class _IntercityPricePageState extends State<IntercityPricePage> {
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9 ]')),
                             ],
-                            style: AppText.subtitle.copyWith(
+                            style: GoogleFonts.unbounded(
                                 fontSize: 14.sp,
                                 height: 20 / 14,
                                 fontWeight: FontWeight.w500,
@@ -127,7 +129,7 @@ class _IntercityPricePageState extends State<IntercityPricePage> {
                         child: _SheetButton(
                           label: 'intercity.price_close'.tr(),
                           filled: false,
-                          onTap: () => context.router.maybePop(),
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ),
                       SizedBox(width: 8.w),
@@ -135,18 +137,12 @@ class _IntercityPricePageState extends State<IntercityPricePage> {
                         child: _SheetButton(
                           label: 'intercity.price_save'.tr(),
                           filled: true,
-                          onTap: () {
-                            // TODO(nav): -> intercity order confirm
-                          },
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ),
                     ],
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

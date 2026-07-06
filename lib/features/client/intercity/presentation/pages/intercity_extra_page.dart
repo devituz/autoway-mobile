@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,21 +9,32 @@ import '../../../../../core/theme/app_text.dart';
 const _icons = 'assets/icons';
 
 /// Intercity-taxi flow — "Qo'shimcha" additional-options sheet (Figma node
-/// 2167:10287). Client variant: a checklist of ride preferences over the dark
-/// map background.
-@RoutePage()
-class IntercityExtraPage extends StatefulWidget {
-  const IntercityExtraPage({super.key});
-
-  @override
-  State<IntercityExtraPage> createState() => _IntercityExtraPageState();
+/// 2167:10287). Shown as a real modal bottom sheet.
+Future<void> showIntercityExtraSheet(BuildContext context) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => const _ExtraSheetBody(),
+  );
 }
 
-class _IntercityExtraPageState extends State<IntercityExtraPage> {
+class _ExtraSheetBody extends StatefulWidget {
+  const _ExtraSheetBody();
+
+  @override
+  State<_ExtraSheetBody> createState() => _ExtraSheetBodyState();
+}
+
+class _ExtraSheetBodyState extends State<_ExtraSheetBody> {
   late final List<_ExtraOption> _options = [
     _ExtraOption(icon: 'personalcard', labelKey: 'intercity.extra_for_other'),
     _ExtraOption(icon: 'ib_snow', labelKey: 'intercity.extra_ac', selected: true),
-    _ExtraOption(labelKey: 'intercity.extra_no_smoking', selected: true),
+    _ExtraOption(
+        icon: 'ic_no_smoke',
+        labelKey: 'intercity.extra_no_smoking',
+        selected: true),
     _ExtraOption(icon: 'ib_pet', labelKey: 'intercity.extra_pets'),
     _ExtraOption(icon: 'ib_music', labelKey: 'intercity.extra_music'),
     _ExtraOption(
@@ -33,16 +43,7 @@ class _IntercityExtraPageState extends State<IntercityExtraPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          const Positioned.fill(
-            child: ColoredBox(color: Color(0x99282828)),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _Sheet(
+    return _Sheet(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -67,7 +68,7 @@ class _IntercityExtraPageState extends State<IntercityExtraPage> {
                         child: _SheetButton(
                           label: 'intercity.extra_close'.tr(),
                           filled: false,
-                          onTap: () => context.router.maybePop(),
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ),
                       SizedBox(width: 8.w),
@@ -75,18 +76,12 @@ class _IntercityExtraPageState extends State<IntercityExtraPage> {
                         child: _SheetButton(
                           label: 'intercity.extra_continue'.tr(),
                           filled: true,
-                          onTap: () {
-                            // TODO(nav): -> IntercityPricePage
-                          },
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ),
                     ],
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

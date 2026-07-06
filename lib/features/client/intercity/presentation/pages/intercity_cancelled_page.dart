@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
@@ -232,7 +233,7 @@ class _OrderSummaryCard extends StatelessWidget {
                   Row(
                     children: [
                       Text('#168-98',
-                          style: TextStyle(
+                          style: GoogleFonts.unbounded(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                               height: 26 / 16,
@@ -268,7 +269,7 @@ class _OrderSummaryCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('400 000',
-                          style: TextStyle(
+                          style: GoogleFonts.unbounded(
                               fontSize: 12.sp,
                               height: 16 / 12,
                               color: AppColors.textMuted,
@@ -278,14 +279,14 @@ class _OrderSummaryCard extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text: '350 000 ',
-                                style: TextStyle(
+                                style: GoogleFonts.unbounded(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                     height: 26 / 16,
                                     color: AppColors.textDark)),
                             TextSpan(
                                 text: 'so‘m',
-                                style: TextStyle(
+                                style: GoogleFonts.unbounded(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                     height: 26 / 16,
@@ -306,14 +307,14 @@ class _OrderSummaryCard extends StatelessWidget {
                       children: [
                         TextSpan(
                             text: '16:00',
-                            style: TextStyle(
+                            style: GoogleFonts.unbounded(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 height: 26 / 16,
                                 color: AppColors.textDark)),
                         TextSpan(
                             text: ', 15 aprel',
-                            style: TextStyle(
+                            style: GoogleFonts.unbounded(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 height: 26 / 16,

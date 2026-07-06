@@ -3,10 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import 'intercity_cancel_order_page.dart';
+import 'intercity_rate_driver_page.dart';
 import '../../domain/entities/intercity_trip_status.dart';
 
 const _icons = 'assets/icons';
@@ -322,7 +325,7 @@ class _ActionCircle extends StatelessWidget {
         TripAction.location =>
           context.router.push(const IntercityDriverLocationRoute()),
         TripAction.cancel =>
-          context.router.push(const IntercityCancelOrderRoute()),
+          _confirmCancel(context),
         _ => null,
       },
       child: Column(
@@ -387,7 +390,7 @@ class _DetailsCard extends StatelessWidget {
                     children: [
                       Text(
                         '#168-98',
-                        style: AppText.subtitle.copyWith(
+                        style: GoogleFonts.unbounded(
                           fontSize: 16.sp,
                           color: AppColors.textDark,
                           fontWeight: FontWeight.w500,
@@ -430,7 +433,7 @@ class _DetailsCard extends StatelessWidget {
                       if (status.showOldPrice)
                         Text(
                           '400 000',
-                          style: AppText.subtitle.copyWith(
+                          style: GoogleFonts.unbounded(
                             fontSize: 12.sp,
                             color: AppColors.textMuted,
                             decoration: TextDecoration.lineThrough,
@@ -441,7 +444,7 @@ class _DetailsCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: '350 000 ',
-                              style: AppText.subtitle.copyWith(
+                              style: GoogleFonts.unbounded(
                                 fontSize: 16.sp,
                                 color: AppColors.textDark,
                                 fontWeight: FontWeight.w500,
@@ -449,7 +452,7 @@ class _DetailsCard extends StatelessWidget {
                             ),
                             TextSpan(
                               text: 'so‘m',
-                              style: AppText.subtitle.copyWith(
+                              style: GoogleFonts.unbounded(
                                 fontSize: 16.sp,
                                 color: AppColors.textMuted,
                               ),
@@ -470,7 +473,7 @@ class _DetailsCard extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: '16:00',
-                          style: AppText.subtitle.copyWith(
+                          style: GoogleFonts.unbounded(
                             fontSize: 16.sp,
                             color: status.mutedTime
                                 ? AppColors.textMuted
@@ -480,7 +483,7 @@ class _DetailsCard extends StatelessWidget {
                         ),
                         TextSpan(
                           text: ', 15 aprel',
-                          style: AppText.subtitle.copyWith(
+                          style: GoogleFonts.unbounded(
                             fontSize: 16.sp,
                             color: AppColors.textMuted,
                             fontWeight: FontWeight.w500,
@@ -683,9 +686,9 @@ class _BottomButton extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (trailingClose) {
-          context.router.push(const IntercityCancelOrderRoute());
+          _confirmCancel(context);
         } else if (trailingLike) {
-          context.router.push(const IntercityRateDriverRoute());
+          showIntercityRateDriverSheet(context);
         }
       },
       child: Container(
@@ -742,5 +745,14 @@ class _Line extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(height: 1, color: AppColors.border);
+  }
+}
+
+
+/// Opens the cancel-confirmation sheet; on confirm goes to the cancelled page.
+Future<void> _confirmCancel(BuildContext context) async {
+  final confirmed = await showIntercityCancelOrderSheet(context);
+  if (confirmed == true && context.mounted) {
+    context.router.push(const IntercityCancelledRoute());
   }
 }

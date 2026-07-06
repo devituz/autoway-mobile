@@ -3,11 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../domain/entities/intercity_trip_status.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text.dart';
+import 'intercity_price_page.dart';
 
 const _icons = 'assets/icons';
 const _images = 'assets/images';
@@ -178,10 +180,11 @@ class _DriverInfoCard extends StatelessWidget {
         _PriceRow(
           label: 'intercity.driverview_leaving_at'.tr(),
           valueSpans: [
-            TextSpan(
+            const TextSpan(
                 text: '15 aprel, ',
-                style: TextStyle(color: AppColors.textMuted)),
-            const TextSpan(text: '16:00'),
+                style: TextStyle(color: AppColors.ctaBlue)),
+            const TextSpan(
+                text: '16:00', style: TextStyle(color: AppColors.ctaBlue)),
           ],
         ),
         const _ThinDivider(),
@@ -194,7 +197,7 @@ class _DriverInfoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('01 B 125 YC',
-                      style: AppText.screenTitle.copyWith(
+                      style: GoogleFonts.unbounded(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textDark)),
@@ -525,7 +528,7 @@ class _SeatSelectionCard extends StatelessWidget {
                 style: AppText.subtitle.copyWith(
                     fontSize: 14.sp, color: AppColors.textDark)),
             Text('$total so‘m',
-                style: AppText.screenTitle.copyWith(
+                style: GoogleFonts.unbounded(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.textDark)),
@@ -533,7 +536,7 @@ class _SeatSelectionCard extends StatelessWidget {
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => context.router.push(const IntercityPriceRoute()),
+          onTap: () => showIntercityPriceSheet(context),
           child: Container(
             height: 48.h,
             alignment: Alignment.center,
@@ -826,7 +829,7 @@ class _BottomBar extends StatelessWidget {
                   ),
                 ),
                 Text('$commission so‘m',
-                    style: AppText.subtitle.copyWith(
+                    style: GoogleFonts.unbounded(
                         fontSize: 15.sp, color: AppColors.textOnDark)),
               ],
             ),
@@ -931,7 +934,7 @@ class _PriceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final valueStyle = AppText.screenTitle.copyWith(
+    final valueStyle = GoogleFonts.unbounded(
         fontSize: 16.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textDark);

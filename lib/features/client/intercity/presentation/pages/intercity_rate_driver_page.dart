@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,16 +12,25 @@ const _icons = 'assets/icons';
 /// A bottom sheet over the dark backdrop: a 5-star rating row, a list of
 /// selectable complaint reasons with circular checkboxes, a "leave a comment"
 /// field, and the "Etiroz bildirish" (dispute) / "Saqlash" (save) button pair.
-@RoutePage()
-class IntercityRateDriverPage extends StatefulWidget {
-  const IntercityRateDriverPage({super.key});
-
-  @override
-  State<IntercityRateDriverPage> createState() =>
-      _IntercityRateDriverPageState();
+/// Shown as a real modal bottom sheet.
+Future<void> showIntercityRateDriverSheet(BuildContext context) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: const Color(0x99282828),
+    builder: (_) => const _RateSheetBody(),
+  );
 }
 
-class _IntercityRateDriverPageState extends State<IntercityRateDriverPage> {
+class _RateSheetBody extends StatefulWidget {
+  const _RateSheetBody();
+
+  @override
+  State<_RateSheetBody> createState() => _RateSheetBodyState();
+}
+
+class _RateSheetBodyState extends State<_RateSheetBody> {
   int _rating = 2; // 1-based count of filled stars
 
   static const _reasons = [
@@ -37,11 +45,7 @@ class _IntercityRateDriverPageState extends State<IntercityRateDriverPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0x99282828),
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
+    return Container(
           width: double.infinity,
           decoration: BoxDecoration(
             color: AppColors.accent,
@@ -143,7 +147,7 @@ class _IntercityRateDriverPageState extends State<IntercityRateDriverPage> {
                               child: _SheetButton(
                                 label: 'intercity.rate_save'.tr(),
                                 filled: true,
-                                onTap: () => context.router.maybePop(),
+                                                onTap: () => Navigator.of(context).pop(),
                               ),
                             ),
                           ],
@@ -155,8 +159,6 @@ class _IntercityRateDriverPageState extends State<IntercityRateDriverPage> {
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 }
