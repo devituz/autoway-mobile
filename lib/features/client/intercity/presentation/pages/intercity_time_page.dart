@@ -200,9 +200,8 @@ class _SlotColumn extends StatelessWidget {
                   ),
                   if (slot.count > 0)
                     Container(
-                      constraints: BoxConstraints(minWidth: 25.r),
-                      height: 25.r,
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      width: 32.r,
+                      height: 32.r,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: selected ? AppColors.brand30 : AppColors.textMuted,
