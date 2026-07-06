@@ -53,6 +53,8 @@ class _IntercityAddressPageState extends State<IntercityAddressPage> {
           permission == LocationPermission.deniedForever) {
         return;
       }
+      // Show the blue "my location" dot on the map.
+      await _controller?.toggleUserLayer(visible: true);
       final pos = await Geolocator.getCurrentPosition();
       await _controller?.moveCamera(
         CameraUpdate.newCameraPosition(
@@ -67,6 +69,15 @@ class _IntercityAddressPageState extends State<IntercityAddressPage> {
     } catch (_) {
       // Location is best-effort: stay on the current camera position.
     }
+  }
+
+  void _onMapTap(Point point) {
+    _controller?.moveCamera(
+      CameraUpdate.newCameraPosition(CameraPosition(target: point, zoom: 16)),
+      animation:
+          const MapAnimation(type: MapAnimationType.smooth, duration: 0.4),
+    );
+    _reverseGeocode(point);
   }
 
   void _onCameraPositionChanged(CameraPosition position,
@@ -85,11 +96,22 @@ class _IntercityAddressPageState extends State<IntercityAddressPage> {
           await placemarkFromCoordinates(target.latitude, target.longitude);
       if (!mounted || placemarks.isEmpty) return;
       final pm = placemarks.first;
-      final parts = <String?>[
-        pm.locality?.isNotEmpty == true ? pm.locality : pm.administrativeArea,
-        pm.thoroughfare,
-        pm.subThoroughfare,
-      ].whereType<String>().where((e) => e.isNotEmpty).toList();
+      final city =
+          pm.locality?.isNotEmpty == true ? pm.locality : pm.administrativeArea;
+      // Street + house: prefer thoroughfare/subThoroughfare, fall back to the
+      // combined street field some platforms return instead.
+      String? street;
+      if (pm.thoroughfare?.isNotEmpty == true) {
+        street = pm.subThoroughfare?.isNotEmpty == true
+            ? '${pm.thoroughfare} ${pm.subThoroughfare}'
+            : pm.thoroughfare;
+      } else if (pm.street?.isNotEmpty == true) {
+        street = pm.street;
+      }
+      final parts = <String?>[city, street]
+          .whereType<String>()
+          .where((e) => e.isNotEmpty)
+          .toList();
       if (parts.isEmpty) return;
       setState(() => _address = parts.join(', '));
     } catch (_) {
@@ -118,6 +140,8 @@ class _IntercityAddressPageState extends State<IntercityAddressPage> {
                 _goToMyLocation();
               },
               onCameraPositionChanged: _onCameraPositionChanged,
+              // Tapping the map moves the pin there and resolves that address.
+              onMapTap: _onMapTap,
             ),
           ),
           // Top white fade for legibility.

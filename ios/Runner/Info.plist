@@ -87,7 +87,9 @@
 				</dict>
 			</dict>
 		</dict>
-		<key>NSLocationWhenInUseUsageDescription</key>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Haydovchi rejimida buyurtmalar va marshrut uchun joylashuvingiz fonda ham ishlatiladi.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Manzilingizni aniqlash va xaritada ko'rsatish uchun joylashuvga ruxsat kerak.</string>
 </dict>
 </plist>
