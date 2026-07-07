@@ -671,24 +671,42 @@ class _DashedLine extends StatelessWidget {
 }
 
 /// Vertical dashed connector between route points (Figma: 4/4 dash, #0F172A).
+/// CustomPaint (not LayoutBuilder) so it is safe inside IntrinsicHeight —
+/// LayoutBuilder cannot report intrinsic dimensions and crashes layout there.
 class _DashedVerticalLine extends StatelessWidget {
   final Color color;
   const _DashedVerticalLine({required this.color});
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, c) {
-        const dashH = 4.0;
-        final count = (c.maxHeight / (dashH * 2)).floor().clamp(1, 100);
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            count,
-            (_) => Container(width: 1, height: dashH, color: color),
-          ),
-        );
-      },
+    return CustomPaint(
+      size: const Size(1, double.infinity),
+      painter: _DashedVerticalLinePainter(color),
     );
   }
+}
+
+class _DashedVerticalLinePainter extends CustomPainter {
+  final Color color;
+  _DashedVerticalLinePainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const dashH = 4.0;
+    const gap = 4.0;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    final x = size.width / 2;
+    double y = 0;
+    while (y < size.height) {
+      final end = (y + dashH) > size.height ? size.height : y + dashH;
+      canvas.drawLine(Offset(x, y), Offset(x, end), paint);
+      y += dashH + gap;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedVerticalLinePainter old) =>
+      old.color != color;
 }
