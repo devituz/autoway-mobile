@@ -42,3 +42,9 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // yandex_mapkit_lite declares maps.mobile as `implementation`, so it is not
+    // visible to MainActivity.kt without this explicit dependency.
+    implementation("com.yandex.android:maps.mobile:4.4.0-lite")
+}
