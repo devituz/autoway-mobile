@@ -91,6 +91,8 @@
 		<string>Autoway needs access to your photo library so you can choose a profile photo.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Autoway uses your location to show your position on the map and find rides near you.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Autoway uses your location to show your position on the map and find rides near you.</string>
 		<key>NSMotionUsageDescription</key>
 		<string>Autoway uses motion sensors to improve location accuracy and map navigation.</string>
 	</dict>
