@@ -86,14 +86,14 @@
 			</dict>
 		</dict>
 		<key>NSCameraUsageDescription</key>
-		<string>Autoway uses the camera to let you take a profile photo.</string>
+		<string>Camera access lets you take a photo and set it as your profile picture.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Autoway needs access to your photo library so you can choose a profile photo.</string>
+		<string>Photo library access lets you choose a picture from your gallery and set it as your profile picture.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>Autoway uses your location to show your position on the map and find rides near you.</string>
+		<string>Your location is used to detect your current address and show your position on the map when you choose pickup and drop-off points for intercity rides and cargo delivery.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>Autoway uses your location to show your position on the map and find rides near you.</string>
+		<string>Your location is used to detect your current address and show your position on the map when you choose pickup and drop-off points for intercity rides and cargo delivery.</string>
 		<key>NSMotionUsageDescription</key>
-		<string>Autoway uses motion sensors to improve location accuracy and map navigation.</string>
+		<string>Motion and fitness data is used by the map to improve positioning accuracy while you move.</string>
 	</dict>
 </plist>
