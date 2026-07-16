@@ -72,19 +72,6 @@
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
-		<key>NSAppTransportSecurity</key>
-		<dict>
-			<key>NSExceptionDomains</key>
-			<dict>
-				<key>185.130.212.150</key>
-				<dict>
-					<key>NSExceptionAllowsInsecureHTTPLoads</key>
-					<true/>
-					<key>NSIncludesSubdomains</key>
-					<true/>
-				</dict>
-			</dict>
-		</dict>
 		<key>NSCameraUsageDescription</key>
 		<string>Camera access lets you take a photo and set it as your profile picture.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
